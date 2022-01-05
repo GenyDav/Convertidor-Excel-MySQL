@@ -5,9 +5,12 @@
  */
 package interfaz;
 
+import conexion.Conexion;
 import java.awt.CardLayout;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.UIManager;
-
 
 /**
  *
@@ -15,6 +18,11 @@ import javax.swing.UIManager;
  */
 public class InterfazGrafica extends javax.swing.JFrame {
     private CardLayout cardLayout;
+    private String servidor;
+    private String usuario;
+    private String clave;
+    private Conexion conexion;
+    private String mensaje;
 
     public InterfazGrafica() {
         initComponents();
@@ -26,6 +34,11 @@ public class InterfazGrafica extends javax.swing.JFrame {
         setSize(1000,600);
         //setResizable(false);
         setLocationRelativeTo(null);
+        
+        servidor = "";
+        usuario = "";
+        clave = "";
+        mensaje = "";
     }
     
     /**
@@ -44,14 +57,13 @@ public class InterfazGrafica extends javax.swing.JFrame {
         jLabel6 = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
         txtUsuario = new javax.swing.JTextField();
-        txtDireccion = new javax.swing.JTextField();
+        txtServidor = new javax.swing.JTextField();
         txtClave = new javax.swing.JPasswordField();
         btnConectar = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
-        mensaje = new javax.swing.JLabel();
-        jLabel9 = new javax.swing.JLabel();
-        txtbase = new javax.swing.JPasswordField();
         jPanel6 = new javax.swing.JPanel();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        msj = new javax.swing.JTextArea();
         jPanel4 = new javax.swing.JPanel();
         jPanel5 = new javax.swing.JPanel();
         guardar_excel = new javax.swing.JButton();
@@ -89,6 +101,8 @@ public class InterfazGrafica extends javax.swing.JFrame {
         jPanel2.setBackground(new java.awt.Color(51, 51, 51));
         jPanel2.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 102, 102)));
         jPanel2.setForeground(new java.awt.Color(255, 255, 255));
+        jPanel2.setMaximumSize(new java.awt.Dimension(265, 364));
+        jPanel2.setName(""); // NOI18N
 
         jLabel5.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         jLabel5.setForeground(new java.awt.Color(255, 255, 255));
@@ -106,7 +120,7 @@ public class InterfazGrafica extends javax.swing.JFrame {
         txtUsuario.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255), 3));
         txtUsuario.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
 
-        txtDireccion.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255), 3));
+        txtServidor.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255), 3));
 
         txtClave.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255), 3));
 
@@ -121,15 +135,6 @@ public class InterfazGrafica extends javax.swing.JFrame {
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));
         jLabel1.setText("Datos de conexión");
 
-        mensaje.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
-        mensaje.setForeground(new java.awt.Color(255, 255, 255));
-
-        jLabel9.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        jLabel9.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel9.setText("Nombre de la base de datos");
-
-        txtbase.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255), 3));
-
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -137,17 +142,14 @@ public class InterfazGrafica extends javax.swing.JFrame {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGap(25, 25, 25)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(mensaje, javax.swing.GroupLayout.DEFAULT_SIZE, 210, Short.MAX_VALUE)
                     .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel6)
                     .addComponent(btnConectar, javax.swing.GroupLayout.DEFAULT_SIZE, 210, Short.MAX_VALUE)
                     .addComponent(txtClave)
                     .addComponent(jLabel5)
-                    .addComponent(txtDireccion)
+                    .addComponent(txtServidor)
                     .addComponent(txtUsuario)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jLabel9, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(txtbase))
+                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap(28, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
@@ -158,7 +160,7 @@ public class InterfazGrafica extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addComponent(jLabel6)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(txtDireccion, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(txtServidor, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jLabel5)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -167,13 +169,7 @@ public class InterfazGrafica extends javax.swing.JFrame {
                 .addComponent(jLabel8)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(txtClave, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(jLabel9)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(txtbase, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(mensaje, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
                 .addComponent(btnConectar, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(21, 21, 21))
         );
@@ -192,14 +188,26 @@ public class InterfazGrafica extends javax.swing.JFrame {
             .addGap(0, 345, Short.MAX_VALUE)
         );
 
+        jScrollPane3.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
+
+        msj.setEditable(false);
+        msj.setColumns(20);
+        msj.setRows(5);
+        msj.setAutoscrolls(false);
+        jScrollPane3.setViewportView(msj);
+
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 190, Short.MAX_VALUE)
-                .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, 523, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, 0)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, 523, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addGap(12, 12, 12)
+                        .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 701, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         jPanel3Layout.setVerticalGroup(
@@ -208,7 +216,9 @@ public class InterfazGrafica extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
                 .addGap(0, 147, Short.MAX_VALUE)
                 .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, 345, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(108, 108, 108))
+                .addGap(31, 31, 31)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(13, 13, 13))
         );
 
         jPanel1.add(jPanel3, "card2");
@@ -483,7 +493,7 @@ public class InterfazGrafica extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 990, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -501,14 +511,10 @@ public class InterfazGrafica extends javax.swing.JFrame {
        
     }//GEN-LAST:event_jButton4ActionPerformed
 
-    private void btnConectarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConectarActionPerformed
-        cardLayout.show(jPanel1, "card3");
-        setTitle("Exportar tablas");
-    }//GEN-LAST:event_btnConectarActionPerformed
-
     private void btnSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalirActionPerformed
         cardLayout.show(jPanel1, "card2");
         setTitle("Iniciar conexión");
+        limpiarCamposInicio();
     }//GEN-LAST:event_btnSalirActionPerformed
 
     private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
@@ -531,11 +537,46 @@ public class InterfazGrafica extends javax.swing.JFrame {
 
     }//GEN-LAST:event_jButton7ActionPerformed
 
+    private void btnConectarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConectarActionPerformed
+        mensaje = "Intentando conectar con el servidor...";
+        msj.setText(mensaje);
+        servidor = txtServidor.getText();
+        usuario = txtUsuario.getText();
+        clave = txtClave.getText();
+        new Thread(){
+            @Override
+            public void run(){
+                try{
+                    conexion = new Conexion(servidor,usuario,clave);
+                    setTitle("Exportar tablas");
+                    cardLayout.show(jPanel1, "card3");
+                }catch(SQLException sqle){
+                    //sqle.printStackTrace();
+                    mensaje += "\nFalló el intento de conexión."
+                        + "\nDatos de conexión incorrectos, verifique e intente de nuevo.";
+                }catch(ClassNotFoundException cnf){
+                    cnf.printStackTrace(); 
+                    mensaje += "\nFalló el intento de conexión."
+                        + "\nNo se pudo encontar la librería mysql-conector-java";
+                }finally{
+                    msj.setText(mensaje);
+                }
+            }
+        }.start();
+    }//GEN-LAST:event_btnConectarActionPerformed
+
+    public void limpiarCamposInicio(){
+        txtServidor.setText("");
+        txtUsuario.setText("");
+        txtClave.setText("");
+        mensaje = "Conexión terminada...";
+        msj.setText(mensaje);
+    }
     /**
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-        //LookAndFeel nativo
+        // LookAndFeel nativo
         try {    
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         } catch (Exception ex) {
@@ -570,7 +611,6 @@ public class InterfazGrafica extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
-    private javax.swing.JLabel jLabel9;
     private javax.swing.JList jList1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel10;
@@ -585,12 +625,12 @@ public class InterfazGrafica extends javax.swing.JFrame {
     private javax.swing.JProgressBar jProgressBar1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JTable jTable1;
-    private javax.swing.JLabel mensaje;
+    private javax.swing.JTextArea msj;
     private javax.swing.JPanel panelExport;
     private javax.swing.JPasswordField txtClave;
-    private javax.swing.JTextField txtDireccion;
+    private javax.swing.JTextField txtServidor;
     private javax.swing.JTextField txtUsuario;
-    private javax.swing.JPasswordField txtbase;
     // End of variables declaration//GEN-END:variables
 }
