@@ -7,15 +7,11 @@ package interfaz;
 
 import conexion.Conexion;
 import java.awt.CardLayout;
-import java.io.IOException;
+import java.awt.event.ItemEvent;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.swing.DefaultListModel;
 import javax.swing.JTable;
 import javax.swing.UIManager;
-import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -23,35 +19,34 @@ import javax.swing.table.DefaultTableModel;
  */
 public class InterfazGrafica extends javax.swing.JFrame {
     private CardLayout cardLayout;
-    private String servidor;
-    private String usuario;
-    private String clave;
-    private Conexion conexion;
-    private String mensaje;     // mensaje de la pantalla de inicio
-
+    private String servidor;        // dirección o nombre del servidor de bases de datos
+    private String usuario;         // nombre del usuario
+    private String clave;           // contraseña para acceder al servidor
+    private Conexion conn;          // encargado de realizar la conexión y consultas a la base de datos
+    private String mensaje;         // mensaje de la pantalla de inicio
+    private FormatoTabla formato;   // formato de la tabla en donde se muestran los datos
 
     public InterfazGrafica() {
         initComponents();
+        setResizable(false);
+        setTitle("Iniciar conexión");
+        setSize(1000,600);
+        setLocationRelativeTo(null);
+        
         cardLayout = (CardLayout) jPanel1.getLayout();
         //Imagen imagen = new Imagen("/imagenes/img_inicio.png");
         //jPanel6.add(imagen);
         //jPanel6.repaint();
-        setTitle("Iniciar conexión");
-        setSize(1000,600);
-        //setResizable(false);
-        setLocationRelativeTo(null);
         
         servidor = "";
         usuario = "";
         clave = "";
         mensaje = "";
+       
+        tabla.setAutoResizeMode(JTable.AUTO_RESIZE_OFF); // mostrar barra de desplazamiento horizontal
+        formato = null;
         
-        DefaultTableModel modelo = new DefaultTableModel();
-        modelo.addColumn("id");
-        modelo.addColumn("nombre");
-        
-        tabla.setModel(modelo);
-        tabla.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+
     }
     
     /**
@@ -129,12 +124,15 @@ public class InterfazGrafica extends javax.swing.JFrame {
         jLabel8.setForeground(new java.awt.Color(255, 255, 255));
         jLabel8.setText("Contraseña");
 
+        txtUsuario.setText("root");
         txtUsuario.setAutoscrolls(false);
         txtUsuario.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255), 3));
         txtUsuario.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
 
+        txtServidor.setText("localhost");
         txtServidor.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255), 3));
 
+        txtClave.setText("root");
         txtClave.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255), 3));
 
         btnConectar.setText("Conectar");
@@ -246,22 +244,12 @@ public class InterfazGrafica extends javax.swing.JFrame {
         guardar_excel.setContentAreaFilled(false);
         guardar_excel.setPressedIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/bd_excel_3.png"))); // NOI18N
         guardar_excel.setRolloverIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/bd_excel_2.png"))); // NOI18N
-        guardar_excel.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                guardar_excelActionPerformed(evt);
-            }
-        });
 
         jButton4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/excel_bd_1.png"))); // NOI18N
         jButton4.setBorderPainted(false);
         jButton4.setContentAreaFilled(false);
         jButton4.setPressedIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/salir_mini_3.png"))); // NOI18N
         jButton4.setRolloverIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/salir_mini_2.png"))); // NOI18N
-        jButton4.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton4ActionPerformed(evt);
-            }
-        });
 
         btnSalir.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/salir_mini_1.png"))); // NOI18N
         btnSalir.setBorderPainted(false);
@@ -279,7 +267,7 @@ public class InterfazGrafica extends javax.swing.JFrame {
         jPanel5Layout.setHorizontalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jButton4, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
+            .addGroup(jPanel5Layout.createSequentialGroup()
                 .addGap(0, 0, Short.MAX_VALUE)
                 .addComponent(guardar_excel, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE))
             .addComponent(btnSalir, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
@@ -287,6 +275,7 @@ public class InterfazGrafica extends javax.swing.JFrame {
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel5Layout.createSequentialGroup()
+                .addGap(6, 6, 6)
                 .addComponent(guardar_excel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButton4)
@@ -300,22 +289,31 @@ public class InterfazGrafica extends javax.swing.JFrame {
 
         panelExport.setBackground(new java.awt.Color(255, 255, 255));
 
-        comboBases.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                comboBasesActionPerformed(evt);
+        comboBases.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                BDItemStateChanged(evt);
             }
         });
 
         jScrollPane1.setToolTipText("");
 
+        tabla.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+
+            }
+        ));
+        tabla.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_ALL_COLUMNS);
         jScrollPane1.setViewportView(tabla);
 
         jLabel2.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         jLabel2.setText("Base de datos");
 
-        comboTablas.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                comboTablasActionPerformed(evt);
+        comboTablas.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                comboTablasItemStateChanged(evt);
             }
         });
 
@@ -323,11 +321,6 @@ public class InterfazGrafica extends javax.swing.JFrame {
         jLabel3.setText("Tablas");
 
         jCheckBox1.setText("Expotar todas las tablas");
-        jCheckBox1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jCheckBox1ActionPerformed(evt);
-            }
-        });
 
         jList1.setModel(new javax.swing.AbstractListModel() {
             String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
@@ -353,18 +346,8 @@ public class InterfazGrafica extends javax.swing.JFrame {
         );
 
         jButton6.setText("Quitar tabla(s)");
-        jButton6.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton6ActionPerformed(evt);
-            }
-        });
 
         jButton7.setText("Borrar todo");
-        jButton7.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton7ActionPerformed(evt);
-            }
-        });
 
         javax.swing.GroupLayout jPanel10Layout = new javax.swing.GroupLayout(jPanel10);
         jPanel10.setLayout(jPanel10Layout);
@@ -518,43 +501,14 @@ public class InterfazGrafica extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void guardar_excelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_guardar_excelActionPerformed
-        
-    }//GEN-LAST:event_guardar_excelActionPerformed
-
-    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-       
-    }//GEN-LAST:event_jButton4ActionPerformed
-
     private void btnSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalirActionPerformed
         cardLayout.show(jPanel1, "card2");
         setTitle("Iniciar conexión");
         limpiarCamposInicio();
     }//GEN-LAST:event_btnSalirActionPerformed
-
-    private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton6ActionPerformed
-
-    private void jCheckBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jCheckBox1ActionPerformed
-
-    private void comboTablasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboTablasActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_comboTablasActionPerformed
-
-    private void comboBasesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboBasesActionPerformed
-        comboTablas.removeAllItems();
-        cargarTablas(comboBases.getSelectedItem().toString());
-    }//GEN-LAST:event_comboBasesActionPerformed
-
-    private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
-
-    }//GEN-LAST:event_jButton7ActionPerformed
-
+    
     private void btnConectarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConectarActionPerformed
-        mensaje = "Intentando conectar con el servidor...";
+        mensaje = "Estableciendo conexión con el servidor...";
         msj.setText(mensaje);
         servidor = txtServidor.getText();
         usuario = txtUsuario.getText();
@@ -563,12 +517,12 @@ public class InterfazGrafica extends javax.swing.JFrame {
             @Override
             public void run(){
                 try{
-                    conexion = new Conexion(servidor,usuario,clave);                   
-                    cargarBasesDeDatos();
+                    conn = new Conexion(servidor,usuario,clave);                   
+                    cargarListaDeBases();
                     setTitle("Exportar tablas");
                     cardLayout.show(jPanel1, "card3");
                 }catch(SQLException sqle){
-                    //sqle.printStackTrace();
+                    sqle.printStackTrace();
                     mensaje += "\nFalló el intento de conexión."
                         + "\nDatos de conexión incorrectos, verifique e intente de nuevo.";
                 }catch(ClassNotFoundException cnf){
@@ -582,6 +536,37 @@ public class InterfazGrafica extends javax.swing.JFrame {
         }.start();
     }//GEN-LAST:event_btnConectarActionPerformed
 
+    /**
+     * Detecta el evento cuando cambia el item de la tabla seleccionada
+     * @param evt 
+     */
+    private void comboTablasItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_comboTablasItemStateChanged
+        if(comboTablas.getItemCount()>0){
+            cargarDatos(comboBases.getSelectedItem().toString(),comboTablas.getSelectedItem().toString());
+        }
+    }//GEN-LAST:event_comboTablasItemStateChanged
+
+    private void BDItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_BDItemStateChanged
+        //System.out.println("Base de datos cambiada");      
+        if(evt.getStateChange()==ItemEvent.SELECTED){
+            //System.out.println("Seleccionando elemento"); 
+            cargarListaDeTablas(comboBases.getSelectedItem().toString());
+        }else{
+            //System.out.println("Deseleccionando selección");  
+            comboTablas.removeAllItems();
+        }
+        /*if(!borrandoSeleccion){
+            
+            //System.out.println("Seleccionando elemento"); 
+            cargarListaDeTablas(comboBases.getSelectedItem().toString());
+            borrandoSeleccion = true;
+        }else{
+            //System.out.println("Deseleccionando selección");  
+            comboTablas.removeAllItems();
+            borrandoSeleccion = false;
+        }*/
+    }//GEN-LAST:event_BDItemStateChanged
+
     public void limpiarCamposInicio(){
         txtServidor.setText("");
         txtUsuario.setText("");
@@ -590,9 +575,9 @@ public class InterfazGrafica extends javax.swing.JFrame {
         msj.setText(mensaje);
     }
     
-    public void cargarBasesDeDatos(){
+    public void cargarListaDeBases(){
         try{
-            ArrayList<String>lista = conexion.obtenerBasesDeDatos();
+            ArrayList<String>lista = conn.obtenerBasesDeDatos();
             lista.stream().forEach((String nomBase) -> {
                 comboBases.addItem(nomBase);
             });
@@ -601,9 +586,10 @@ public class InterfazGrafica extends javax.swing.JFrame {
         }
     }
     
-    public void cargarTablas(String nomBase){
+    public void cargarListaDeTablas(String nomBase){
+        //System.out.println("Cargando nueva lista de tablas");
         try{
-            ArrayList<String> listaTablas = conexion.obtenerTablas(nomBase);
+            ArrayList<String> listaTablas = conn.obtenerTablas(nomBase);
             listaTablas.stream().forEach((String nomTabla) -> {
                 comboTablas.addItem(nomTabla);
             });
@@ -611,6 +597,18 @@ public class InterfazGrafica extends javax.swing.JFrame {
             info.setText("No se pudo cargar la información del servidor...");
         }
     }
+    
+    public void cargarDatos(String nomBase,String nomTabla){
+        //System.out.println("Base: "+nomBase+ " Tabla: "+nomTabla);
+        try{
+            formato = new FormatoTabla(tabla,conn,nomBase,nomTabla);
+            formato.asignarNombres();
+            formato.mostrarInformacion();
+        }catch(SQLException e){
+            e.printStackTrace();
+        }
+    }
+    
     /**
      * @param args the command line arguments
      */
