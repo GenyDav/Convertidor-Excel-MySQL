@@ -84,19 +84,19 @@ public class InterfazGrafica extends javax.swing.JFrame {
         comboTablas = new javax.swing.JComboBox();
         jLabel3 = new javax.swing.JLabel();
         jPanel10 = new javax.swing.JPanel();
-        jCheckBox1 = new javax.swing.JCheckBox();
+        checkBoxTablas = new javax.swing.JCheckBox();
         jPanel11 = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jList1 = new javax.swing.JList();
-        jButton6 = new javax.swing.JButton();
-        jButton7 = new javax.swing.JButton();
+        seleccionTablas = new javax.swing.JList();
+        btnQuitar = new javax.swing.JButton();
+        btnBorrar = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
         barraProgreso = new javax.swing.JProgressBar();
         info = new javax.swing.JLabel();
-        jButton2 = new javax.swing.JButton();
         jLabel7 = new javax.swing.JLabel();
-        jLabel4 = new javax.swing.JLabel();
-        jLabel9 = new javax.swing.JLabel();
+        jPanel8 = new javax.swing.JPanel();
+        labelRegistros = new javax.swing.JLabel();
+        jButton1 = new javax.swing.JButton();
         jPanel9 = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -124,7 +124,7 @@ public class InterfazGrafica extends javax.swing.JFrame {
         jLabel8.setForeground(new java.awt.Color(255, 255, 255));
         jLabel8.setText("Contraseña");
 
-        txtUsuario.setText("roots");
+        txtUsuario.setText("root");
         txtUsuario.setAutoscrolls(false);
         txtUsuario.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255), 3));
         txtUsuario.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
@@ -281,7 +281,8 @@ public class InterfazGrafica extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButton4)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(btnSalir))
+                .addComponent(btnSalir)
+                .addContainerGap())
         );
 
         jPanel7.setBackground(new java.awt.Color(255, 255, 255));
@@ -321,14 +322,26 @@ public class InterfazGrafica extends javax.swing.JFrame {
         jLabel3.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         jLabel3.setText("Tablas");
 
-        jCheckBox1.setText("Expotar todas las tablas");
+        jPanel10.setBackground(new java.awt.Color(255, 255, 255));
 
-        jList1.setModel(new javax.swing.AbstractListModel() {
+        checkBoxTablas.setBackground(new java.awt.Color(255, 255, 255));
+        checkBoxTablas.setSelected(true);
+        checkBoxTablas.setText("Exportar todas las tablas");
+        checkBoxTablas.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                checkBoxStateChanged(evt);
+            }
+        });
+
+        jScrollPane2.setBorder(null);
+
+        seleccionTablas.setBorder(javax.swing.BorderFactory.createTitledBorder("Seleccionar tablas"));
+        seleccionTablas.setModel(new javax.swing.AbstractListModel() {
             String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
             public int getSize() { return strings.length; }
             public Object getElementAt(int i) { return strings[i]; }
         });
-        jScrollPane2.setViewportView(jList1);
+        jScrollPane2.setViewportView(seleccionTablas);
 
         javax.swing.GroupLayout jPanel11Layout = new javax.swing.GroupLayout(jPanel11);
         jPanel11.setLayout(jPanel11Layout);
@@ -346,9 +359,9 @@ public class InterfazGrafica extends javax.swing.JFrame {
                 .addGap(0, 0, Short.MAX_VALUE))
         );
 
-        jButton6.setText("Quitar tabla(s)");
+        btnQuitar.setText("Quitar tabla(s)");
 
-        jButton7.setText("Borrar todo");
+        btnBorrar.setText("Borrar todo");
 
         javax.swing.GroupLayout jPanel10Layout = new javax.swing.GroupLayout(jPanel10);
         jPanel10.setLayout(jPanel10Layout);
@@ -359,25 +372,25 @@ public class InterfazGrafica extends javax.swing.JFrame {
                 .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jPanel11, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(jPanel10Layout.createSequentialGroup()
-                        .addComponent(jCheckBox1)
+                        .addComponent(checkBoxTablas)
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(jPanel10Layout.createSequentialGroup()
-                        .addComponent(jButton7, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btnBorrar, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jButton6, javax.swing.GroupLayout.DEFAULT_SIZE, 133, Short.MAX_VALUE)))
+                        .addComponent(btnQuitar, javax.swing.GroupLayout.DEFAULT_SIZE, 133, Short.MAX_VALUE)))
                 .addGap(0, 0, 0))
         );
         jPanel10Layout.setVerticalGroup(
             jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel10Layout.createSequentialGroup()
                 .addGap(0, 0, 0)
-                .addComponent(jCheckBox1)
+                .addComponent(checkBoxTablas)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel11, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton6)
-                    .addComponent(jButton7))
+                    .addComponent(btnQuitar)
+                    .addComponent(btnBorrar))
                 .addGap(0, 0, 0))
         );
 
@@ -391,15 +404,31 @@ public class InterfazGrafica extends javax.swing.JFrame {
         info.setBackground(new java.awt.Color(0, 153, 153));
         info.setText("Mensaje");
 
-        jButton2.setText("Seleccionar tabla");
-
         jLabel7.setFont(new java.awt.Font("Arial", 1, 18)); // NOI18N
         jLabel7.setText("Exportar tablas de MySQL a Excel");
 
-        jLabel4.setText("jLabel4");
+        labelRegistros.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        labelRegistros.setText("Registro 1/100 cargado");
 
-        jLabel9.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        jLabel9.setText("Registro 1/100 cargado");
+        jButton1.setText("Seleccionar tabla");
+
+        javax.swing.GroupLayout jPanel8Layout = new javax.swing.GroupLayout(jPanel8);
+        jPanel8.setLayout(jPanel8Layout);
+        jPanel8Layout.setHorizontalGroup(
+            jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel8Layout.createSequentialGroup()
+                .addComponent(jButton1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(labelRegistros, javax.swing.GroupLayout.PREFERRED_SIZE, 335, javax.swing.GroupLayout.PREFERRED_SIZE))
+        );
+        jPanel8Layout.setVerticalGroup(
+            jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel8Layout.createSequentialGroup()
+                .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(labelRegistros, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButton1))
+                .addGap(0, 0, Short.MAX_VALUE))
+        );
 
         javax.swing.GroupLayout panelExportLayout = new javax.swing.GroupLayout(panelExport);
         panelExport.setLayout(panelExportLayout);
@@ -413,7 +442,7 @@ public class InterfazGrafica extends javax.swing.JFrame {
                         .addComponent(barraProgreso, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(panelExportLayout.createSequentialGroup()
                             .addGroup(panelExportLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 506, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 506, Short.MAX_VALUE)
                                 .addGroup(panelExportLayout.createSequentialGroup()
                                     .addGroup(panelExportLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                         .addComponent(jLabel2)
@@ -422,13 +451,7 @@ public class InterfazGrafica extends javax.swing.JFrame {
                                     .addGroup(panelExportLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                         .addComponent(comboBases, 0, 357, Short.MAX_VALUE)
                                         .addComponent(comboTablas, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                                .addGroup(javax.swing.GroupLayout.Alignment.LEADING, panelExportLayout.createSequentialGroup()
-                                    .addComponent(jButton2)
-                                    .addGroup(panelExportLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(jLabel4)
-                                        .addGroup(panelExportLayout.createSequentialGroup()
-                                            .addGap(12, 12, 12)
-                                            .addComponent(jLabel9, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))))
+                                .addComponent(jPanel8, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                             .addGap(24, 24, 24)
                             .addGroup(panelExportLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                 .addComponent(jPanel10, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -441,33 +464,30 @@ public class InterfazGrafica extends javax.swing.JFrame {
         panelExportLayout.setVerticalGroup(
             panelExportLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelExportLayout.createSequentialGroup()
-                .addGap(21, 21, 21)
+                .addGap(30, 30, 30)
                 .addComponent(jLabel7)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(panelExportLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(panelExportLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addGroup(panelExportLayout.createSequentialGroup()
-                            .addGroup(panelExportLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                .addComponent(comboBases, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(jLabel2))
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                            .addGroup(panelExportLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                .addComponent(jLabel3)
-                                .addComponent(comboTablas, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 294, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addComponent(jPanel10, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addComponent(jLabel4))
+                .addGroup(panelExportLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(panelExportLayout.createSequentialGroup()
+                        .addGroup(panelExportLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(comboBases, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel2))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(panelExportLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel3)
+                            .addComponent(comboTablas, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 294, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jPanel10, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelExportLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jLabel9, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jPanel8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(20, 20, 20)
                 .addComponent(barraProgreso, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(info, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addGap(30, 30, 30))
         );
 
         jPanel7.add(panelExport, "card2");
@@ -542,7 +562,7 @@ public class InterfazGrafica extends javax.swing.JFrame {
                     cardLayout.show(jPanel1, "card3");
                 }catch(SQLException sqle){
                     mensaje += "\nFalló el intento de conexión "
-                        + "\nError "
+                        + "\nError MySQL "
                         + sqle.getErrorCode()+": "+sqle.getMessage()+"."
                         + "\nDatos de conexión incorrectos, verifique e intente de nuevo.";
                 }catch(ClassNotFoundException cnf){
@@ -575,6 +595,18 @@ public class InterfazGrafica extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_comboBasesItemStateChanged
 
+    private void checkBoxStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_checkBoxStateChanged
+        if(checkBoxTablas.isSelected()){
+            btnQuitar.setEnabled(false);
+            btnBorrar.setEnabled(false);
+            seleccionTablas.setEnabled(false);
+        }else{
+            btnQuitar.setEnabled(true);
+            btnBorrar.setEnabled(true);
+            seleccionTablas.setEnabled(true);
+        }    
+    }//GEN-LAST:event_checkBoxStateChanged
+
     public void limpiarCamposInicio(){
         txtServidor.setText("");
         txtUsuario.setText("");
@@ -591,9 +623,10 @@ public class InterfazGrafica extends javax.swing.JFrame {
             });
         }catch(SQLException e){
             info.setText("No se pudo cargar la información del servidor "
-            + "(Error " + e.getErrorCode() + ": " + e.getMessage() + ".");
+            + "(Error MySQL " + e.getErrorCode() + ": " + e.getMessage() + ".");
         }catch(Exception ex){
-            info.setText("No se pudo cargar la información ("+ex.getMessage()+")");
+            info.setText("No se pudo cargar la información del servidor ("+ex.getMessage()+")");
+            //ex.printStackTrace();
         }
     }
     
@@ -605,24 +638,25 @@ public class InterfazGrafica extends javax.swing.JFrame {
             });
         }catch(SQLException e){
             info.setText("No se pudo cargar la información "
-            + "(Error " + e.getErrorCode() + ": " + e.getMessage() + ".");
+            + "(Error MySQL " + e.getErrorCode() + ": " + e.getMessage() + ".");
         }catch(Exception ex){
-            info.setText("No se pudo cargar la información ("+ex.getMessage()+")");
+            info.setText("No se pudo cargar la lista de tablas en la base de datos "
+                + comboBases.getSelectedItem()+" ("+ex.toString()+")");
+            //ex.printStackTrace();
         }
     }
     
     public void cargarDatos(String nomBase,String nomTabla){
         try{
-            formato = new FormatoTabla(tabla,conn,nomBase,nomTabla,barraProgreso);
-            //formato.asignarNombresColumnas();
-            //formato.mostrarInformacion();
+            formato = new FormatoTabla(tabla,conn,nomBase,nomTabla,labelRegistros);
             formato.execute();
-            //info.setText(formato.get());
         }catch(SQLException e){
             info.setText("No se pudo cargar la información "
-            + "(Error " + e.getErrorCode() + ": " + e.getMessage() + ".");
+            + "(Error MySQL " + e.getErrorCode() + ": " + e.getMessage() + ".");
         }catch(Exception ex){
-            info.setText("No fue posible cargar los registros de la tabla  ("+ex.toString()+")");
+            info.setText("No fue posible cargar los registros de la tabla "
+                +comboTablas.getSelectedItem()+" ("+ex.toString()+")");
+            //ex.printStackTrace();
         }
     }
     
@@ -647,28 +681,25 @@ public class InterfazGrafica extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JProgressBar barraProgreso;
+    private javax.swing.JButton btnBorrar;
     private javax.swing.JButton btnConectar;
+    private javax.swing.JButton btnQuitar;
     private javax.swing.JButton btnSalir;
+    private javax.swing.JCheckBox checkBoxTablas;
     private javax.swing.JComboBox comboBases;
     private javax.swing.JComboBox comboTablas;
     private javax.swing.JButton guardar_excel;
     private javax.swing.JLabel info;
-    private javax.swing.JButton jButton2;
+    private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
-    private javax.swing.JButton jButton6;
-    private javax.swing.JButton jButton7;
-    private javax.swing.JCheckBox jCheckBox1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
-    private javax.swing.JLabel jLabel9;
-    private javax.swing.JList jList1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel10;
     private javax.swing.JPanel jPanel11;
@@ -678,12 +709,15 @@ public class InterfazGrafica extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel5;
     private javax.swing.JPanel jPanel6;
     private javax.swing.JPanel jPanel7;
+    private javax.swing.JPanel jPanel8;
     private javax.swing.JPanel jPanel9;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JLabel labelRegistros;
     private javax.swing.JTextArea msj;
     private javax.swing.JPanel panelExport;
+    private javax.swing.JList seleccionTablas;
     private javax.swing.JTable tabla;
     private javax.swing.JPasswordField txtClave;
     private javax.swing.JTextField txtServidor;
