@@ -10,6 +10,7 @@ import java.awt.CardLayout;
 import java.awt.event.ItemEvent;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import javax.swing.DefaultListModel;
 import javax.swing.JTable;
 import javax.swing.UIManager;
 
@@ -25,6 +26,10 @@ public class InterfazGrafica extends javax.swing.JFrame {
     private Conexion conn;          // encargado de realizar la conexión y consultas a la base de datos
     private String mensaje;         // mensaje de la pantalla de inicio
     private FormatoTabla formato;   // formato de la tabla en donde se muestran los datos
+    private DefaultListModel modeloLista;
+    private int numTablaSel;            // cantidad de tablas seleccionadas
+    private int tablasEnBase;           // número de tablas en una base de datos
+    private boolean []marcadorTablas;
 
     public InterfazGrafica() {
         initComponents();
@@ -32,6 +37,8 @@ public class InterfazGrafica extends javax.swing.JFrame {
         setTitle("Iniciar conexión");
         setSize(1000,600);
         setLocationRelativeTo(null);
+        
+        jScrollPaneSel.getVerticalScrollBar().setEnabled(false);
         
         cardLayout = (CardLayout) jPanel1.getLayout();
         //Imagen imagen = new Imagen("/imagenes/img_inicio.png");
@@ -45,6 +52,10 @@ public class InterfazGrafica extends javax.swing.JFrame {
        
         tabla.setAutoResizeMode(JTable.AUTO_RESIZE_OFF); // mostrar barra de desplazamiento horizontal
         formato = null;
+        
+        modeloLista = new DefaultListModel();
+        seleccionTablas.setModel(modeloLista);
+        numTablaSel = 0;
     }
     
     /**
@@ -56,6 +67,7 @@ public class InterfazGrafica extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        buttonGroup1 = new javax.swing.ButtonGroup();
         jPanel1 = new javax.swing.JPanel();
         jPanel3 = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
@@ -84,19 +96,21 @@ public class InterfazGrafica extends javax.swing.JFrame {
         comboTablas = new javax.swing.JComboBox();
         jLabel3 = new javax.swing.JLabel();
         jPanel10 = new javax.swing.JPanel();
-        checkBoxTablas = new javax.swing.JCheckBox();
         jPanel11 = new javax.swing.JPanel();
-        jScrollPane2 = new javax.swing.JScrollPane();
+        jScrollPaneSel = new javax.swing.JScrollPane();
         seleccionTablas = new javax.swing.JList();
         btnQuitar = new javax.swing.JButton();
         btnBorrar = new javax.swing.JButton();
+        tablasSel = new javax.swing.JRadioButton();
+        tablasCompletas = new javax.swing.JRadioButton();
         jButton3 = new javax.swing.JButton();
         barraProgreso = new javax.swing.JProgressBar();
         info = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
         jPanel8 = new javax.swing.JPanel();
         labelRegistros = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
+        btnAgregarTabla = new javax.swing.JButton();
+        jLabel4 = new javax.swing.JLabel();
         jPanel9 = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -281,8 +295,7 @@ public class InterfazGrafica extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButton4)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(btnSalir)
-                .addContainerGap())
+                .addComponent(btnSalir))
         );
 
         jPanel7.setBackground(new java.awt.Color(255, 255, 255));
@@ -324,24 +337,17 @@ public class InterfazGrafica extends javax.swing.JFrame {
 
         jPanel10.setBackground(new java.awt.Color(255, 255, 255));
 
-        checkBoxTablas.setBackground(new java.awt.Color(255, 255, 255));
-        checkBoxTablas.setSelected(true);
-        checkBoxTablas.setText("Exportar todas las tablas");
-        checkBoxTablas.addChangeListener(new javax.swing.event.ChangeListener() {
-            public void stateChanged(javax.swing.event.ChangeEvent evt) {
-                checkBoxStateChanged(evt);
-            }
-        });
+        jScrollPaneSel.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        jScrollPaneSel.setEnabled(false);
 
-        jScrollPane2.setBorder(null);
-
-        seleccionTablas.setBorder(javax.swing.BorderFactory.createTitledBorder("Seleccionar tablas"));
+        seleccionTablas.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
         seleccionTablas.setModel(new javax.swing.AbstractListModel() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
+            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5", "Item 1", "Item 2", "Item 3", "Item 4", "Item 5", "Item 1", "Item 2", "Item 3", "Item 4", "Item 5", "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
             public int getSize() { return strings.length; }
             public Object getElementAt(int i) { return strings[i]; }
         });
-        jScrollPane2.setViewportView(seleccionTablas);
+        seleccionTablas.setEnabled(false);
+        jScrollPaneSel.setViewportView(seleccionTablas);
 
         javax.swing.GroupLayout jPanel11Layout = new javax.swing.GroupLayout(jPanel11);
         jPanel11.setLayout(jPanel11Layout);
@@ -349,19 +355,48 @@ public class InterfazGrafica extends javax.swing.JFrame {
             jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel11Layout.createSequentialGroup()
                 .addGap(0, 0, 0)
-                .addComponent(jScrollPane2)
+                .addComponent(jScrollPaneSel)
                 .addGap(0, 0, 0))
         );
         jPanel11Layout.setVerticalGroup(
             jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel11Layout.createSequentialGroup()
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 307, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+            .addComponent(jScrollPaneSel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 282, Short.MAX_VALUE)
         );
 
         btnQuitar.setText("Quitar tabla(s)");
+        btnQuitar.setEnabled(false);
+        btnQuitar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnQuitarActionPerformed(evt);
+            }
+        });
 
         btnBorrar.setText("Borrar todo");
+        btnBorrar.setEnabled(false);
+        btnBorrar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnBorrarActionPerformed(evt);
+            }
+        });
+
+        tablasSel.setBackground(new java.awt.Color(255, 255, 255));
+        buttonGroup1.add(tablasSel);
+        tablasSel.setText("Exportar las tablas seleccionadas");
+        tablasSel.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                tablasSelActionPerformed(evt);
+            }
+        });
+
+        tablasCompletas.setBackground(new java.awt.Color(255, 255, 255));
+        buttonGroup1.add(tablasCompletas);
+        tablasCompletas.setSelected(true);
+        tablasCompletas.setLabel("Exportar todas las tablas de la base");
+        tablasCompletas.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                tablasCompletasActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel10Layout = new javax.swing.GroupLayout(jPanel10);
         jPanel10.setLayout(jPanel10Layout);
@@ -372,22 +407,24 @@ public class InterfazGrafica extends javax.swing.JFrame {
                 .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jPanel11, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(jPanel10Layout.createSequentialGroup()
-                        .addComponent(checkBoxTablas)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(jPanel10Layout.createSequentialGroup()
                         .addComponent(btnBorrar, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(btnQuitar, javax.swing.GroupLayout.DEFAULT_SIZE, 133, Short.MAX_VALUE)))
-                .addGap(0, 0, 0))
+                        .addComponent(btnQuitar, javax.swing.GroupLayout.DEFAULT_SIZE, 149, Short.MAX_VALUE))
+                    .addGroup(jPanel10Layout.createSequentialGroup()
+                        .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(tablasCompletas)
+                            .addComponent(tablasSel))
+                        .addGap(0, 0, Short.MAX_VALUE))))
         );
         jPanel10Layout.setVerticalGroup(
             jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel10Layout.createSequentialGroup()
+                .addComponent(tablasCompletas)
                 .addGap(0, 0, 0)
-                .addComponent(checkBoxTablas)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(tablasSel)
+                .addGap(0, 0, 0)
                 .addComponent(jPanel11, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnQuitar)
                     .addComponent(btnBorrar))
@@ -408,16 +445,22 @@ public class InterfazGrafica extends javax.swing.JFrame {
         jLabel7.setText("Exportar tablas de MySQL a Excel");
 
         labelRegistros.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        labelRegistros.setText("Registro 1/100 cargado");
+        labelRegistros.setText("Buscando registros...");
 
-        jButton1.setText("Seleccionar tabla");
+        btnAgregarTabla.setText("Seleccionar tabla");
+        btnAgregarTabla.setEnabled(false);
+        btnAgregarTabla.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAgregarTablaActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel8Layout = new javax.swing.GroupLayout(jPanel8);
         jPanel8.setLayout(jPanel8Layout);
         jPanel8Layout.setHorizontalGroup(
             jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel8Layout.createSequentialGroup()
-                .addComponent(jButton1)
+                .addComponent(btnAgregarTabla)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(labelRegistros, javax.swing.GroupLayout.PREFERRED_SIZE, 335, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
@@ -426,21 +469,26 @@ public class InterfazGrafica extends javax.swing.JFrame {
             .addGroup(jPanel8Layout.createSequentialGroup()
                 .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(labelRegistros, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton1))
+                    .addComponent(btnAgregarTabla))
                 .addGap(0, 0, Short.MAX_VALUE))
         );
+
+        jLabel4.setFont(new java.awt.Font("Dialog", 1, 13)); // NOI18N
+        jLabel4.setText("Opciones de exportación");
 
         javax.swing.GroupLayout panelExportLayout = new javax.swing.GroupLayout(panelExport);
         panelExport.setLayout(panelExportLayout);
         panelExportLayout.setHorizontalGroup(
             panelExportLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelExportLayout.createSequentialGroup()
-                .addGap(42, 42, 42)
-                .addGroup(panelExportLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel7)
-                    .addGroup(panelExportLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addComponent(barraProgreso, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGroup(panelExportLayout.createSequentialGroup()
+                .addGap(36, 36, 36)
+                .addGroup(panelExportLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(barraProgreso, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(panelExportLayout.createSequentialGroup()
+                        .addGap(6, 6, 6)
+                        .addComponent(info, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(panelExportLayout.createSequentialGroup()
+                        .addGroup(panelExportLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(panelExportLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                                 .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 506, Short.MAX_VALUE)
                                 .addGroup(panelExportLayout.createSequentialGroup()
@@ -452,20 +500,22 @@ public class InterfazGrafica extends javax.swing.JFrame {
                                         .addComponent(comboBases, 0, 357, Short.MAX_VALUE)
                                         .addComponent(comboTablas, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                                 .addComponent(jPanel8, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                            .addGap(24, 24, 24)
+                            .addComponent(jLabel7))
+                        .addGap(24, 24, 24)
+                        .addGroup(panelExportLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel4)
                             .addGroup(panelExportLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                 .addComponent(jPanel10, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                        .addGroup(panelExportLayout.createSequentialGroup()
-                            .addGap(6, 6, 6)
-                            .addComponent(info, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
-                .addContainerGap(68, Short.MAX_VALUE))
+                                .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))))
+                .addContainerGap(58, Short.MAX_VALUE))
         );
         panelExportLayout.setVerticalGroup(
             panelExportLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelExportLayout.createSequentialGroup()
                 .addGap(30, 30, 30)
-                .addComponent(jLabel7)
+                .addGroup(panelExportLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel7)
+                    .addComponent(jLabel4))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelExportLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(panelExportLayout.createSequentialGroup()
@@ -581,10 +631,11 @@ public class InterfazGrafica extends javax.swing.JFrame {
      * @param evt 
      */
     private void comboTablasItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_comboTablasItemStateChanged
-        if(evt.getStateChange()==ItemEvent.SELECTED)
+        if(evt.getStateChange()==ItemEvent.SELECTED){
             if(comboTablas.getItemCount()>0){
                 cargarDatos(comboBases.getSelectedItem().toString(),comboTablas.getSelectedItem().toString());
             }
+        }
     }//GEN-LAST:event_comboTablasItemStateChanged
 
     private void comboBasesItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_comboBasesItemStateChanged
@@ -595,17 +646,62 @@ public class InterfazGrafica extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_comboBasesItemStateChanged
 
-    private void checkBoxStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_checkBoxStateChanged
-        if(checkBoxTablas.isSelected()){
-            btnQuitar.setEnabled(false);
-            btnBorrar.setEnabled(false);
-            seleccionTablas.setEnabled(false);
-        }else{
-            btnQuitar.setEnabled(true);
-            btnBorrar.setEnabled(true);
-            seleccionTablas.setEnabled(true);
-        }    
-    }//GEN-LAST:event_checkBoxStateChanged
+    private void tablasCompletasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tablasCompletasActionPerformed
+        btnQuitar.setEnabled(false);
+        btnBorrar.setEnabled(false);
+        btnAgregarTabla.setEnabled(false);
+        seleccionTablas.setEnabled(false);
+        jScrollPaneSel.getVerticalScrollBar().setEnabled(false);
+    }//GEN-LAST:event_tablasCompletasActionPerformed
+
+    private void tablasSelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tablasSelActionPerformed
+        btnQuitar.setEnabled(true);
+        btnBorrar.setEnabled(true);
+        btnAgregarTabla.setEnabled(true);
+        seleccionTablas.setEnabled(true);
+        jScrollPaneSel.getVerticalScrollBar().setEnabled(true);
+    }//GEN-LAST:event_tablasSelActionPerformed
+
+    private void btnQuitarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnQuitarActionPerformed
+        int []tablasBorradas = seleccionTablas.getSelectedIndices();
+        int acomodo = 0;            // para el desfase que ocurre al eliminar elementos de la lista
+        for(int t:tablasBorradas){
+            //System.out.println(t);
+            System.out.println(modeloLista.toString());
+            
+            ElementoLista e = (ElementoLista)modeloLista.getElementAt(0);
+            System.out.println(e.getPosicion());
+            marcadorTablas[e.getPosicion()] = false;    
+            for(int i=0;i<marcadorTablas.length;i++){
+                System.out.print("["+marcadorTablas[i]+"]");
+            }System.out.println();
+            modeloLista.remove(t-acomodo);
+            
+            //System.out.println(t-acomodo);
+            acomodo++;
+        }
+    }//GEN-LAST:event_btnQuitarActionPerformed
+
+    private void btnBorrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBorrarActionPerformed
+        modeloLista.clear();
+        numTablaSel = 0;
+    }//GEN-LAST:event_btnBorrarActionPerformed
+
+    private void btnAgregarTablaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarTablaActionPerformed
+        if(!marcadorTablas[comboTablas.getSelectedIndex()]){    
+            modeloLista.addElement(new ElementoLista(comboTablas.getSelectedItem().toString(),comboTablas.getSelectedIndex()));
+            numTablaSel++;
+            seleccionTablas.setSelectedIndex(numTablaSel-1);
+            
+            marcadorTablas[comboTablas.getSelectedIndex()] = true;
+            for(int i=0;i<marcadorTablas.length;i++){
+                System.out.print("["+marcadorTablas[i]+"]");
+            }
+            System.out.println();
+            //btnAgregarTabla.setEnabled(false);
+            btnAgregarTabla.setToolTipText("Tabla agregada a la lista de exportación");   
+        }
+    }//GEN-LAST:event_btnAgregarTablaActionPerformed
 
     public void limpiarCamposInicio(){
         txtServidor.setText("");
@@ -634,15 +730,21 @@ public class InterfazGrafica extends javax.swing.JFrame {
         try{
             ArrayList<String> listaTablas = conn.obtenerTablas(nomBase);
             listaTablas.stream().forEach((String nomTabla) -> {
-                comboTablas.addItem(nomTabla);
+                comboTablas.addItem(nomTabla);           
             });
+            System.out.println(listaTablas.size());
+            marcadorTablas = new boolean[listaTablas.size()];
+            for(int i=0;i<listaTablas.size();i++){
+                marcadorTablas[i] = false;
+                //System.out.println(i);
+            }
         }catch(SQLException e){
             info.setText("No se pudo cargar la información "
             + "(Error MySQL " + e.getErrorCode() + ": " + e.getMessage() + ".");
         }catch(Exception ex){
             info.setText("No se pudo cargar la lista de tablas en la base de datos "
-                + comboBases.getSelectedItem()+" ("+ex.toString()+")");
-            //ex.printStackTrace();
+            + comboBases.getSelectedItem()+" ("+ex.toString()+")");
+            ex.printStackTrace();
         }
     }
     
@@ -681,21 +783,22 @@ public class InterfazGrafica extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JProgressBar barraProgreso;
+    private javax.swing.JButton btnAgregarTabla;
     private javax.swing.JButton btnBorrar;
     private javax.swing.JButton btnConectar;
     private javax.swing.JButton btnQuitar;
     private javax.swing.JButton btnSalir;
-    private javax.swing.JCheckBox checkBoxTablas;
+    private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JComboBox comboBases;
     private javax.swing.JComboBox comboTablas;
     private javax.swing.JButton guardar_excel;
     private javax.swing.JLabel info;
-    private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
@@ -712,13 +815,15 @@ public class InterfazGrafica extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel8;
     private javax.swing.JPanel jPanel9;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JScrollPane jScrollPaneSel;
     private javax.swing.JLabel labelRegistros;
     private javax.swing.JTextArea msj;
     private javax.swing.JPanel panelExport;
     private javax.swing.JList seleccionTablas;
     private javax.swing.JTable tabla;
+    private javax.swing.JRadioButton tablasCompletas;
+    private javax.swing.JRadioButton tablasSel;
     private javax.swing.JPasswordField txtClave;
     private javax.swing.JTextField txtServidor;
     private javax.swing.JTextField txtUsuario;
