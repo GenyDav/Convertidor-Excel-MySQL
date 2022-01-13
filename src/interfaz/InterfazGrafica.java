@@ -11,6 +11,7 @@ import java.awt.event.ItemEvent;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import javax.swing.DefaultListModel;
+import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.UIManager;
 
@@ -108,9 +109,12 @@ public class InterfazGrafica extends javax.swing.JFrame {
         info = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
         jPanel8 = new javax.swing.JPanel();
-        labelRegistros = new javax.swing.JLabel();
         btnAgregarTabla = new javax.swing.JButton();
         jLabel4 = new javax.swing.JLabel();
+        jPanel14 = new javax.swing.JPanel();
+        labelRegistros = new javax.swing.JLabel();
+        labelSelTabla = new javax.swing.JLabel();
+        jSeparator1 = new javax.swing.JSeparator();
         jPanel9 = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -240,7 +244,7 @@ public class InterfazGrafica extends javax.swing.JFrame {
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                .addGap(0, 147, Short.MAX_VALUE)
+                .addGap(0, 171, Short.MAX_VALUE)
                 .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, 345, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -409,7 +413,7 @@ public class InterfazGrafica extends javax.swing.JFrame {
                     .addGroup(jPanel10Layout.createSequentialGroup()
                         .addComponent(btnBorrar, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(btnQuitar, javax.swing.GroupLayout.DEFAULT_SIZE, 149, Short.MAX_VALUE))
+                        .addComponent(btnQuitar, javax.swing.GroupLayout.DEFAULT_SIZE, 134, Short.MAX_VALUE))
                     .addGroup(jPanel10Layout.createSequentialGroup()
                         .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(tablasCompletas)
@@ -444,9 +448,6 @@ public class InterfazGrafica extends javax.swing.JFrame {
         jLabel7.setFont(new java.awt.Font("Arial", 1, 18)); // NOI18N
         jLabel7.setText("Exportar tablas de MySQL a Excel");
 
-        labelRegistros.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        labelRegistros.setText("Buscando registros...");
-
         btnAgregarTabla.setText("Seleccionar tabla");
         btnAgregarTabla.setEnabled(false);
         btnAgregarTabla.addActionListener(new java.awt.event.ActionListener() {
@@ -461,20 +462,34 @@ public class InterfazGrafica extends javax.swing.JFrame {
             jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel8Layout.createSequentialGroup()
                 .addComponent(btnAgregarTabla)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(labelRegistros, javax.swing.GroupLayout.PREFERRED_SIZE, 335, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(212, Short.MAX_VALUE))
         );
         jPanel8Layout.setVerticalGroup(
             jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel8Layout.createSequentialGroup()
-                .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(labelRegistros, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnAgregarTabla))
-                .addGap(0, 0, Short.MAX_VALUE))
+            .addComponent(btnAgregarTabla)
         );
 
         jLabel4.setFont(new java.awt.Font("Dialog", 1, 13)); // NOI18N
         jLabel4.setText("Opciones de exportación");
+
+        labelRegistros.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        labelRegistros.setText("Buscando registros...");
+
+        javax.swing.GroupLayout jPanel14Layout = new javax.swing.GroupLayout(jPanel14);
+        jPanel14.setLayout(jPanel14Layout);
+        jPanel14Layout.setHorizontalGroup(
+            jPanel14Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel14Layout.createSequentialGroup()
+                .addContainerGap(28, Short.MAX_VALUE)
+                .addComponent(labelRegistros, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
+        );
+        jPanel14Layout.setVerticalGroup(
+            jPanel14Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel14Layout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(labelRegistros, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
+        );
 
         javax.swing.GroupLayout panelExportLayout = new javax.swing.GroupLayout(panelExport);
         panelExport.setLayout(panelExportLayout);
@@ -482,32 +497,37 @@ public class InterfazGrafica extends javax.swing.JFrame {
             panelExportLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelExportLayout.createSequentialGroup()
                 .addGap(36, 36, 36)
-                .addGroup(panelExportLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(barraProgreso, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(panelExportLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(info, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(panelExportLayout.createSequentialGroup()
-                        .addGap(6, 6, 6)
-                        .addComponent(info, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(panelExportLayout.createSequentialGroup()
-                        .addGroup(panelExportLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(panelExportLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 506, Short.MAX_VALUE)
-                                .addGroup(panelExportLayout.createSequentialGroup()
-                                    .addGroup(panelExportLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(jLabel2)
-                                        .addComponent(jLabel3))
-                                    .addGap(49, 49, 49)
-                                    .addGroup(panelExportLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                        .addComponent(comboBases, 0, 357, Short.MAX_VALUE)
-                                        .addComponent(comboTablas, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                                .addComponent(jPanel8, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                            .addComponent(jLabel7))
-                        .addGap(24, 24, 24)
-                        .addGroup(panelExportLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel4)
-                            .addGroup(panelExportLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(jPanel10, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))))
-                .addContainerGap(58, Short.MAX_VALUE))
+                        .addGroup(panelExportLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(labelSelTabla, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(barraProgreso, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, panelExportLayout.createSequentialGroup()
+                                .addGroup(panelExportLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(panelExportLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                        .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 518, Short.MAX_VALUE)
+                                        .addGroup(panelExportLayout.createSequentialGroup()
+                                            .addGroup(panelExportLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                .addComponent(jLabel2)
+                                                .addComponent(jLabel3))
+                                            .addGap(61, 61, 61)
+                                            .addGroup(panelExportLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                                .addComponent(comboBases, 0, 357, Short.MAX_VALUE)
+                                                .addComponent(comboTablas, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                                        .addGroup(panelExportLayout.createSequentialGroup()
+                                            .addComponent(jPanel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                            .addGap(0, 0, 0)
+                                            .addComponent(jPanel14, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                    .addComponent(jLabel7))
+                                .addGap(24, 24, 24)
+                                .addGroup(panelExportLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(jLabel4)
+                                    .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(jPanel10, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                            .addComponent(jSeparator1))
+                        .addGap(0, 49, Short.MAX_VALUE)))
+                .addContainerGap())
         );
         panelExportLayout.setVerticalGroup(
             panelExportLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -530,14 +550,19 @@ public class InterfazGrafica extends javax.swing.JFrame {
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 294, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jPanel10, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(panelExportLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(20, 20, 20)
+                .addGroup(panelExportLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jPanel8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButton3)
+                    .addComponent(jPanel14, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(0, 0, 0)
+                .addComponent(labelSelTabla, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, 0)
+                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, 0)
                 .addComponent(barraProgreso, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(0, 0, 0)
                 .addComponent(info, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(30, 30, 30))
+                .addContainerGap())
         );
 
         jPanel7.add(panelExport, "card2");
@@ -550,7 +575,7 @@ public class InterfazGrafica extends javax.swing.JFrame {
         );
         jPanel9Layout.setVerticalGroup(
             jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 600, Short.MAX_VALUE)
+            .addGap(0, 624, Short.MAX_VALUE)
         );
 
         jPanel7.add(jPanel9, "card3");
@@ -626,26 +651,6 @@ public class InterfazGrafica extends javax.swing.JFrame {
         }.start();
     }//GEN-LAST:event_btnConectarActionPerformed
 
-    /**
-     * Detecta el evento cuando cambia el item de la tabla seleccionada
-     * @param evt 
-     */
-    private void comboTablasItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_comboTablasItemStateChanged
-        if(evt.getStateChange()==ItemEvent.SELECTED){
-            if(comboTablas.getItemCount()>0){
-                cargarDatos(comboBases.getSelectedItem().toString(),comboTablas.getSelectedItem().toString());
-            }
-        }
-    }//GEN-LAST:event_comboTablasItemStateChanged
-
-    private void comboBasesItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_comboBasesItemStateChanged
-        if(evt.getStateChange()==ItemEvent.SELECTED){ 
-            cargarListaDeTablas(comboBases.getSelectedItem().toString());
-        }else{  
-            comboTablas.removeAllItems();
-        }
-    }//GEN-LAST:event_comboBasesItemStateChanged
-
     private void tablasCompletasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tablasCompletasActionPerformed
         btnQuitar.setEnabled(false);
         btnBorrar.setEnabled(false);
@@ -655,37 +660,36 @@ public class InterfazGrafica extends javax.swing.JFrame {
     }//GEN-LAST:event_tablasCompletasActionPerformed
 
     private void tablasSelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tablasSelActionPerformed
-        btnQuitar.setEnabled(true);
-        btnBorrar.setEnabled(true);
+        //btnQuitar.setEnabled(true);
+        //btnBorrar.setEnabled(true);
         btnAgregarTabla.setEnabled(true);
         seleccionTablas.setEnabled(true);
         jScrollPaneSel.getVerticalScrollBar().setEnabled(true);
     }//GEN-LAST:event_tablasSelActionPerformed
 
-    private void btnQuitarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnQuitarActionPerformed
-        int []tablasBorradas = seleccionTablas.getSelectedIndices();
-        int acomodo = 0;            // para el desfase que ocurre al eliminar elementos de la lista
-        for(int t:tablasBorradas){
-            //System.out.println(t);
-            System.out.println(modeloLista.toString());
-            
-            ElementoLista e = (ElementoLista)modeloLista.getElementAt(0);
-            System.out.println(e.getPosicion());
-            marcadorTablas[e.getPosicion()] = false;    
-            for(int i=0;i<marcadorTablas.length;i++){
-                System.out.print("["+marcadorTablas[i]+"]");
-            }System.out.println();
-            modeloLista.remove(t-acomodo);
-            
-            //System.out.println(t-acomodo);
-            acomodo++;
+    /**
+     * Detecta el evento cuando cambia el item de la tabla seleccionada
+     * @param evt 
+     */
+    private void comboTablasItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_comboTablasItemStateChanged
+        if(evt.getStateChange()==ItemEvent.SELECTED){
+            if(comboTablas.getItemCount()>0){
+                cargarDatos(comboBases.getSelectedItem().toString(),comboTablas.getSelectedItem().toString());
+            }
+            labelSelTabla.setText("");
         }
-    }//GEN-LAST:event_btnQuitarActionPerformed
+    }//GEN-LAST:event_comboTablasItemStateChanged
 
-    private void btnBorrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBorrarActionPerformed
-        modeloLista.clear();
-        numTablaSel = 0;
-    }//GEN-LAST:event_btnBorrarActionPerformed
+    private void comboBasesItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_comboBasesItemStateChanged
+        if(evt.getStateChange()==ItemEvent.SELECTED){
+            cargarListaDeTablas(comboBases.getSelectedItem().toString());
+            labelSelTabla.setText("");
+        }else{
+            comboTablas.removeAllItems();
+            modeloLista.clear();
+            numTablaSel = 0;
+        }
+    }//GEN-LAST:event_comboBasesItemStateChanged
 
     private void btnAgregarTablaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarTablaActionPerformed
         if(!marcadorTablas[comboTablas.getSelectedIndex()]){    
@@ -698,10 +702,66 @@ public class InterfazGrafica extends javax.swing.JFrame {
                 System.out.print("["+marcadorTablas[i]+"]");
             }
             System.out.println();
-            //btnAgregarTabla.setEnabled(false);
-            btnAgregarTabla.setToolTipText("Tabla agregada a la lista de exportación");   
+            labelSelTabla.setText("Tabla agregada a la lista de exportación");
+            btnQuitar.setEnabled(true);
+            btnBorrar.setEnabled(true);
+        }else{
+            labelSelTabla.setText("La tabla ya está en la lista de exportación");
         }
     }//GEN-LAST:event_btnAgregarTablaActionPerformed
+
+    private void btnBorrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBorrarActionPerformed
+        int resp = JOptionPane.showConfirmDialog(
+            jPanel1, 
+            "Todas las tablas en la lista se \nborrarán. ¿Continuar?",
+            "¿Borrar todo?", 
+            JOptionPane.OK_CANCEL_OPTION,
+            JOptionPane.QUESTION_MESSAGE
+        );
+        if(resp==0){
+            numTablaSel = 0;
+            ElementoLista e;
+            for(int i=modeloLista.getSize()-1; i>=0; i--){
+                e = (ElementoLista)modeloLista.getElementAt(i);
+                System.out.println(e.getNombre());
+                marcadorTablas[e.getPosicion()] = false;
+                for(int k=0;k<marcadorTablas.length;k++){
+                    System.out.print("["+marcadorTablas[k]+"]");
+                }System.out.println();
+            }
+            modeloLista.clear();
+            btnBorrar.setEnabled(false);
+            btnQuitar.setEnabled(false);
+        }
+    }//GEN-LAST:event_btnBorrarActionPerformed
+
+    private void btnQuitarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnQuitarActionPerformed
+        int []tablasBorradas = seleccionTablas.getSelectedIndices();
+        int acomodo = 0;            // para el desfase que ocurre al eliminar elementos de la lista
+        for(int t:tablasBorradas){
+            //System.out.println(t);
+            System.out.println(modeloLista.toString());
+            
+            ElementoLista e = (ElementoLista)modeloLista.getElementAt(t-acomodo);
+            System.out.println(e.getPosicion());
+            marcadorTablas[e.getPosicion()] = false;    
+            for(int i=0;i<marcadorTablas.length;i++){
+                System.out.print("["+marcadorTablas[i]+"]");
+            }System.out.println();
+            modeloLista.remove(t-acomodo);
+            //System.out.println(t-acomodo);
+            acomodo++;
+        }
+        if(tablasBorradas.length>1){
+            labelSelTabla.setText("Tablas borradas de la lista de exportación");
+        }else{
+            labelSelTabla.setText("Tabla borrada de la lista de exportación");
+        }
+        if(modeloLista.isEmpty()){
+            btnQuitar.setEnabled(false);
+            btnBorrar.setEnabled(false);
+        }
+    }//GEN-LAST:event_btnQuitarActionPerformed
 
     public void limpiarCamposInicio(){
         txtServidor.setText("");
@@ -806,6 +866,7 @@ public class InterfazGrafica extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel10;
     private javax.swing.JPanel jPanel11;
+    private javax.swing.JPanel jPanel14;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
@@ -817,7 +878,9 @@ public class InterfazGrafica extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPaneSel;
+    private javax.swing.JSeparator jSeparator1;
     private javax.swing.JLabel labelRegistros;
+    private javax.swing.JLabel labelSelTabla;
     private javax.swing.JTextArea msj;
     private javax.swing.JPanel panelExport;
     private javax.swing.JList seleccionTablas;
