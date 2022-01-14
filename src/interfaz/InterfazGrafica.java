@@ -10,6 +10,8 @@ import java.awt.CardLayout;
 import java.awt.event.ItemEvent;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
@@ -31,6 +33,8 @@ public class InterfazGrafica extends javax.swing.JFrame {
     private int numTablaSel;            // cantidad de tablas seleccionadas
     private int tablasEnBase;           // número de tablas en una base de datos
     private boolean []marcadorTablas;
+    private int indiceTablaAct;
+    private boolean cambioCancelado;
 
     public InterfazGrafica() {
         initComponents();
@@ -57,6 +61,8 @@ public class InterfazGrafica extends javax.swing.JFrame {
         modeloLista = new DefaultListModel();
         seleccionTablas.setModel(modeloLista);
         numTablaSel = 0;
+        indiceTablaAct = 0;
+        cambioCancelado = false;
     }
     
     /**
@@ -311,6 +317,11 @@ public class InterfazGrafica extends javax.swing.JFrame {
         comboBases.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 comboBasesItemStateChanged(evt);
+            }
+        });
+        comboBases.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                comboBasesMouseClicked(evt);
             }
         });
 
@@ -681,13 +692,29 @@ public class InterfazGrafica extends javax.swing.JFrame {
     }//GEN-LAST:event_comboTablasItemStateChanged
 
     private void comboBasesItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_comboBasesItemStateChanged
-        if(evt.getStateChange()==ItemEvent.SELECTED){
-            cargarListaDeTablas(comboBases.getSelectedItem().toString());
-            labelSelTabla.setText("");
+        if(modeloLista.isEmpty()){
+            if(evt.getStateChange()==ItemEvent.SELECTED){
+                cargarListaDeTablas(comboBases.getSelectedItem().toString());
+                labelSelTabla.setText("");
+            }else{         
+                comboTablas.removeAllItems();
+            }
         }else{
-            comboTablas.removeAllItems();
-            modeloLista.clear();
-            numTablaSel = 0;
+            if(!cambioCancelado){
+                if(evt.getStateChange()==ItemEvent.SELECTED){
+                    comboBases.hidePopup();
+                    System.out.println("Ocultado");
+                    
+                    if(limpiarSeleccionTablas("¿Cambiar la base de datos activa?")==0){
+                        comboTablas.removeAllItems();
+                        cargarListaDeTablas(comboBases.getSelectedItem().toString());
+                        labelSelTabla.setText("");
+                    }else{
+                        cambioCancelado = true;
+                        comboBases.setSelectedIndex(indiceTablaAct);             
+                    }               
+                }
+            }
         }
     }//GEN-LAST:event_comboBasesItemStateChanged
 
@@ -698,10 +725,9 @@ public class InterfazGrafica extends javax.swing.JFrame {
             seleccionTablas.setSelectedIndex(numTablaSel-1);
             
             marcadorTablas[comboTablas.getSelectedIndex()] = true;
-            for(int i=0;i<marcadorTablas.length;i++){
+            /*for(int i=0;i<marcadorTablas.length;i++){
                 System.out.print("["+marcadorTablas[i]+"]");
-            }
-            System.out.println();
+            }System.out.println();*/
             labelSelTabla.setText("Tabla agregada a la lista de exportación");
             btnQuitar.setEnabled(true);
             btnBorrar.setEnabled(true);
@@ -711,7 +737,7 @@ public class InterfazGrafica extends javax.swing.JFrame {
     }//GEN-LAST:event_btnAgregarTablaActionPerformed
 
     private void btnBorrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBorrarActionPerformed
-        int resp = JOptionPane.showConfirmDialog(
+        /*int resp = JOptionPane.showConfirmDialog(
             jPanel1, 
             "Todas las tablas en la lista se \nborrarán. ¿Continuar?",
             "¿Borrar todo?", 
@@ -723,16 +749,15 @@ public class InterfazGrafica extends javax.swing.JFrame {
             ElementoLista e;
             for(int i=modeloLista.getSize()-1; i>=0; i--){
                 e = (ElementoLista)modeloLista.getElementAt(i);
-                System.out.println(e.getNombre());
+                //System.out.println(e.getNombre());
                 marcadorTablas[e.getPosicion()] = false;
-                for(int k=0;k<marcadorTablas.length;k++){
-                    System.out.print("["+marcadorTablas[k]+"]");
-                }System.out.println();
             }
             modeloLista.clear();
             btnBorrar.setEnabled(false);
             btnQuitar.setEnabled(false);
-        }
+        }*/
+        limpiarSeleccionTablas("¿Borrar todo?");
+        labelSelTabla.setText("Selección de tablas borrada");
     }//GEN-LAST:event_btnBorrarActionPerformed
 
     private void btnQuitarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnQuitarActionPerformed
@@ -740,22 +765,34 @@ public class InterfazGrafica extends javax.swing.JFrame {
         int acomodo = 0;            // para el desfase que ocurre al eliminar elementos de la lista
         for(int t:tablasBorradas){
             //System.out.println(t);
-            System.out.println(modeloLista.toString());
+            //System.out.println(modeloLista.toString());
             
             ElementoLista e = (ElementoLista)modeloLista.getElementAt(t-acomodo);
-            System.out.println(e.getPosicion());
+            //System.out.println(e.getPosicion());
             marcadorTablas[e.getPosicion()] = false;    
-            for(int i=0;i<marcadorTablas.length;i++){
+            /*for(int i=0;i<marcadorTablas.length;i++){
                 System.out.print("["+marcadorTablas[i]+"]");
-            }System.out.println();
+            }System.out.println();*/
             modeloLista.remove(t-acomodo);
+            numTablaSel--;
             //System.out.println(t-acomodo);
             acomodo++;
         }
+        //seleccionTablas.setSelectedIndex(numTablaSel-1);
         if(tablasBorradas.length>1){
             labelSelTabla.setText("Tablas borradas de la lista de exportación");
+            if(!modeloLista.isEmpty()){
+                seleccionTablas.setSelectedIndex(0);
+            }
         }else{
             labelSelTabla.setText("Tabla borrada de la lista de exportación");
+            //System.out.println(tablasBorradas[0]);
+            //System.out.println(modeloLista.getSize()-1);
+            if(tablasBorradas[0]==modeloLista.getSize()){   // si el elemento borrado es el último de la lista
+                seleccionTablas.setSelectedIndex(modeloLista.getSize()-1);
+            }else{
+                seleccionTablas.setSelectedIndex(tablasBorradas[0]);    // selec. el elemento sig a eliminado
+            }
         }
         if(modeloLista.isEmpty()){
             btnQuitar.setEnabled(false);
@@ -763,6 +800,37 @@ public class InterfazGrafica extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btnQuitarActionPerformed
 
+    private void comboBasesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_comboBasesMouseClicked
+        cambioCancelado = false; // reiniciar el valor de la variable cuando el usuario
+                                // quiere cambiar de tabla pero canceló otro cambio antes
+    }//GEN-LAST:event_comboBasesMouseClicked
+
+    public int limpiarSeleccionTablas(String titulo){
+        int resp = JOptionPane.showConfirmDialog(
+            jPanel1, 
+            "Todas las tablas en la lista se \nborrarán. ¿Continuar?",
+            titulo, 
+            JOptionPane.OK_CANCEL_OPTION,
+            JOptionPane.QUESTION_MESSAGE
+        );
+        if(resp==0){
+            numTablaSel = 0;
+            ElementoLista e;
+            for(int i=modeloLista.getSize()-1; i>=0; i--){
+                e = (ElementoLista)modeloLista.getElementAt(i);
+                //System.out.println(e.getNombre());
+                marcadorTablas[e.getPosicion()] = false;
+                /*for(int k=0;k<marcadorTablas.length;k++){
+                    System.out.print("["+marcadorTablas[k]+"]");
+                }System.out.println();*/
+            }
+            modeloLista.clear();
+            btnBorrar.setEnabled(false);
+            btnQuitar.setEnabled(false);
+        }
+        return resp;
+    }
+    
     public void limpiarCamposInicio(){
         txtServidor.setText("");
         txtUsuario.setText("");
