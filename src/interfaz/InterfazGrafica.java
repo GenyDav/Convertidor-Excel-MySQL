@@ -8,14 +8,15 @@ package interfaz;
 import conexion.Conexion;
 import java.awt.CardLayout;
 import java.awt.event.ItemEvent;
+import java.io.File;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
+import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.UIManager;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 /**
  *
@@ -447,6 +448,11 @@ public class InterfazGrafica extends javax.swing.JFrame {
         );
 
         jButton3.setText("Exportar");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
 
         barraProgreso.setToolTipText("");
         barraProgreso.setValue(67);
@@ -671,8 +677,6 @@ public class InterfazGrafica extends javax.swing.JFrame {
     }//GEN-LAST:event_tablasCompletasActionPerformed
 
     private void tablasSelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tablasSelActionPerformed
-        //btnQuitar.setEnabled(true);
-        //btnBorrar.setEnabled(true);
         btnAgregarTabla.setEnabled(true);
         seleccionTablas.setEnabled(true);
         jScrollPaneSel.getVerticalScrollBar().setEnabled(true);
@@ -702,9 +706,7 @@ public class InterfazGrafica extends javax.swing.JFrame {
         }else{
             if(!cambioCancelado){
                 if(evt.getStateChange()==ItemEvent.SELECTED){
-                    comboBases.hidePopup();
-                    System.out.println("Ocultado");
-                    
+                    comboBases.hidePopup();                  
                     if(limpiarSeleccionTablas("¿Cambiar la base de datos activa?")==0){
                         comboTablas.removeAllItems();
                         cargarListaDeTablas(comboBases.getSelectedItem().toString());
@@ -737,25 +739,6 @@ public class InterfazGrafica extends javax.swing.JFrame {
     }//GEN-LAST:event_btnAgregarTablaActionPerformed
 
     private void btnBorrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBorrarActionPerformed
-        /*int resp = JOptionPane.showConfirmDialog(
-            jPanel1, 
-            "Todas las tablas en la lista se \nborrarán. ¿Continuar?",
-            "¿Borrar todo?", 
-            JOptionPane.OK_CANCEL_OPTION,
-            JOptionPane.QUESTION_MESSAGE
-        );
-        if(resp==0){
-            numTablaSel = 0;
-            ElementoLista e;
-            for(int i=modeloLista.getSize()-1; i>=0; i--){
-                e = (ElementoLista)modeloLista.getElementAt(i);
-                //System.out.println(e.getNombre());
-                marcadorTablas[e.getPosicion()] = false;
-            }
-            modeloLista.clear();
-            btnBorrar.setEnabled(false);
-            btnQuitar.setEnabled(false);
-        }*/
         limpiarSeleccionTablas("¿Borrar todo?");
         labelSelTabla.setText("Selección de tablas borrada");
     }//GEN-LAST:event_btnBorrarActionPerformed
@@ -805,6 +788,22 @@ public class InterfazGrafica extends javax.swing.JFrame {
                                 // quiere cambiar de tabla pero canceló otro cambio antes
     }//GEN-LAST:event_comboBasesMouseClicked
 
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        JFileChooser fc = new JFileChooser();
+        //int seleccion = fc.showDialog(jPanel1, "Exportar");
+        fc.setSelectedFile(new File("archivo.xlsx"));
+        fc.setFileFilter(new FileNameExtensionFilter("Libro de Excel (*.xlsx)","xlsx"));
+        fc.setFileFilter(new FileNameExtensionFilter("Libro de Excel 97-2003 (*.xls)","xls"));
+        
+        
+        int seleccion = fc.showSaveDialog(jPanel1);      
+        if(seleccion==JFileChooser.APPROVE_OPTION){
+            System.out.println(fc.getSelectedFile().toString());
+            System.out.println(fc.getSelectedFile().getName());
+            System.out.println(fc.getFileFilter().getDescription());
+        }
+    }//GEN-LAST:event_jButton3ActionPerformed
+
     public int limpiarSeleccionTablas(String titulo){
         int resp = JOptionPane.showConfirmDialog(
             jPanel1, 
@@ -850,7 +849,7 @@ public class InterfazGrafica extends javax.swing.JFrame {
             + "(Error MySQL " + e.getErrorCode() + ": " + e.getMessage() + ".");
         }catch(Exception ex){
             info.setText("No se pudo cargar la información del servidor ("+ex.getMessage()+")");
-            //ex.printStackTrace();
+            ex.printStackTrace();
         }
     }
     
@@ -860,11 +859,10 @@ public class InterfazGrafica extends javax.swing.JFrame {
             listaTablas.stream().forEach((String nomTabla) -> {
                 comboTablas.addItem(nomTabla);           
             });
-            System.out.println(listaTablas.size());
+            //System.out.println(listaTablas.size());
             marcadorTablas = new boolean[listaTablas.size()];
             for(int i=0;i<listaTablas.size();i++){
                 marcadorTablas[i] = false;
-                //System.out.println(i);
             }
         }catch(SQLException e){
             info.setText("No se pudo cargar la información "
@@ -886,7 +884,7 @@ public class InterfazGrafica extends javax.swing.JFrame {
         }catch(Exception ex){
             info.setText("No fue posible cargar los registros de la tabla "
                 +comboTablas.getSelectedItem()+" ("+ex.toString()+")");
-            //ex.printStackTrace();
+            ex.printStackTrace();
         }
     }
     
