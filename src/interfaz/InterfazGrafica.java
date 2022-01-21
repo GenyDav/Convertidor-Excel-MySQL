@@ -7,6 +7,8 @@ package interfaz;
 
 import conexion.Conexion;
 import java.awt.CardLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.io.File;
 import java.sql.SQLException;
@@ -111,7 +113,7 @@ public class InterfazGrafica extends javax.swing.JFrame {
         btnBorrar = new javax.swing.JButton();
         tablasSel = new javax.swing.JRadioButton();
         tablasCompletas = new javax.swing.JRadioButton();
-        jButton3 = new javax.swing.JButton();
+        btnExportar = new javax.swing.JButton();
         barraProgreso = new javax.swing.JProgressBar();
         info = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
@@ -447,10 +449,10 @@ public class InterfazGrafica extends javax.swing.JFrame {
                 .addGap(0, 0, 0))
         );
 
-        jButton3.setText("Exportar");
-        jButton3.addActionListener(new java.awt.event.ActionListener() {
+        btnExportar.setText("Exportar");
+        btnExportar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton3ActionPerformed(evt);
+                btnExportarActionPerformed(evt);
             }
         });
 
@@ -540,7 +542,7 @@ public class InterfazGrafica extends javax.swing.JFrame {
                                 .addGap(24, 24, 24)
                                 .addGroup(panelExportLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                     .addComponent(jLabel4)
-                                    .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(btnExportar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                     .addComponent(jPanel10, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                             .addComponent(jSeparator1))
                         .addGap(0, 49, Short.MAX_VALUE)))
@@ -569,7 +571,7 @@ public class InterfazGrafica extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelExportLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jPanel8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton3)
+                    .addComponent(btnExportar)
                     .addComponent(jPanel14, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(0, 0, 0)
                 .addComponent(labelSelTabla, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -788,22 +790,48 @@ public class InterfazGrafica extends javax.swing.JFrame {
                                 // quiere cambiar de tabla pero canceló otro cambio antes
     }//GEN-LAST:event_comboBasesMouseClicked
 
-    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+    private void btnExportarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExportarActionPerformed
+        guardarArchivo();
+    }//GEN-LAST:event_btnExportarActionPerformed
+    
+    public void guardarArchivo(){
         JFileChooser fc = new JFileChooser();
-        //int seleccion = fc.showDialog(jPanel1, "Exportar");
         fc.setSelectedFile(new File("archivo.xlsx"));
+      
+        
+        fc.setAcceptAllFileFilterUsed(false);
+        fc.setMultiSelectionEnabled(false);
         fc.setFileFilter(new FileNameExtensionFilter("Libro de Excel (*.xlsx)","xlsx"));
-        fc.setFileFilter(new FileNameExtensionFilter("Libro de Excel 97-2003 (*.xls)","xls"));
+        fc.setFileFilter(new FileNameExtensionFilter("Libro de Excel 97-2003 (*.xls)","xls"));  
         
-        
-        int seleccion = fc.showSaveDialog(jPanel1);      
+        int seleccion = fc.showSaveDialog(jPanel1);
         if(seleccion==JFileChooser.APPROVE_OPTION){
             System.out.println(fc.getSelectedFile().toString());
             System.out.println(fc.getSelectedFile().getName());
-            System.out.println(fc.getFileFilter().getDescription());
+            System.out.println(fc.getSelectedFile().getPath());
+            System.out.println(fc.getSelectedFile().getAbsolutePath());
+            
+            File archivo = new File(fc.getSelectedFile().toString());
+            if (archivo.exists()) {
+                System.out.println("El archivo ya existe");
+                int resp = JOptionPane.showConfirmDialog(
+                    jPanel1, 
+                    "El archivo ya existe. ¿Sobreescribirlo?",
+                    "Titulo", 
+                    JOptionPane.OK_CANCEL_OPTION,
+                    JOptionPane.QUESTION_MESSAGE
+                );
+                System.out.println(resp);
+                if(resp==0){
+                    System.out.println("Código para escribir el archivo");
+                }else{
+                    System.out.println("Mostrar la ventana");
+                    guardarArchivo();
+                }
+            }
         }
-    }//GEN-LAST:event_jButton3ActionPerformed
-
+    }
+    
     public int limpiarSeleccionTablas(String titulo){
         int resp = JOptionPane.showConfirmDialog(
             jPanel1, 
@@ -912,6 +940,7 @@ public class InterfazGrafica extends javax.swing.JFrame {
     private javax.swing.JButton btnAgregarTabla;
     private javax.swing.JButton btnBorrar;
     private javax.swing.JButton btnConectar;
+    private javax.swing.JButton btnExportar;
     private javax.swing.JButton btnQuitar;
     private javax.swing.JButton btnSalir;
     private javax.swing.ButtonGroup buttonGroup1;
@@ -919,7 +948,6 @@ public class InterfazGrafica extends javax.swing.JFrame {
     private javax.swing.JComboBox comboTablas;
     private javax.swing.JButton guardar_excel;
     private javax.swing.JLabel info;
-    private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
