@@ -9,7 +9,6 @@ import conexion.Conexion;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
-import java.util.List;
 import javax.swing.JLabel;
 import javax.swing.JTable;
 import javax.swing.SwingWorker;
