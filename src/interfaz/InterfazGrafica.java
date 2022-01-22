@@ -18,6 +18,7 @@ import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.UIManager;
+import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 /**
@@ -794,42 +795,9 @@ public class InterfazGrafica extends javax.swing.JFrame {
         guardarArchivo();
     }//GEN-LAST:event_btnExportarActionPerformed
     
-    public void guardarArchivo(){
-        JFileChooser fc = new JFileChooser();
-        fc.setSelectedFile(new File("archivo.xlsx"));
-      
-        
-        fc.setAcceptAllFileFilterUsed(false);
-        fc.setMultiSelectionEnabled(false);
-        fc.setFileFilter(new FileNameExtensionFilter("Libro de Excel (*.xlsx)","xlsx"));
-        fc.setFileFilter(new FileNameExtensionFilter("Libro de Excel 97-2003 (*.xls)","xls"));  
-        
-        int seleccion = fc.showSaveDialog(jPanel1);
-        if(seleccion==JFileChooser.APPROVE_OPTION){
-            System.out.println(fc.getSelectedFile().toString());
-            System.out.println(fc.getSelectedFile().getName());
-            System.out.println(fc.getSelectedFile().getPath());
-            System.out.println(fc.getSelectedFile().getAbsolutePath());
-            
-            File archivo = new File(fc.getSelectedFile().toString());
-            if (archivo.exists()) {
-                System.out.println("El archivo ya existe");
-                int resp = JOptionPane.showConfirmDialog(
-                    jPanel1, 
-                    "El archivo ya existe. ¿Sobreescribirlo?",
-                    "Titulo", 
-                    JOptionPane.OK_CANCEL_OPTION,
-                    JOptionPane.QUESTION_MESSAGE
-                );
-                System.out.println(resp);
-                if(resp==0){
-                    System.out.println("Código para escribir el archivo");
-                }else{
-                    System.out.println("Mostrar la ventana");
-                    guardarArchivo();
-                }
-            }
-        }
+    public void guardarArchivo(){ 
+        SelectorGuarda sg = new SelectorGuarda();
+        sg.showSaveDialog(jPanel1);
     }
     
     public int limpiarSeleccionTablas(String titulo){
@@ -840,7 +808,7 @@ public class InterfazGrafica extends javax.swing.JFrame {
             JOptionPane.OK_CANCEL_OPTION,
             JOptionPane.QUESTION_MESSAGE
         );
-        if(resp==0){
+        if(resp==JOptionPane.OK_OPTION){
             numTablaSel = 0;
             ElementoLista e;
             for(int i=modeloLista.getSize()-1; i>=0; i--){
