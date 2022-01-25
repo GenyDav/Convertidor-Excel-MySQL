@@ -10,7 +10,11 @@ import java.awt.CardLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.io.File;
+import java.nio.file.FileSystems;
+import java.nio.file.Path;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import javax.swing.DefaultListModel;
@@ -20,6 +24,7 @@ import javax.swing.JTable;
 import javax.swing.UIManager;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.filechooser.FileSystemView;
 
 /**
  *
@@ -796,7 +801,8 @@ public class InterfazGrafica extends javax.swing.JFrame {
     }//GEN-LAST:event_btnExportarActionPerformed
     
     public void guardarArchivo(){ 
-        SelectorGuarda sg = new SelectorGuarda();
+        String directorio = FileSystemView.getFileSystemView().getDefaultDirectory().getPath();
+        SelectorGuarda sg = new SelectorGuarda(new File(directorio+"\\nombre-base.xlsx"));
         sg.showSaveDialog(jPanel1);
     }
     
