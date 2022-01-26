@@ -5,6 +5,7 @@
  */
 package interfaz;
 
+import excel.GeneradorExcel;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
@@ -22,8 +23,9 @@ public class SelectorGuarda extends JFileChooser {
     private String nomArch;
     private String extension;
     private BasicFileChooserUI interfaz;
+    GeneradorExcel gen;
     
-    public SelectorGuarda(File archivo){
+    public SelectorGuarda(File archivo, GeneradorExcel gen){
         setSelectedFile(archivo);
         setDialogTitle("Guardar archivo Excel");
         setAcceptAllFileFilterUsed(false);
@@ -33,8 +35,9 @@ public class SelectorGuarda extends JFileChooser {
         rutaArch = archivo.getPath();
         //System.out.println("path: "+rutaArch);
         nomArch = archivo.getName();
-        extension = null;
+        extension = "xlsx";
         interfaz = (BasicFileChooserUI)getUI();
+        this.gen = gen;
         
         addPropertyChangeListener(JFileChooser.FILE_FILTER_CHANGED_PROPERTY, new PropertyChangeListener(){
             // NOTA: cuando se selecciona un tipo de archivo distinto al actual
@@ -75,12 +78,13 @@ public class SelectorGuarda extends JFileChooser {
     @Override
     public void approveSelection(){
         nomArch = getSelectedFile().getName();
-        rutaArch = getSelectedFile().getAbsolutePath();        
+        rutaArch = getSelectedFile().getPath();    
         // Verificar la extensión del archivo antes de guardarlo
         if(!rutaArch.endsWith(extension)){
             rutaArch += "." + extension;
             nomArch += "." + extension;
         }
+        System.out.println("ruta nueva: "+rutaArch);
         //System.out.println("Ubicacion: "+getCurrentDirectory());
         File archivo = new File(rutaArch);
         if(archivo.exists()){
@@ -92,10 +96,14 @@ public class SelectorGuarda extends JFileChooser {
                 JOptionPane.WARNING_MESSAGE
             );
             if(resp==JOptionPane.OK_OPTION){
-                System.out.println("Código para escribir el archivo");
+                //gen.execute();
+                gen.crearLibro(rutaArch);
             }else{
                 return; // regresar al jFileChooser
             }
+        }else{
+            //gen.execute();
+            gen.crearLibro(rutaArch);
         }
         super.approveSelection();
     }
