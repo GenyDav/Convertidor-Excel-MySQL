@@ -6,24 +6,16 @@
 package interfaz;
 
 import conexion.Conexion;
+import excel.GeneradorExcel;
 import java.awt.CardLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.io.File;
-import java.nio.file.FileSystems;
-import java.nio.file.Path;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import javax.swing.DefaultListModel;
-import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.UIManager;
-import javax.swing.filechooser.FileFilter;
-import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.filechooser.FileSystemView;
 
 /**
@@ -39,6 +31,7 @@ public class InterfazGrafica extends javax.swing.JFrame {
     private String mensaje;         // mensaje de la pantalla de inicio
     private FormatoTabla formato;   // formato de la tabla en donde se muestran los datos
     private DefaultListModel modeloLista;
+    private ArrayList<String> listaTablas;
     private int numTablaSel;            // cantidad de tablas seleccionadas
     private int tablasEnBase;           // número de tablas en una base de datos
     private boolean []marcadorTablas;
@@ -801,8 +794,10 @@ public class InterfazGrafica extends javax.swing.JFrame {
     }//GEN-LAST:event_btnExportarActionPerformed
     
     public void guardarArchivo(){ 
+        String bd = comboBases.getSelectedItem().toString();
+        GeneradorExcel generador = new GeneradorExcel(conn, bd, listaTablas);
         String directorio = FileSystemView.getFileSystemView().getDefaultDirectory().getPath();
-        SelectorGuarda sg = new SelectorGuarda(new File(directorio+"\\nombre-base.xlsx"));
+        SelectorGuarda sg = new SelectorGuarda(new File(directorio+"\\"+bd+".xlsx"),generador);
         sg.showSaveDialog(jPanel1);
     }
     
@@ -857,7 +852,7 @@ public class InterfazGrafica extends javax.swing.JFrame {
     
     public void cargarListaDeTablas(String nomBase){
         try{
-            ArrayList<String> listaTablas = conn.obtenerTablas(nomBase);
+            listaTablas = conn.obtenerTablas(nomBase);
             listaTablas.stream().forEach((String nomTabla) -> {
                 comboTablas.addItem(nomTabla);           
             });
