@@ -14,10 +14,14 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.BorderStyle;
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.FillPatternType;
+import org.apache.poi.ss.usermodel.Font;
+import org.apache.poi.ss.usermodel.HorizontalAlignment;
+import org.apache.poi.ss.usermodel.IndexedColors;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -51,6 +55,7 @@ public class GeneradorExcel {
         try  (OutputStream flujoSalida = new FileOutputStream(rutaArch)) {
             libro.write(flujoSalida);
         } catch (FileNotFoundException ex) {
+            // El archivo esta abierto cuando se intentar sobreescribir
             ex.printStackTrace();
         } catch (IOException ex) {
             ex.printStackTrace();
@@ -58,7 +63,7 @@ public class GeneradorExcel {
     }
     
     private void crearHoja(String t){
-        System.out.println(t);
+        //System.out.println(t);
         Sheet hoja = libro.createSheet(t);
         try {
             resultados = conn.obtenerRegistros(nombreBase,t);
@@ -73,12 +78,31 @@ public class GeneradorExcel {
     private int escribirEncabezados(Sheet hoja) throws SQLException{
         Row renglon = hoja.createRow(0);
         int numColumnas = metaDatos.getColumnCount();
+        
+        Font fuente = libro.createFont();
+        fuente.setFontHeightInPoints((short)11);
+        fuente.setFontName("Arial Unicode MS");
+        fuente.setBold(true);
+        fuente.setColor(IndexedColors.WHITE.getIndex());
+        CellStyle estiloCelda = libro.createCellStyle();
+        estiloCelda.setFont(fuente);
+        estiloCelda.setAlignment(HorizontalAlignment.CENTER);
+        estiloCelda.setFillForegroundColor(IndexedColors.SEA_GREEN.getIndex());
+        estiloCelda.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+        estiloCelda.setBottomBorderColor(IndexedColors.WHITE.getIndex());
+        estiloCelda.setBorderBottom(BorderStyle.DOUBLE);
+        estiloCelda.setRightBorderColor(IndexedColors.WHITE.getIndex());
+        estiloCelda.setBorderRight(BorderStyle.THIN);
+        
         for(int i=0;i<numColumnas;i++){             // obtener el nombre de cada columna
             Cell celda = renglon.createCell(i);
             celda.setCellValue(metaDatos.getColumnName(i+1));
+            celda.setCellStyle(estiloCelda);
         }
-        System.out.println("Encabezados listos");
         return numColumnas;
+    }
+    private void cambiarEstiloEncabezado(){
+        
     }
     
     private void escribirDatos(Sheet hoja,int numColumnas) throws SQLException{
@@ -90,6 +114,9 @@ public class GeneradorExcel {
                 celda.setCellValue(resultados.getObject(i+1).toString());
             }
             renglon++;
+        }
+        for(int j=0;j<numColumnas;j++){
+            hoja.autoSizeColumn(j);
         }
     }
 }
