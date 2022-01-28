@@ -14,7 +14,9 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 import javax.swing.JLabel;
+import javax.swing.JProgressBar;
 import javax.swing.SwingWorker;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.BorderStyle;
@@ -38,19 +40,24 @@ public class GeneradorExcel extends SwingWorker<Void,Integer>{
     private ArrayList<String> tablas;
     private Conexion conn;
     private Workbook libro;
+    private String hojaAct;
     private ResultSet resultados;
     private ResultSetMetaData metaDatos;
     private String rutaArch;
     private String tipoArch;
     private JLabel labelProgreso;
+    private JProgressBar barra;
     
-    public GeneradorExcel(Conexion c, String base, ArrayList<String>tablas, JLabel label){
+    public GeneradorExcel(Conexion c, String base, ArrayList<String>tablas, JLabel label, JProgressBar barra){
         conn = c;
         nombreBase = base;
+        libro = null;
+        hojaAct = null;
         this.tablas = tablas;
         rutaArch = null;
         tipoArch = null;
         labelProgreso = label;
+        this.barra = barra;
     }
     
     public void defInfoArchivo(String rutaArch, String extension){
@@ -67,6 +74,7 @@ public class GeneradorExcel extends SwingWorker<Void,Integer>{
         for(String tablaActual:tablas){
             crearHoja(tablaActual);
         }
+        labelProgreso.setText("Exportación de la base '"+nombreBase+"' terminada");
         try(OutputStream flujoSalida = new FileOutputStream(rutaArch)){
             libro.write(flujoSalida);
         }catch (FileNotFoundException ex){
@@ -78,10 +86,12 @@ public class GeneradorExcel extends SwingWorker<Void,Integer>{
     }
     
     private void crearHoja(String t){
-        //System.out.println(t);
-        labelProgreso.setText("Creando hoja "+t);
+        hojaAct = t;
         Sheet hoja = libro.createSheet(t);
         try {
+            barra.setValue(0);
+            barra.setString(0+"%");
+            labelProgreso.setText("Creando hoja '"+hojaAct+"': consultando la base de datos...");
             resultados = conn.obtenerRegistros(nombreBase,t);
             metaDatos = resultados.getMetaData();
             int columnas = escribirEncabezados(hoja);
@@ -96,7 +106,7 @@ public class GeneradorExcel extends SwingWorker<Void,Integer>{
         int numColumnas = metaDatos.getColumnCount();
 
         CellStyle estiloCelda = defEstiloEnc();
-        
+        labelProgreso.setText("Creando hoja '"+hojaAct+"': escribiendo los nombres de las columnas...");
         for(int i=0;i<numColumnas;i++){             // obtener el nombre de cada columna
             Cell celda = renglon.createCell(i);
             celda.setCellValue(metaDatos.getColumnName(i+1));
@@ -106,7 +116,20 @@ public class GeneradorExcel extends SwingWorker<Void,Integer>{
     }
     
     private void escribirDatos(Sheet hoja,int numColumnas) throws SQLException{
+        float incremento;
+        int numRegistros = 0;
+        float progreso = 0f;
         int renglon = 1;
+        
+        resultados.last();
+        numRegistros = resultados.getRow();
+        
+        System.out.println("numero de registros: "+numRegistros);
+        incremento = 100F/numRegistros;
+        System.out.println("incremento: "+incremento);
+        
+        labelProgreso.setText("Creando hoja '"+hojaAct+"': escribiendo registros...");
+        resultados.beforeFirst();
         while(resultados.next()){
             Row reg = hoja.createRow(renglon);
             for(int i=0;i<numColumnas;i++){
@@ -114,15 +137,17 @@ public class GeneradorExcel extends SwingWorker<Void,Integer>{
                 Object res = resultados.getObject(i+1);
                 if(res!=null){
                     celda.setCellValue(res.toString());
-                }else{
-                    //System.out.println("nulo");
                 }
-                /*try{
-                    Thread.sleep(500);
-                }catch(Exception e){}*/
+                try{
+                    Thread.sleep(250);
+                }catch(Exception e){}
             }
+            progreso = renglon*incremento;
+            System.out.println("progreso: "+progreso);
+            publish(Math.round(progreso));
             renglon++;
         }
+        // Ajustar el ancho de las columnas a su contenido
         for(int j=0;j<numColumnas;j++){
             hoja.autoSizeColumn(j);
         }
@@ -151,5 +176,12 @@ public class GeneradorExcel extends SwingWorker<Void,Integer>{
     protected Void doInBackground() throws Exception {
         crearLibro();
         return null;
+    }
+    
+    @Override
+    protected void process(List<Integer> chunks){
+        barra.setValue(chunks.get(0));
+        System.out.println("chunk: "+chunks.get(0));
+        barra.setString(Integer.toString(chunks.get(0))+"%");
     }
 }
