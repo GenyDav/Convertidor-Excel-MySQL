@@ -795,7 +795,7 @@ public class InterfazGrafica extends javax.swing.JFrame {
     
     public void guardarArchivo(){ 
         String bd = comboBases.getSelectedItem().toString();
-        GeneradorExcel generador = new GeneradorExcel(conn, bd, listaTablas);
+        GeneradorExcel generador = new GeneradorExcel(conn, bd, listaTablas, info);
         String directorio = FileSystemView.getFileSystemView().getDefaultDirectory().getPath();
         SelectorGuarda sg = new SelectorGuarda(new File(directorio+"\\"+bd+".xlsx"),generador);
         sg.showSaveDialog(jPanel1);
