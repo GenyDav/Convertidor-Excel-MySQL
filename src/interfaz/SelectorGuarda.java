@@ -10,6 +10,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
 import javax.swing.JFileChooser;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.plaf.basic.BasicFileChooserUI;
@@ -23,7 +24,7 @@ public class SelectorGuarda extends JFileChooser {
     private String nomArch;
     private String extension;
     private BasicFileChooserUI interfaz;
-    GeneradorExcel gen;
+    private GeneradorExcel gen;
     
     public SelectorGuarda(File archivo, GeneradorExcel gen){
         setSelectedFile(archivo);
@@ -90,20 +91,20 @@ public class SelectorGuarda extends JFileChooser {
         if(archivo.exists()){
             int resp = JOptionPane.showConfirmDialog(
                 this, 
-                "El archivo "+nomArch+" ya existe. \n¿Desea reemplazarlo?",
+                "El archivo " + nomArch + " ya existe. \n¿Desea reemplazarlo?",
                 "Confirmar sobreescritura", 
                 JOptionPane.OK_CANCEL_OPTION,
                 JOptionPane.WARNING_MESSAGE
             );
             if(resp==JOptionPane.OK_OPTION){
-                //gen.execute();
-                gen.crearLibro(rutaArch);
+                gen.defInfoArchivo(rutaArch, extension);
+                gen.execute();
             }else{
                 return; // regresar al jFileChooser
             }
         }else{
-            //gen.execute();
-            gen.crearLibro(rutaArch);
+            gen.defInfoArchivo(rutaArch, extension);
+            gen.execute();
         }
         super.approveSelection();
     }
