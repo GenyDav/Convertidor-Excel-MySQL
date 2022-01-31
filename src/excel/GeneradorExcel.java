@@ -38,26 +38,30 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 public class GeneradorExcel extends SwingWorker<Void,Integer>{
     private String nombreBase;
     private ArrayList<String> tablas;
+    private int numTablas;
+    private int indiceTablaAct;
     private Conexion conn;
     private Workbook libro;
-    private String hojaAct;
     private ResultSet resultados;
     private ResultSetMetaData metaDatos;
     private String rutaArch;
     private String tipoArch;
     private JLabel labelProgreso;
     private JProgressBar barra;
+    private int numRegistros;
     
     public GeneradorExcel(Conexion c, String base, ArrayList<String>tablas, JLabel label, JProgressBar barra){
         conn = c;
         nombreBase = base;
         libro = null;
-        hojaAct = null;
+        indiceTablaAct = 0;
         this.tablas = tablas;
+        numTablas = tablas.size();
         rutaArch = null;
         tipoArch = null;
         labelProgreso = label;
         this.barra = barra;
+        numRegistros = 0;
     }
     
     public void defInfoArchivo(String rutaArch, String extension){
@@ -66,36 +70,45 @@ public class GeneradorExcel extends SwingWorker<Void,Integer>{
     }
     
     public void crearLibro(){
+        labelProgreso.setText("Iniciando exportación de la base '" + nombreBase + "'...");
         if(tipoArch.equals("xls")){
             libro = new HSSFWorkbook();
         }else{
             libro = new XSSFWorkbook();
         }
-        for(String tablaActual:tablas){
-            crearHoja(tablaActual);
+        for(int i=0;i<numTablas;i++){
+            indiceTablaAct = i;
+            crearHoja(tablas.get(i));
         }
-        labelProgreso.setText("Exportación de la base '"+nombreBase+"' terminada");
         try(OutputStream flujoSalida = new FileOutputStream(rutaArch)){
             libro.write(flujoSalida);
         }catch (FileNotFoundException ex){
             // El archivo esta abierto cuando se intentar sobreescribir
+            // pedirle al usuario que cierre el archivo antes de guardar la base
+            // o pedirle que lo cierre justo cuando se carguen todas las tablas
+            // e intentar escribir el archivo hasta que el usuario lo cierre
             ex.printStackTrace();
         }catch (IOException ex) {
             ex.printStackTrace();
+        }finally{
+            labelProgreso.setText("Exportación de la base '" + nombreBase + "' terminada");
         }
     }
     
     private void crearHoja(String t){
-        hojaAct = t;
+        int columnas;   // número de columnas en la hoja
         Sheet hoja = libro.createSheet(t);
         try {
-            barra.setValue(0);
-            barra.setString(0+"%");
-            labelProgreso.setText("Creando hoja '"+hojaAct+"': consultando la base de datos...");
+            publish(0); // reiniciar la barra de progreso
+            labelProgreso.setText("Exportando la base '" + nombreBase + "': "
+                + "creando hoja '" + t + "', consultando la base de datos...");
             resultados = conn.obtenerRegistros(nombreBase,t);
             metaDatos = resultados.getMetaData();
-            int columnas = escribirEncabezados(hoja);
-            escribirDatos(hoja,columnas);
+            labelProgreso.setText("Exportando la base '" + nombreBase + "': "
+                + "creando hoja '"+ t + "'"
+                + " (tabla " + (indiceTablaAct+1) + " de " + numTablas + ")");
+            columnas = escribirEncabezados(hoja);
+            escribirDatos(hoja, columnas);
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
@@ -106,7 +119,6 @@ public class GeneradorExcel extends SwingWorker<Void,Integer>{
         int numColumnas = metaDatos.getColumnCount();
 
         CellStyle estiloCelda = defEstiloEnc();
-        labelProgreso.setText("Creando hoja '"+hojaAct+"': escribiendo los nombres de las columnas...");
         for(int i=0;i<numColumnas;i++){             // obtener el nombre de cada columna
             Cell celda = renglon.createCell(i);
             celda.setCellValue(metaDatos.getColumnName(i+1));
@@ -117,19 +129,16 @@ public class GeneradorExcel extends SwingWorker<Void,Integer>{
     
     private void escribirDatos(Sheet hoja,int numColumnas) throws SQLException{
         float incremento;
-        int numRegistros = 0;
-        float progreso = 0f;
+        float progreso = 0F;
         int renglon = 1;
         
         resultados.last();
         numRegistros = resultados.getRow();
-        
-        System.out.println("numero de registros: "+numRegistros);
+        //System.out.println("numero de registros: "+numRegistros);
         incremento = 100F/numRegistros;
-        System.out.println("incremento: "+incremento);
-        
-        labelProgreso.setText("Creando hoja '"+hojaAct+"': escribiendo registros...");
+        //System.out.println("incremento: "+incremento);
         resultados.beforeFirst();
+        
         while(resultados.next()){
             Row reg = hoja.createRow(renglon);
             for(int i=0;i<numColumnas;i++){
@@ -138,12 +147,12 @@ public class GeneradorExcel extends SwingWorker<Void,Integer>{
                 if(res!=null){
                     celda.setCellValue(res.toString());
                 }
-                try{
-                    Thread.sleep(250);
-                }catch(Exception e){}
             }
             progreso = renglon*incremento;
-            System.out.println("progreso: "+progreso);
+            //System.out.println("progreso: "+progreso);
+            try{
+                Thread.sleep(1);
+            }catch(Exception e){}
             publish(Math.round(progreso));
             renglon++;
         }
@@ -151,6 +160,8 @@ public class GeneradorExcel extends SwingWorker<Void,Integer>{
         for(int j=0;j<numColumnas;j++){
             hoja.autoSizeColumn(j);
         }
+        publish(100);
+        // cerrar
     }
     
     private CellStyle defEstiloEnc(){
@@ -181,7 +192,5 @@ public class GeneradorExcel extends SwingWorker<Void,Integer>{
     @Override
     protected void process(List<Integer> chunks){
         barra.setValue(chunks.get(0));
-        System.out.println("chunk: "+chunks.get(0));
-        barra.setString(Integer.toString(chunks.get(0))+"%");
     }
 }
