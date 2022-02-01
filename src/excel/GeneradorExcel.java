@@ -16,6 +16,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JProgressBar;
 import javax.swing.SwingWorker;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -70,28 +71,41 @@ public class GeneradorExcel extends SwingWorker<Void,Integer>{
     }
     
     public void crearLibro(){
-        labelProgreso.setText("Iniciando exportación de la base '" + nombreBase + "'...");
-        if(tipoArch.equals("xls")){
-            libro = new HSSFWorkbook();
-        }else{
-            libro = new XSSFWorkbook();
-        }
-        for(int i=0;i<numTablas;i++){
-            indiceTablaAct = i;
-            crearHoja(tablas.get(i));
-        }
-        try(OutputStream flujoSalida = new FileOutputStream(rutaArch)){
-            libro.write(flujoSalida);
+        try{
+            try (OutputStream flujoSalida = new FileOutputStream(rutaArch)) {
+                labelProgreso.setText("Iniciando exportación de la base '" + nombreBase + "'...");
+                if(tipoArch.equals("xls")){
+                    libro = new HSSFWorkbook();
+                }else{
+                    libro = new XSSFWorkbook();
+                }
+                for(int i=0;i<numTablas;i++){
+                    indiceTablaAct = i;
+                    crearHoja(tablas.get(i));
+                }
+                
+                libro.write(flujoSalida);
+                libro.close();
+                libro = null;
+            }
+            conn.terminarConexion();
+            conn = null;
+            labelProgreso.setText("Exportación de la base '" + nombreBase + "' terminada");
         }catch (FileNotFoundException ex){
-            // El archivo esta abierto cuando se intentar sobreescribir
-            // pedirle al usuario que cierre el archivo antes de guardar la base
-            // o pedirle que lo cierre justo cuando se carguen todas las tablas
-            // e intentar escribir el archivo hasta que el usuario lo cierre
-            ex.printStackTrace();
+            // si el archivo está abierto cuando se intenta sobreescribir
+            // se le pide al usuario que cierre el archivo antes de comenzar
+            // a exportar la base de datos
+            JOptionPane.showMessageDialog(
+                null, 
+                "El archivo está siendo utilizado por otro programa.  "
+                    + "\nCiérrelo e inténtelo de nuevo.",
+                "No se puede escribir el archivo", 
+                JOptionPane.INFORMATION_MESSAGE
+            );
+            // ex.printStackTrace();
         }catch (IOException ex) {
             ex.printStackTrace();
-        }finally{
-            labelProgreso.setText("Exportación de la base '" + nombreBase + "' terminada");
+            labelProgreso.setText("Error: "+ex.getMessage());
         }
     }
     
@@ -110,6 +124,8 @@ public class GeneradorExcel extends SwingWorker<Void,Integer>{
             columnas = escribirEncabezados(hoja);
             escribirDatos(hoja, columnas);
         } catch (SQLException ex) {
+            labelProgreso.setText("No se pudo cargar la información del servidor "
+            + "(Error MySQL " + ex.getErrorCode() + ": " + ex.getMessage() + ".");
             ex.printStackTrace();
         }
     }
@@ -161,7 +177,6 @@ public class GeneradorExcel extends SwingWorker<Void,Integer>{
             hoja.autoSizeColumn(j);
         }
         publish(100);
-        // cerrar
     }
     
     private CellStyle defEstiloEnc(){
