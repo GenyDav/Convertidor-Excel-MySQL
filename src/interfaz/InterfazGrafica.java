@@ -12,8 +12,6 @@ import java.awt.event.ItemEvent;
 import java.io.File;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
@@ -33,9 +31,10 @@ public class InterfazGrafica extends javax.swing.JFrame {
     private String mensaje;         // mensaje de la pantalla de inicio
     private FormatoTabla formato;   // formato de la tabla en donde se muestran los datos
     private DefaultListModel modeloLista;
-    private ArrayList<String> listaTablas;
+    private ArrayList<String> listaTablas;      // lista de tablas que van a ser exportadas
+    private ArrayList<String> listaTablasCompletas;
+    private ArrayList<String> listaTablasSeleccionadas;
     private int numTablaSel;            // cantidad de tablas seleccionadas
-    private int tablasEnBase;           // número de tablas en una base de datos
     private boolean []marcadorTablas;
     private int indiceTablaAct;
     private boolean cambioCancelado;
@@ -64,6 +63,11 @@ public class InterfazGrafica extends javax.swing.JFrame {
         
         modeloLista = new DefaultListModel();
         seleccionTablas.setModel(modeloLista);
+        
+        listaTablas = new ArrayList();
+        listaTablasCompletas = new ArrayList();
+        listaTablasSeleccionadas = new ArrayList();
+        
         numTablaSel = 0;
         indiceTablaAct = 0;
         cambioCancelado = false;
@@ -400,7 +404,7 @@ public class InterfazGrafica extends javax.swing.JFrame {
 
         tablasSel.setBackground(new java.awt.Color(255, 255, 255));
         buttonGroup1.add(tablasSel);
-        tablasSel.setText("Exportar las tablas seleccionadas");
+        tablasSel.setText("Exportar solo las tablas seleccionadas");
         tablasSel.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 tablasSelActionPerformed(evt);
@@ -673,12 +677,14 @@ public class InterfazGrafica extends javax.swing.JFrame {
         btnAgregarTabla.setEnabled(false);
         seleccionTablas.setEnabled(false);
         jScrollPaneSel.getVerticalScrollBar().setEnabled(false);
+        listaTablas = listaTablasCompletas;
     }//GEN-LAST:event_tablasCompletasActionPerformed
 
     private void tablasSelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tablasSelActionPerformed
         btnAgregarTabla.setEnabled(true);
         seleccionTablas.setEnabled(true);
         jScrollPaneSel.getVerticalScrollBar().setEnabled(true);
+        listaTablas = listaTablasSeleccionadas;
     }//GEN-LAST:event_tablasSelActionPerformed
 
     /**
@@ -722,6 +728,7 @@ public class InterfazGrafica extends javax.swing.JFrame {
     private void btnAgregarTablaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarTablaActionPerformed
         if(!marcadorTablas[comboTablas.getSelectedIndex()]){    
             modeloLista.addElement(new ElementoLista(comboTablas.getSelectedItem().toString(),comboTablas.getSelectedIndex()));
+            listaTablasSeleccionadas.add(comboTablas.getSelectedItem().toString());
             numTablaSel++;
             seleccionTablas.setSelectedIndex(numTablaSel-1);
             
@@ -756,6 +763,7 @@ public class InterfazGrafica extends javax.swing.JFrame {
                 System.out.print("["+marcadorTablas[i]+"]");
             }System.out.println();*/
             modeloLista.remove(t-acomodo);
+            listaTablasSeleccionadas.remove(t-acomodo);
             numTablaSel--;
             //System.out.println(t-acomodo);
             acomodo++;
@@ -827,6 +835,7 @@ public class InterfazGrafica extends javax.swing.JFrame {
                 }System.out.println();*/
             }
             modeloLista.clear();
+            listaTablasSeleccionadas.clear();
             btnBorrar.setEnabled(false);
             btnQuitar.setEnabled(false);
         }
@@ -858,13 +867,13 @@ public class InterfazGrafica extends javax.swing.JFrame {
     
     public void cargarListaDeTablas(String nomBase){
         try{
-            listaTablas = conn.obtenerTablas(nomBase);
-            listaTablas.stream().forEach((String nomTabla) -> {
+            listaTablasCompletas = conn.obtenerTablas(nomBase);
+            listaTablasCompletas.stream().forEach((String nomTabla) -> {
                 comboTablas.addItem(nomTabla);           
             });
             //System.out.println(listaTablas.size());
-            marcadorTablas = new boolean[listaTablas.size()];
-            for(int i=0;i<listaTablas.size();i++){
+            marcadorTablas = new boolean[listaTablasCompletas.size()];
+            for(int i=0;i<listaTablasCompletas.size();i++){
                 marcadorTablas[i] = false;
             }
         }catch(SQLException e){
