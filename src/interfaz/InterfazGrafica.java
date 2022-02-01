@@ -8,6 +8,7 @@ package interfaz;
 import conexion.Conexion;
 import excel.GeneradorExcel;
 import java.awt.CardLayout;
+import java.awt.Color;
 import java.awt.event.ItemEvent;
 import java.io.File;
 import java.sql.SQLException;
@@ -40,6 +41,9 @@ public class InterfazGrafica extends javax.swing.JFrame {
     private boolean cambioCancelado;
 
     public InterfazGrafica() {
+        UIManager.put("ProgressBar.selectionBackground", Color.black);
+        UIManager.put("ProgressBar.selectionForeground", Color.white);
+        UIManager.put("ProgressBar.foreground", new Color(255,148,0));
         initComponents();
         setResizable(false);
         setTitle("Iniciar conexión");
@@ -124,10 +128,10 @@ public class InterfazGrafica extends javax.swing.JFrame {
         jLabel7 = new javax.swing.JLabel();
         jPanel8 = new javax.swing.JPanel();
         btnAgregarTabla = new javax.swing.JButton();
+        labelSelTabla = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         jPanel14 = new javax.swing.JPanel();
         labelRegistros = new javax.swing.JLabel();
-        labelSelTabla = new javax.swing.JLabel();
         jSeparator1 = new javax.swing.JSeparator();
         jPanel9 = new javax.swing.JPanel();
 
@@ -465,8 +469,8 @@ public class InterfazGrafica extends javax.swing.JFrame {
         barraProgreso.setFocusable(false);
         barraProgreso.setStringPainted(true);
 
-        info.setBackground(new java.awt.Color(0, 153, 153));
-        info.setText(" ");
+        info.setBackground(new java.awt.Color(255, 255, 255));
+        info.setText("Progreso de exportación");
 
         jLabel7.setFont(new java.awt.Font("Arial", 1, 18)); // NOI18N
         jLabel7.setText("Exportar tablas de MySQL a Excel");
@@ -485,11 +489,14 @@ public class InterfazGrafica extends javax.swing.JFrame {
             jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel8Layout.createSequentialGroup()
                 .addComponent(btnAgregarTabla)
-                .addContainerGap(212, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(labelSelTabla, javax.swing.GroupLayout.PREFERRED_SIZE, 219, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
         jPanel8Layout.setVerticalGroup(
             jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(btnAgregarTabla)
+            .addComponent(labelSelTabla, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
         jLabel4.setFont(new java.awt.Font("Dialog", 1, 13)); // NOI18N
@@ -521,11 +528,10 @@ public class InterfazGrafica extends javax.swing.JFrame {
             .addGroup(panelExportLayout.createSequentialGroup()
                 .addGap(36, 36, 36)
                 .addGroup(panelExportLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(labelSelTabla, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(panelExportLayout.createSequentialGroup()
                         .addGroup(panelExportLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(panelExportLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 518, Short.MAX_VALUE)
+                                .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING)
                                 .addGroup(panelExportLayout.createSequentialGroup()
                                     .addGroup(panelExportLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                         .addComponent(jLabel2)
@@ -547,7 +553,7 @@ public class InterfazGrafica extends javax.swing.JFrame {
                     .addComponent(jSeparator1, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(barraProgreso, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(info, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(61, Short.MAX_VALUE))
+                .addContainerGap(30, Short.MAX_VALUE))
         );
         panelExportLayout.setVerticalGroup(
             panelExportLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -574,9 +580,7 @@ public class InterfazGrafica extends javax.swing.JFrame {
                     .addComponent(jPanel8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnExportar)
                     .addComponent(jPanel14, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(0, 0, 0)
-                .addComponent(labelSelTabla, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(26, 26, 26)
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 4, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, 0)
                 .addComponent(info, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -809,9 +813,10 @@ public class InterfazGrafica extends javax.swing.JFrame {
             SelectorGuarda sg = new SelectorGuarda(new File(directorio+"\\"+bd+".xlsx"),generador);
             sg.showSaveDialog(jPanel1);
         } catch (ClassNotFoundException ex) {
-            ex.printStackTrace();
+            info.setText("nNo se pudo encontar la librería mysql-conector-java...");
         } catch (SQLException ex) {
-            ex.printStackTrace();
+            info.setText("No se pudo cargar la información del servidor "
+            + "(Error MySQL " + ex.getErrorCode() + ": " + ex.getMessage() + ".");
         }
     }
     
@@ -876,6 +881,7 @@ public class InterfazGrafica extends javax.swing.JFrame {
             for(int i=0;i<listaTablasCompletas.size();i++){
                 marcadorTablas[i] = false;
             }
+            listaTablas = listaTablasCompletas;
         }catch(SQLException e){
             info.setText("No se pudo cargar la información "
             + "(Error MySQL " + e.getErrorCode() + ": " + e.getMessage() + ".");
