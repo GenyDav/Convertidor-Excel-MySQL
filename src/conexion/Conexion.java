@@ -28,6 +28,7 @@ public class Conexion {
         conn = DriverManager.getConnection("jdbc:mysql://"+servidor+"/",usr,passwd);
         info = conn.getMetaData();  
         s = conn.createStatement();
+        rs = null;
     }
     
     public ArrayList<String> obtenerBasesDeDatos() throws SQLException{
@@ -58,4 +59,29 @@ public class Conexion {
         rs.first();
         return Integer.valueOf(rs.getString(1));
     }
+    
+    public void terminarConexion(){
+        if(rs!=null){
+            try{
+                rs.close();
+                rs = null;
+                info = null;
+            }
+            catch(SQLException sqlEx){}
+        }
+        if(s!=null){
+            try{
+                s.close();
+                s = null;
+            }
+            catch(SQLException sqlEx){}
+        }
+        if(conn!=null){
+            try{
+                conn.close();
+                conn = null;
+            }
+            catch(SQLException ex){}
+        }
+    }    
 }
