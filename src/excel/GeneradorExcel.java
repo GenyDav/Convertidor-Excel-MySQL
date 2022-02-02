@@ -161,7 +161,12 @@ public class GeneradorExcel extends SwingWorker<Void,Integer>{
                 Cell celda = reg.createCell(i);
                 Object res = resultados.getObject(i+1);
                 if(res!=null){
-                    celda.setCellValue(res.toString());
+                    if(res.getClass().getSuperclass().getSimpleName().equals("Number")){
+                        Number n = (Number)res;
+                        celda.setCellValue(n.doubleValue());
+                    }else{
+                        celda.setCellValue(res.toString());
+                    }
                 }
             }
             progreso = renglon*incremento;
