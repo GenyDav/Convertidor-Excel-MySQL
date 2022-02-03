@@ -279,18 +279,21 @@ public class InterfazGrafica extends javax.swing.JFrame {
         guardar_excel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/bd_excel_1.png"))); // NOI18N
         guardar_excel.setBorderPainted(false);
         guardar_excel.setContentAreaFilled(false);
+        guardar_excel.setDefaultCapable(false);
         guardar_excel.setPressedIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/bd_excel_3.png"))); // NOI18N
         guardar_excel.setRolloverIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/bd_excel_2.png"))); // NOI18N
 
         jButton4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/excel_bd_1.png"))); // NOI18N
         jButton4.setBorderPainted(false);
         jButton4.setContentAreaFilled(false);
-        jButton4.setPressedIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/salir_mini_3.png"))); // NOI18N
-        jButton4.setRolloverIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/salir_mini_2.png"))); // NOI18N
+        jButton4.setDefaultCapable(false);
+        jButton4.setPressedIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/excel_bd_3.png"))); // NOI18N
+        jButton4.setRolloverIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/excel_bd_2.png"))); // NOI18N
 
         btnSalir.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/salir_mini_1.png"))); // NOI18N
         btnSalir.setBorderPainted(false);
         btnSalir.setContentAreaFilled(false);
+        btnSalir.setDefaultCapable(false);
         btnSalir.setPressedIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/salir_mini_3.png"))); // NOI18N
         btnSalir.setRolloverIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/salir_mini_2.png"))); // NOI18N
         btnSalir.addActionListener(new java.awt.event.ActionListener() {
@@ -638,6 +641,7 @@ public class InterfazGrafica extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalirActionPerformed
+        conn.terminarConexion();
         cardLayout.show(jPanel1, "card2");
         setTitle("Iniciar conexión");
         limpiarCamposInicio();
