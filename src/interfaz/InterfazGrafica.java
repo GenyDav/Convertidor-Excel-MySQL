@@ -552,7 +552,9 @@ public class InterfazGrafica extends javax.swing.JFrame {
                             .addComponent(jPanel10, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                     .addComponent(jSeparator1, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(barraProgreso, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(info, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(panelExportLayout.createSequentialGroup()
+                        .addGap(2, 2, 2)
+                        .addComponent(info, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addContainerGap(30, Short.MAX_VALUE))
         );
         panelExportLayout.setVerticalGroup(
@@ -808,7 +810,7 @@ public class InterfazGrafica extends javax.swing.JFrame {
             String bd = comboBases.getSelectedItem().toString(); 
             Conexion con2 = new Conexion(servidor,usuario,clave);
             
-            GeneradorExcel generador = new GeneradorExcel(con2, bd, listaTablas, info, barraProgreso);
+            GeneradorExcel generador = new GeneradorExcel(con2, bd, listaTablas, info, barraProgreso, this);
             String directorio = FileSystemView.getFileSystemView().getDefaultDirectory().getPath();
             SelectorGuarda sg = new SelectorGuarda(new File(directorio+"\\"+bd+".xlsx"),generador);
             sg.showSaveDialog(jPanel1);
