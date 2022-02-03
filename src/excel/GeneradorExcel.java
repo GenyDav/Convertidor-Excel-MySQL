@@ -15,6 +15,7 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JProgressBar;
@@ -49,9 +50,10 @@ public class GeneradorExcel extends SwingWorker<Void,Integer>{
     private String tipoArch;
     private JLabel labelProgreso;
     private JProgressBar barra;
+    private JFrame ventana;
     private int numRegistros;
     
-    public GeneradorExcel(Conexion c, String base, ArrayList<String>tablas, JLabel label, JProgressBar barra){
+    public GeneradorExcel(Conexion c, String base, ArrayList<String>tablas, JLabel label, JProgressBar barra, JFrame ventana){
         conn = c;
         nombreBase = base;
         libro = null;
@@ -62,6 +64,7 @@ public class GeneradorExcel extends SwingWorker<Void,Integer>{
         tipoArch = null;
         labelProgreso = label;
         this.barra = barra;
+        this.ventana = ventana;
         numRegistros = 0;
     }
     
@@ -83,7 +86,6 @@ public class GeneradorExcel extends SwingWorker<Void,Integer>{
                     indiceTablaAct = i;
                     crearHoja(tablas.get(i));
                 }
-                
                 libro.write(flujoSalida);
                 libro.close();
                 libro = null;
@@ -91,12 +93,19 @@ public class GeneradorExcel extends SwingWorker<Void,Integer>{
             conn.terminarConexion();
             conn = null;
             labelProgreso.setText("Exportación de la base '" + nombreBase + "' terminada");
+            publish(100);
+            JOptionPane.showMessageDialog(
+                ventana, 
+                "La exportación finalizó con éxito",
+                "Proceso terminado", 
+                JOptionPane.INFORMATION_MESSAGE
+            );
         }catch (FileNotFoundException ex){
             // si el archivo está abierto cuando se intenta sobreescribir
             // se le pide al usuario que cierre el archivo antes de comenzar
             // a exportar la base de datos
             JOptionPane.showMessageDialog(
-                null, 
+                ventana, 
                 "El archivo está siendo utilizado por otro programa.  "
                     + "\nCiérrelo e inténtelo de nuevo.",
                 "No se puede escribir el archivo", 
@@ -180,8 +189,8 @@ public class GeneradorExcel extends SwingWorker<Void,Integer>{
         // Ajustar el ancho de las columnas a su contenido
         for(int j=0;j<numColumnas;j++){
             hoja.autoSizeColumn(j);
-        }
-        publish(100);
+        }   
+        //publish(100);
     }
     
     private CellStyle defEstiloEnc(){
