@@ -7,6 +7,7 @@ package interfaz;
 
 import conexion.Conexion;
 import excel.GeneradorExcel;
+import excel.LectorExcel;
 import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.event.ItemEvent;
@@ -14,7 +15,6 @@ import java.io.File;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import javax.swing.DefaultListModel;
-import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.UIManager;
@@ -40,6 +40,10 @@ public class InterfazGrafica extends javax.swing.JFrame {
     private boolean []marcadorTablas;
     private int indiceTablaAct;
     private boolean cambioCancelado;
+    
+    // Atributos para leer archivo de Excel
+    private LectorExcel lector;
+    private ArrayList<String> listaHojas;
 
     public InterfazGrafica() {
         UIManager.put("ProgressBar.selectionBackground", Color.black);
@@ -77,6 +81,9 @@ public class InterfazGrafica extends javax.swing.JFrame {
         numTablaSel = 0;
         indiceTablaAct = 0;
         cambioCancelado = false;
+        
+        // Inicialización de variables para leer archivoExcel
+        lector = new LectorExcel(comboHojas);
     }
     
     /**
@@ -113,7 +120,7 @@ public class InterfazGrafica extends javax.swing.JFrame {
         jScrollPane2 = new javax.swing.JScrollPane();
         tabla1 = new javax.swing.JTable();
         jLabel9 = new javax.swing.JLabel();
-        comboTablas1 = new javax.swing.JComboBox();
+        comboHojas = new javax.swing.JComboBox();
         jLabel10 = new javax.swing.JLabel();
         jPanel12 = new javax.swing.JPanel();
         jPanel13 = new javax.swing.JPanel();
@@ -136,7 +143,7 @@ public class InterfazGrafica extends javax.swing.JFrame {
         jSeparator2 = new javax.swing.JSeparator();
         btnAbrir = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
-        archivoExcel = new javax.swing.JLabel();
+        labelArchivo = new javax.swing.JLabel();
         panelExport = new javax.swing.JPanel();
         comboBases = new javax.swing.JComboBox();
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -385,9 +392,9 @@ public class InterfazGrafica extends javax.swing.JFrame {
         jLabel9.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         jLabel9.setText("Archivo seleccionado");
 
-        comboTablas1.addItemListener(new java.awt.event.ItemListener() {
+        comboHojas.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                comboTablas1ItemStateChanged(evt);
+                comboHojasItemStateChanged(evt);
             }
         });
 
@@ -557,10 +564,10 @@ public class InterfazGrafica extends javax.swing.JFrame {
 
         jButton2.setText("Cambiar tipos");
 
-        archivoExcel.setForeground(new java.awt.Color(102, 102, 102));
-        archivoExcel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        archivoExcel.setText("Seleccione un archivo  ");
-        archivoExcel.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        labelArchivo.setForeground(new java.awt.Color(102, 102, 102));
+        labelArchivo.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        labelArchivo.setText("Seleccione un archivo  ");
+        labelArchivo.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
         javax.swing.GroupLayout panelImportLayout = new javax.swing.GroupLayout(panelImport);
         panelImport.setLayout(panelImportLayout);
@@ -582,8 +589,8 @@ public class InterfazGrafica extends javax.swing.JFrame {
                                     .addComponent(jLabel10))
                                 .addGap(10, 10, 10)
                                 .addGroup(panelImportLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(comboTablas1, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(archivoExcel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                    .addComponent(comboHojas, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(labelArchivo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                                 .addGap(6, 6, 6)
                                 .addGroup(panelImportLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                     .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -613,7 +620,7 @@ public class InterfazGrafica extends javax.swing.JFrame {
                     .addGroup(panelImportLayout.createSequentialGroup()
                         .addGroup(panelImportLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel9)
-                            .addComponent(archivoExcel, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(labelArchivo, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(btnAbrir, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(panelImportLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -625,7 +632,7 @@ public class InterfazGrafica extends javax.swing.JFrame {
                                     .addComponent(jLabel10)
                                     .addGroup(panelImportLayout.createSequentialGroup()
                                         .addGap(1, 1, 1)
-                                        .addComponent(comboTablas1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                        .addComponent(comboHojas, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
                         .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 294, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jPanel12, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -1116,9 +1123,9 @@ public class InterfazGrafica extends javax.swing.JFrame {
         cardLayout2.show(jPanel7, "cardExport");
     }//GEN-LAST:event_guardar_excelActionPerformed
 
-    private void comboTablas1ItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_comboTablas1ItemStateChanged
+    private void comboHojasItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_comboHojasItemStateChanged
         // TODO add your handling code here:
-    }//GEN-LAST:event_comboTablas1ItemStateChanged
+    }//GEN-LAST:event_comboHojasItemStateChanged
 
     private void btnQuitar1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnQuitar1ActionPerformed
         // TODO add your handling code here:
@@ -1145,7 +1152,7 @@ public class InterfazGrafica extends javax.swing.JFrame {
     }//GEN-LAST:event_btnAgregarTabla1ActionPerformed
 
     private void btnAbrirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAbrirActionPerformed
-        SelectorApertura sa = new SelectorApertura(archivoExcel);
+        SelectorApertura sa = new SelectorApertura(labelArchivo,lector);
         sa.showOpenDialog(jPanel1);
     }//GEN-LAST:event_btnAbrirActionPerformed
     
@@ -1272,7 +1279,6 @@ public class InterfazGrafica extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JLabel archivoExcel;
     private javax.swing.JProgressBar barraProgreso;
     private javax.swing.JProgressBar barraProgreso1;
     private javax.swing.JButton btnAbrir;
@@ -1288,8 +1294,8 @@ public class InterfazGrafica extends javax.swing.JFrame {
     private javax.swing.JButton btnSalir;
     private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JComboBox comboBases;
+    private javax.swing.JComboBox comboHojas;
     private javax.swing.JComboBox comboTablas;
-    private javax.swing.JComboBox comboTablas1;
     private javax.swing.JButton guardar_bd;
     private javax.swing.JButton guardar_excel;
     private javax.swing.JLabel info;
@@ -1329,6 +1335,7 @@ public class InterfazGrafica extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPaneSel1;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator2;
+    private javax.swing.JLabel labelArchivo;
     private javax.swing.JLabel labelRegistros;
     private javax.swing.JLabel labelRegistros1;
     private javax.swing.JLabel labelSelTabla;
