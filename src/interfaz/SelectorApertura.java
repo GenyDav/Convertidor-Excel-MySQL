@@ -5,9 +5,11 @@
  */
 package interfaz;
 
+import excel.LectorExcel;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
+import java.util.ArrayList;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -22,9 +24,12 @@ public class SelectorApertura extends JFileChooser{
     private String nomArch;
     private String rutaArch;    
     private String extension;
-    private JLabel label;
     
-    public SelectorApertura(JLabel label){
+    private JLabel label;
+    private ArrayList<String> hojas;
+    private LectorExcel lector;
+    
+    public SelectorApertura(JLabel label, LectorExcel lector){
         setDialogTitle("Abrir archivo Excel");
         setAcceptAllFileFilterUsed(false);
         setMultiSelectionEnabled(false);
@@ -33,6 +38,7 @@ public class SelectorApertura extends JFileChooser{
         
         extension = "xlsx";
         this.label = label;
+        this.lector = lector;    
         
         addPropertyChangeListener(JFileChooser.FILE_FILTER_CHANGED_PROPERTY, new PropertyChangeListener(){
             @Override
@@ -68,7 +74,9 @@ public class SelectorApertura extends JFileChooser{
                 JOptionPane.INFORMATION_MESSAGE
             );
         }else{
-            label.setText(nomArch+"  ");
+            label.setText(nomArch + "  ");
+            lector.setRuta(rutaArch);
+            lector.obtenerNombresHojas();
             super.approveSelection();
         }
     }
