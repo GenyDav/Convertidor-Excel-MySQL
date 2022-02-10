@@ -69,6 +69,7 @@ public class InterfazGrafica extends javax.swing.JFrame {
         mensaje = "";
        
         tabla.setAutoResizeMode(JTable.AUTO_RESIZE_OFF); // mostrar barra de desplazamiento horizontal
+        tablaExcel.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
         formato = null;
         
         modeloLista = new DefaultListModel();
@@ -118,7 +119,7 @@ public class InterfazGrafica extends javax.swing.JFrame {
         jPanel7 = new javax.swing.JPanel();
         panelImport = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
-        tabla1 = new javax.swing.JTable();
+        tablaExcel = new javax.swing.JTable();
         jLabel9 = new javax.swing.JLabel();
         comboHojas = new javax.swing.JComboBox();
         jLabel10 = new javax.swing.JLabel();
@@ -378,7 +379,7 @@ public class InterfazGrafica extends javax.swing.JFrame {
 
         jScrollPane2.setToolTipText("");
 
-        tabla1.setModel(new javax.swing.table.DefaultTableModel(
+        tablaExcel.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
@@ -386,8 +387,8 @@ public class InterfazGrafica extends javax.swing.JFrame {
 
             }
         ));
-        tabla1.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_ALL_COLUMNS);
-        jScrollPane2.setViewportView(tabla1);
+        tablaExcel.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_ALL_COLUMNS);
+        jScrollPane2.setViewportView(tablaExcel);
 
         jLabel9.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         jLabel9.setText("Archivo seleccionado");
@@ -1152,7 +1153,7 @@ public class InterfazGrafica extends javax.swing.JFrame {
     }//GEN-LAST:event_btnAgregarTabla1ActionPerformed
 
     private void btnAbrirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAbrirActionPerformed
-        SelectorApertura sa = new SelectorApertura(labelArchivo,lector);
+        SelectorApertura sa = new SelectorApertura(labelArchivo,tablaExcel,lector);
         sa.showOpenDialog(jPanel1);
     }//GEN-LAST:event_btnAbrirActionPerformed
     
@@ -1346,7 +1347,7 @@ public class InterfazGrafica extends javax.swing.JFrame {
     private javax.swing.JList seleccionTablas;
     private javax.swing.JList seleccionTablas1;
     private javax.swing.JTable tabla;
-    private javax.swing.JTable tabla1;
+    private javax.swing.JTable tablaExcel;
     private javax.swing.JRadioButton tablasCompletas;
     private javax.swing.JRadioButton tablasCompletas1;
     private javax.swing.JRadioButton tablasSel;
