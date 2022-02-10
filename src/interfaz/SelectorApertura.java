@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JTable;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 
@@ -26,10 +27,12 @@ public class SelectorApertura extends JFileChooser{
     private String extension;
     
     private JLabel label;
+    private JTable tabla;
+    
     private ArrayList<String> hojas;
     private LectorExcel lector;
     
-    public SelectorApertura(JLabel label, LectorExcel lector){
+    public SelectorApertura(JLabel label, JTable tabla, LectorExcel lector){
         setDialogTitle("Abrir archivo Excel");
         setAcceptAllFileFilterUsed(false);
         setMultiSelectionEnabled(false);
@@ -38,6 +41,7 @@ public class SelectorApertura extends JFileChooser{
         
         extension = "xlsx";
         this.label = label;
+        this.tabla = tabla;
         this.lector = lector;    
         
         addPropertyChangeListener(JFileChooser.FILE_FILTER_CHANGED_PROPERTY, new PropertyChangeListener(){
@@ -77,6 +81,7 @@ public class SelectorApertura extends JFileChooser{
             label.setText(nomArch + "  ");
             lector.setRuta(rutaArch);
             lector.obtenerNombresHojas();
+            new FormatoTablaExcel(tabla,0,lector).asignarNombresColumnas();
             super.approveSelection();
         }
     }
