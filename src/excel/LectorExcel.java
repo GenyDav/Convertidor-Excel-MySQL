@@ -18,6 +18,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
  */
 public class LectorExcel {
     private String ruta;
+    private FileInputStream flujoEntrada;
     private XSSFWorkbook libro;
     private JComboBox comboHojas;
     
@@ -29,7 +30,9 @@ public class LectorExcel {
 
     public void setRuta(String ruta){
         this.ruta = ruta;
-        try(FileInputStream flujoEntrada = new FileInputStream(new File(ruta))){
+        try{
+            flujoEntrada = new FileInputStream(new File(ruta));
+            System.out.println("Leyendo archivo...");
             libro = new XSSFWorkbook(flujoEntrada);
         }catch(FileNotFoundException e){
             e.printStackTrace();
@@ -43,8 +46,22 @@ public class LectorExcel {
     }
     
     public void obtenerNombresHojas(){
+        comboHojas.removeAllItems();
         for(int i=0;i<libro.getNumberOfSheets();i++){
             comboHojas.addItem(libro.getSheetName(i));
+            System.out.println(libro.getSheetName(i));
+        }
+    }
+    
+    public XSSFWorkbook getLibro(){
+        return libro;
+    }
+    
+    public void cerrarArchivo(){
+        try {
+            flujoEntrada.close();
+        } catch (IOException ex) {
+            ex.printStackTrace();
         }
     }
 }
