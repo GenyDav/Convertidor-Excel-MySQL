@@ -10,7 +10,6 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
 import javax.swing.JFileChooser;
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.plaf.basic.BasicFileChooserUI;
@@ -34,7 +33,6 @@ public class SelectorGuarda extends JFileChooser {
         setFileFilter(new FileNameExtensionFilter("Libro de Excel 97-2003 (*.xls)","xls"));
         setFileFilter(new FileNameExtensionFilter("Libro de Excel (*.xlsx)","xlsx"));
         rutaArch = archivo.getPath();
-        //System.out.println("path: "+rutaArch);
         nomArch = archivo.getName();
         extension = "xlsx";
         interfaz = (BasicFileChooserUI)getUI();
@@ -85,8 +83,7 @@ public class SelectorGuarda extends JFileChooser {
             rutaArch += "." + extension;
             nomArch += "." + extension;
         }
-        System.out.println("ruta nueva: "+rutaArch);
-        //System.out.println("Ubicacion: "+getCurrentDirectory());
+        //System.out.println("ruta nueva: "+rutaArch);
         File archivo = new File(rutaArch);
         if(archivo.exists()){
             int resp = JOptionPane.showConfirmDialog(
