@@ -69,25 +69,14 @@ public class SelectorApertura extends JFileChooser{
         }
         File archivo = new File(rutaArch);
         if(!archivo.exists()){
-            JOptionPane.showMessageDialog(
-                this, 
-                nomArch
-                + "\nNo se encuentra el archivo.  "
-                + "\nCompruebe el nombre de archivo e intente de nuevo.",
-                "No se puede abrir el archivo", 
-                JOptionPane.INFORMATION_MESSAGE
-            );
+            mostrarMensaje(this,nomArch+"\nNo se encuentra el archivo.  \nCompruebe el nombre de archivo e intente de nuevo.  ",
+                "No se puede abrir el archivo", JOptionPane.INFORMATION_MESSAGE);
         }else{
             super.approveSelection();
             System.out.println("Tamaño: "+archivo.length());
             if(archivo.length()==0){
-                JOptionPane.showMessageDialog(
-                    this, 
-                    nomArch
-                    + "\nEl archivo no tiene información.  ",
-                    "No se puede leer el archivo", 
-                    JOptionPane.INFORMATION_MESSAGE
-                );
+                mostrarMensaje(this,nomArch+"\nEl archivo no tiene información.  ",
+                    "No se puede leer el archivo",JOptionPane.WARNING_MESSAGE);
                 tabla.setModel(new DefaultTableModel());
                 label.setText("Selecciona un archivo  "); 
             }else{
@@ -97,5 +86,9 @@ public class SelectorApertura extends JFileChooser{
                 new FormatoTablaExcel(tabla,0,lector).asignarNombresColumnas(); 
             }
         }
+    }
+    
+    public void mostrarMensaje(JFileChooser ventana, String mensaje, String titulo, int tipoMsj){
+        JOptionPane.showMessageDialog(ventana, mensaje, titulo, tipoMsj);
     }
 }
