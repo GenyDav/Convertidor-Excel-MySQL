@@ -15,6 +15,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.table.DefaultTableModel;
 
 
 /**
@@ -59,9 +60,8 @@ public class SelectorApertura extends JFileChooser{
     public void approveSelection(){
         nomArch = getSelectedFile().getName();
         rutaArch = getSelectedFile().getPath();  
-        System.out.println(nomArch);
-        System.out.println(rutaArch);
-        System.out.println("================");
+        //System.out.println(nomArch);
+        //System.out.println(rutaArch);
         // comprobar si el nombre del archivo tiene la extensión correspondiente
         if(!nomArch.endsWith(extension)){
             rutaArch += "." + extension;
@@ -78,11 +78,24 @@ public class SelectorApertura extends JFileChooser{
                 JOptionPane.INFORMATION_MESSAGE
             );
         }else{
-            label.setText(nomArch + "  ");
-            lector.setRuta(rutaArch);
-            lector.obtenerNombresHojas();
-            new FormatoTablaExcel(tabla,0,lector).asignarNombresColumnas();
             super.approveSelection();
+            System.out.println("Tamaño: "+archivo.length());
+            if(archivo.length()==0){
+                JOptionPane.showMessageDialog(
+                    this, 
+                    nomArch
+                    + "\nEl archivo no tiene información.  ",
+                    "No se puede leer el archivo", 
+                    JOptionPane.INFORMATION_MESSAGE
+                );
+                tabla.setModel(new DefaultTableModel());
+                label.setText("Selecciona un archivo  "); 
+            }else{
+                lector.setRuta(rutaArch);
+                lector.obtenerNombresHojas();
+                label.setText(nomArch + "  "); 
+                new FormatoTablaExcel(tabla,0,lector).asignarNombresColumnas(); 
+            }
         }
     }
 }
