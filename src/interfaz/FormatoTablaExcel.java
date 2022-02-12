@@ -23,7 +23,8 @@ public class FormatoTablaExcel {
     private JTable tabla;
     private LectorExcel lector;
     private XSSFSheet hoja;
-    private int indiceRengInicio;
+    private int indiceRengInicio, indiceRengFinal;
+    private int indiceColInicio, indiceColFinal;
     
     private int indice; // indice de la hoja que se muestra en pantalla
     private int numColumnas; // de la hoja actual
@@ -34,9 +35,12 @@ public class FormatoTablaExcel {
         tabla.setModel(modelo);
         this.lector = lector;
         this.indice = indiceHoja;
-        numColumnas = 0;
         hoja = lector.getLibro().getSheetAt(indice);
+        numColumnas = 0;
         indiceRengInicio = 0;
+        indiceRengFinal = 0;
+        indiceColInicio = 0;
+        indiceColFinal = 0;
     }
     
     public final void asignarNombresColumnas(){
@@ -46,13 +50,14 @@ public class FormatoTablaExcel {
         if(hoja.getPhysicalNumberOfRows()==1){ // si solo hay un renglón en la hoja
             encabezado = hoja.getRow(hoja.getLastRowNum());
         }else{
-            System.out.println("primer linea: "+hoja.getFirstRowNum());
+            System.out.println("encabezado: "+hoja.getFirstRowNum());
             encabezado = hoja.getRow(hoja.getFirstRowNum());
             indiceRengInicio = hoja.getFirstRowNum();
         }
+        indiceColInicio = encabezado.getFirstCellNum();
         System.out.println("Primer columna: "+encabezado.getFirstCellNum());
+        indiceColFinal = encabezado.getLastCellNum();
         System.out.println("Ultima columna: "+encabezado.getLastCellNum());
-        System.out.println("ultima linea: "+hoja.getLastRowNum());
        
         Iterator<Cell> iterador = encabezado.cellIterator();
         while(iterador.hasNext()){
@@ -64,15 +69,20 @@ public class FormatoTablaExcel {
     }
     
     public final void escribirCeldas(){
+        indiceRengFinal = hoja.getLastRowNum();
+        System.out.println("Ultima linea: "+indiceRengFinal);
+        
+        
         Object []renglon = new Object[numColumnas];
         Row renglonArch;
-        System.out.println(hoja.getPhysicalNumberOfRows());
+
         Iterator<Row> iteradorRenglon = hoja.rowIterator();
         renglonArch = iteradorRenglon.next();
         while(iteradorRenglon.hasNext()){
             renglonArch = iteradorRenglon.next();
             for(int i=0;i<numColumnas;i++){
-                renglon[i] = renglonArch.getCell(i);
+                System.out.println("Columna: "+(i+indiceColInicio));
+                renglon[i] = renglonArch.getCell(i+indiceColInicio);
             }
             modelo.addRow(renglon);
         }
