@@ -9,6 +9,7 @@ import excel.LectorExcel;
 import java.util.ArrayList;
 import java.util.Iterator;
 import javax.swing.JTable;
+import javax.swing.SwingWorker;
 import javax.swing.table.DefaultTableModel;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
@@ -18,9 +19,8 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
  *
  * @author Geny
  */
-public class FormatoTablaExcel {
+public class FormatoTablaExcel extends SwingWorker<Void,Void>{
     private DefaultTableModel modelo; 
-    private JTable tabla;
     private LectorExcel lector;
     private XSSFSheet hoja;
     private int indiceRengFinal;
@@ -29,10 +29,10 @@ public class FormatoTablaExcel {
     private int indice; // indice de la hoja que se muestra en pantalla
     private int numColumnas; // de la hoja actual
     
-    public FormatoTablaExcel(JTable tabla, int indiceHoja, LectorExcel lector){
+    public FormatoTablaExcel(int indiceHoja, LectorExcel lector){
         modelo = new DefaultTableModel();
-        this.tabla = tabla;
-        tabla.setModel(modelo);
+        lector.getTabla().setModel(modelo);
+        //tabla.setModel(modelo);
         this.lector = lector;
         this.indice = indiceHoja;
         hoja = lector.getLibro().getSheetAt(indice);
@@ -89,5 +89,11 @@ public class FormatoTablaExcel {
             asignarNombresColumnas();
             escribirCeldas();
         }
+    }
+    
+    @Override
+    public Void doInBackground(){
+        llenarTabla();
+        return null;
     }
 }
