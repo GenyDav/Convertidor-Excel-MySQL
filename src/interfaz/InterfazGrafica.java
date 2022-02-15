@@ -32,6 +32,7 @@ public class InterfazGrafica extends javax.swing.JFrame {
     private Conexion conn;          // encargado de realizar la conexión y consultas a la base de datos
     private String mensaje;         // mensaje de la pantalla de inicio
     private FormatoTabla formato;   // formato de la tabla en donde se muestran los datos
+    private FormatoTablaExcel formatoExcel;
     private DefaultListModel modeloLista;
     private ArrayList<String> listaTablas;      // lista de tablas que van a ser exportadas
     private ArrayList<String> listaTablasCompletas;
@@ -71,6 +72,7 @@ public class InterfazGrafica extends javax.swing.JFrame {
         tabla.setAutoResizeMode(JTable.AUTO_RESIZE_OFF); // mostrar barra de desplazamiento horizontal
         tablaExcel.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
         formato = null;
+        formatoExcel = null;
         
         modeloLista = new DefaultListModel();
         seleccionTablas.setModel(modeloLista);
@@ -84,7 +86,7 @@ public class InterfazGrafica extends javax.swing.JFrame {
         cambioCancelado = false;
         
         // Inicialización de variables para leer archivoExcel
-        lector = new LectorExcel(comboHojas);
+        lector = new LectorExcel(comboHojas, tablaExcel);
     }
     
     /**
@@ -97,6 +99,7 @@ public class InterfazGrafica extends javax.swing.JFrame {
     private void initComponents() {
 
         buttonGroup1 = new javax.swing.ButtonGroup();
+        buttonGroup2 = new javax.swing.ButtonGroup();
         jPanel1 = new javax.swing.JPanel();
         jPanel3 = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
@@ -137,7 +140,7 @@ public class InterfazGrafica extends javax.swing.JFrame {
         jLabel11 = new javax.swing.JLabel();
         jPanel9 = new javax.swing.JPanel();
         btnAgregarTabla1 = new javax.swing.JButton();
-        labelSelTabla1 = new javax.swing.JLabel();
+        labelSelTablaExcel = new javax.swing.JLabel();
         jLabel12 = new javax.swing.JLabel();
         jPanel15 = new javax.swing.JPanel();
         labelRegistros1 = new javax.swing.JLabel();
@@ -442,7 +445,7 @@ public class InterfazGrafica extends javax.swing.JFrame {
         });
 
         tablasSel1.setBackground(new java.awt.Color(255, 255, 255));
-        buttonGroup1.add(tablasSel1);
+        buttonGroup2.add(tablasSel1);
         tablasSel1.setText("Importar solo las hojas seleccionadas");
         tablasSel1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -451,7 +454,7 @@ public class InterfazGrafica extends javax.swing.JFrame {
         });
 
         tablasCompletas1.setBackground(new java.awt.Color(255, 255, 255));
-        buttonGroup1.add(tablasCompletas1);
+        buttonGroup2.add(tablasCompletas1);
         tablasCompletas1.setSelected(true);
         tablasCompletas1.setText("Importar todas las hojas del archivo");
         tablasCompletas1.addActionListener(new java.awt.event.ActionListener() {
@@ -525,13 +528,13 @@ public class InterfazGrafica extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel9Layout.createSequentialGroup()
                 .addComponent(btnAgregarTabla1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(labelSelTabla1, javax.swing.GroupLayout.PREFERRED_SIZE, 219, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(labelSelTablaExcel, javax.swing.GroupLayout.PREFERRED_SIZE, 219, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
         jPanel9Layout.setVerticalGroup(
             jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(btnAgregarTabla1)
-            .addComponent(labelSelTabla1, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(labelSelTablaExcel, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
         jLabel12.setFont(new java.awt.Font("Dialog", 1, 13)); // NOI18N
@@ -565,10 +568,9 @@ public class InterfazGrafica extends javax.swing.JFrame {
 
         jButton2.setText("Cambiar tipos");
 
-        labelArchivo.setForeground(new java.awt.Color(102, 102, 102));
         labelArchivo.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         labelArchivo.setText("Seleccione un archivo  ");
-        labelArchivo.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        labelArchivo.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(204, 204, 204)));
 
         javax.swing.GroupLayout panelImportLayout = new javax.swing.GroupLayout(panelImport);
         panelImport.setLayout(panelImportLayout);
@@ -741,6 +743,7 @@ public class InterfazGrafica extends javax.swing.JFrame {
 
         tablasCompletas.setBackground(new java.awt.Color(255, 255, 255));
         buttonGroup1.add(tablasCompletas);
+        tablasCompletas.setSelected(true);
         tablasCompletas.setLabel("Exportar todas las tablas de la base");
         tablasCompletas.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -1125,7 +1128,14 @@ public class InterfazGrafica extends javax.swing.JFrame {
     }//GEN-LAST:event_guardar_excelActionPerformed
 
     private void comboHojasItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_comboHojasItemStateChanged
-        // TODO add your handling code here:
+        if(evt.getStateChange()==ItemEvent.SELECTED){
+            System.out.println("...............");
+            if(comboHojas.getItemCount()>0){
+                formatoExcel = new FormatoTablaExcel(comboHojas.getSelectedIndex(),lector);
+                formatoExcel.execute();
+            }
+            labelSelTablaExcel.setText("");
+        }
     }//GEN-LAST:event_comboHojasItemStateChanged
 
     private void btnQuitar1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnQuitar1ActionPerformed
@@ -1294,6 +1304,7 @@ public class InterfazGrafica extends javax.swing.JFrame {
     private javax.swing.JButton btnQuitar1;
     private javax.swing.JButton btnSalir;
     private javax.swing.ButtonGroup buttonGroup1;
+    private javax.swing.ButtonGroup buttonGroup2;
     private javax.swing.JComboBox comboBases;
     private javax.swing.JComboBox comboHojas;
     private javax.swing.JComboBox comboTablas;
@@ -1340,7 +1351,7 @@ public class InterfazGrafica extends javax.swing.JFrame {
     private javax.swing.JLabel labelRegistros;
     private javax.swing.JLabel labelRegistros1;
     private javax.swing.JLabel labelSelTabla;
-    private javax.swing.JLabel labelSelTabla1;
+    private javax.swing.JLabel labelSelTablaExcel;
     private javax.swing.JTextArea msj;
     private javax.swing.JPanel panelExport;
     private javax.swing.JPanel panelImport;
