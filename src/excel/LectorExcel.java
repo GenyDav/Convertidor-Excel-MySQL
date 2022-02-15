@@ -5,35 +5,48 @@
  */
 package excel;
 
+import interfaz.FormatoTablaExcel;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import javax.swing.JComboBox;
+import javax.swing.JTable;
+import javax.swing.SwingWorker;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 /**
  *
  * @author Geny
  */
-public class LectorExcel {
+public class LectorExcel extends SwingWorker<Void,Void>{
     private String ruta;
     private FileInputStream flujoEntrada;
     private XSSFWorkbook libro;
     private JComboBox comboHojas;
+    private JTable tabla;
     
-    public LectorExcel(JComboBox combo){
+    public LectorExcel(JComboBox combo, JTable tabla){
         libro = null;
         ruta = "";
         comboHojas = combo;
+        this.tabla = tabla;
     }
 
     public void setRuta(String ruta){
         this.ruta = ruta;
+    }
+    
+    public JTable getTabla(){
+        return tabla;
+    }
+    
+    public void leerArchivo(){
         try{
             flujoEntrada = new FileInputStream(new File(ruta));
             System.out.println("Leyendo archivo...");
             libro = new XSSFWorkbook(flujoEntrada);
+            new FormatoTablaExcel(0,this).execute(); 
         }catch(FileNotFoundException e){
             e.printStackTrace();
         }catch(IOException ex){
@@ -49,7 +62,6 @@ public class LectorExcel {
         comboHojas.removeAllItems();
         for(int i=0;i<libro.getNumberOfSheets();i++){
             comboHojas.addItem(libro.getSheetName(i));
-            System.out.println(libro.getSheetName(i));
         }
     }
     
@@ -63,5 +75,13 @@ public class LectorExcel {
         } catch (IOException ex) {
             ex.printStackTrace();
         }
+    }
+    
+    @Override
+    public Void doInBackground(){
+        leerArchivo();
+        obtenerNumHojas();
+        obtenerNombresHojas();
+        return null;
     }
 }
