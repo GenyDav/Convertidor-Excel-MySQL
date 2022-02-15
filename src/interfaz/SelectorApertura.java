@@ -81,9 +81,8 @@ public class SelectorApertura extends JFileChooser{
                 label.setText("Selecciona un archivo  "); 
             }else{
                 lector.setRuta(rutaArch);
-                lector.obtenerNombresHojas();
+                lector.execute();
                 label.setText(nomArch + "  "); 
-                new FormatoTablaExcel(tabla,0,lector).asignarNombresColumnas(); 
             }
         }
     }
