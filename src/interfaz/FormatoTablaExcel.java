@@ -84,11 +84,12 @@ public class FormatoTablaExcel extends SwingWorker<Void,Void>{
     }
     
     public final void llenarTabla(){
-        System.out.println("numero de renglones: "+hoja.getPhysicalNumberOfRows());
+        //System.out.println("numero de renglones: "+hoja.getPhysicalNumberOfRows());
         if(hoja.getPhysicalNumberOfRows()>0){
             asignarNombresColumnas();
             escribirCeldas();
         }
+        lector.getLabel().setText(hoja.getPhysicalNumberOfRows()+ "renglones cargados");
     }
     
     @Override
