@@ -11,6 +11,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import javax.swing.JComboBox;
+import javax.swing.JLabel;
 import javax.swing.JTable;
 import javax.swing.SwingWorker;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -25,12 +26,14 @@ public class LectorExcel extends SwingWorker<Void,Void>{
     private XSSFWorkbook libro;
     private JComboBox comboHojas;
     private JTable tabla;
+    private JLabel etiqueta;
     
-    public LectorExcel(JComboBox combo, JTable tabla){
+    public LectorExcel(JComboBox combo, JTable tabla, JLabel label){
         libro = null;
         ruta = "";
         comboHojas = combo;
         this.tabla = tabla;
+        etiqueta = label;
     }
 
     public void setRuta(String ruta){
@@ -41,10 +44,14 @@ public class LectorExcel extends SwingWorker<Void,Void>{
         return tabla;
     }
     
+    public JLabel getLabel(){
+        return etiqueta;
+    }
+    
     public void leerArchivo(){
         try{
             flujoEntrada = new FileInputStream(new File(ruta));
-            System.out.println("Leyendo archivo...");
+            etiqueta.setText("Leyendo archivo...");
             libro = new XSSFWorkbook(flujoEntrada);
             new FormatoTablaExcel(0,this).execute(); 
         }catch(FileNotFoundException e){
