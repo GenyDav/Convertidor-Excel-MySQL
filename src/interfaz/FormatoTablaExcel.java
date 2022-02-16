@@ -8,12 +8,12 @@ package interfaz;
 import excel.LectorExcel;
 import java.util.ArrayList;
 import java.util.Iterator;
-import javax.swing.JTable;
+import javax.swing.JButton;
 import javax.swing.SwingWorker;
 import javax.swing.table.DefaultTableModel;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.ss.usermodel.Sheet;
 
 /**
  *
@@ -22,14 +22,16 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 public class FormatoTablaExcel extends SwingWorker<Void,Void>{
     private DefaultTableModel modelo; 
     private LectorExcel lector;
-    private XSSFSheet hoja;
+    private Sheet hoja;
     private int indiceRengFinal;
     private int indiceColInicio;
     
     private int indice; // indice de la hoja que se muestra en pantalla
     private int numColumnas; // de la hoja actual
     
-    public FormatoTablaExcel(int indiceHoja, LectorExcel lector){
+    private JButton btn;
+    
+    public FormatoTablaExcel(int indiceHoja, LectorExcel lector, JButton boton){
         modelo = new DefaultTableModel();
         lector.getTabla().setModel(modelo);
         //tabla.setModel(modelo);
@@ -39,6 +41,7 @@ public class FormatoTablaExcel extends SwingWorker<Void,Void>{
         numColumnas = 0;
         indiceRengFinal = 0;
         indiceColInicio = 0;
+        btn = boton;
     }
     
     public final void asignarNombresColumnas(){
@@ -89,7 +92,8 @@ public class FormatoTablaExcel extends SwingWorker<Void,Void>{
             asignarNombresColumnas();
             escribirCeldas();
         }
-        lector.getLabel().setText(hoja.getPhysicalNumberOfRows()+ "renglones cargados");
+        lector.getLabel().setText(hoja.getPhysicalNumberOfRows()+ " renglones cargados");
+        btn.setEnabled(true);
     }
     
     @Override
