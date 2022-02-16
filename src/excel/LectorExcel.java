@@ -14,7 +14,8 @@ import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JTable;
 import javax.swing.SwingWorker;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
 
 /**
  *
@@ -22,8 +23,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
  */
 public class LectorExcel extends SwingWorker<Void,Void>{
     private String ruta;
-    private FileInputStream flujoEntrada;
-    private XSSFWorkbook libro;
+    private Workbook libro;
     private JComboBox comboHojas;
     private JTable tabla;
     private JLabel etiqueta;
@@ -50,9 +50,10 @@ public class LectorExcel extends SwingWorker<Void,Void>{
     
     public void leerArchivo(){
         try{
-            flujoEntrada = new FileInputStream(new File(ruta));
+            //flujoEntrada = new FileInputStream(new File(ruta));
             etiqueta.setText("Leyendo archivo...");
-            libro = new XSSFWorkbook(flujoEntrada);
+            libro = WorkbookFactory.create(new File(ruta));
+            //libro = new XSSFWorkbook(flujoEntrada);
             new FormatoTablaExcel(0,this).execute(); 
         }catch(FileNotFoundException e){
             e.printStackTrace();
@@ -72,13 +73,13 @@ public class LectorExcel extends SwingWorker<Void,Void>{
         }
     }
     
-    public XSSFWorkbook getLibro(){
+    public Workbook getLibro(){
         return libro;
     }
     
     public void cerrarArchivo(){
         try {
-            flujoEntrada.close();
+            libro.close();
         } catch (IOException ex) {
             ex.printStackTrace();
         }
