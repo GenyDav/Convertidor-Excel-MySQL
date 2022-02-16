@@ -10,6 +10,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JTable;
@@ -23,17 +24,21 @@ import org.apache.poi.ss.usermodel.WorkbookFactory;
  */
 public class LectorExcel extends SwingWorker<Void,Void>{
     private String ruta;
+    //private FileInputStream flujoEntrada;
     private Workbook libro;
     private JComboBox comboHojas;
     private JTable tabla;
     private JLabel etiqueta;
+    private FormatoTablaExcel formato;
+    private JButton boton;
     
-    public LectorExcel(JComboBox combo, JTable tabla, JLabel label){
+    public LectorExcel(JComboBox combo, JTable tabla, JLabel label, JButton btn){
         libro = null;
         ruta = "";
         comboHojas = combo;
         this.tabla = tabla;
         etiqueta = label;
+        boton = btn;
     }
 
     public void setRuta(String ruta){
@@ -52,9 +57,10 @@ public class LectorExcel extends SwingWorker<Void,Void>{
         try{
             //flujoEntrada = new FileInputStream(new File(ruta));
             etiqueta.setText("Leyendo archivo...");
+            boton.setEnabled(false);
             libro = WorkbookFactory.create(new File(ruta));
             //libro = new XSSFWorkbook(flujoEntrada);
-            new FormatoTablaExcel(0,this).execute(); 
+            new FormatoTablaExcel(0,this,boton).execute();
         }catch(FileNotFoundException e){
             e.printStackTrace();
         }catch(IOException ex){
