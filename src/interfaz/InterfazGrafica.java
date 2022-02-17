@@ -396,6 +396,7 @@ public class InterfazGrafica extends javax.swing.JFrame {
         jLabel9.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         jLabel9.setText("Archivo seleccionado");
 
+        comboHojas.setEnabled(false);
         comboHojas.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 comboHojasItemStateChanged(evt);
@@ -559,7 +560,7 @@ public class InterfazGrafica extends javax.swing.JFrame {
                 .addComponent(labelRegExcel, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
-        btnAbrir.setText("Seleccionar archivo");
+        btnAbrir.setText("Abrir archivo");
         btnAbrir.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnAbrirActionPerformed(evt);
@@ -567,9 +568,9 @@ public class InterfazGrafica extends javax.swing.JFrame {
         });
 
         jButton2.setText("Cambiar tipos");
+        jButton2.setEnabled(false);
 
         labelArchivo.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        labelArchivo.setText("Seleccione un archivo  ");
         labelArchivo.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(204, 204, 204)));
 
         javax.swing.GroupLayout panelImportLayout = new javax.swing.GroupLayout(panelImport);
@@ -1146,10 +1147,13 @@ public class InterfazGrafica extends javax.swing.JFrame {
     }//GEN-LAST:event_btnBorrarExcelActionPerformed
 
     private void tablasSelExcelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tablasSelExcelActionPerformed
-        btnAgregarTablaExcel.setEnabled(true);
-        seleccionTablasExcel.setEnabled(true);
-        jScrollPaneSel1.getVerticalScrollBar().setEnabled(true);
-        //listaTablas = listaTablasSeleccionadas;
+        if(!labelArchivo.getText().equals("")){
+            System.out.println("dgfdgfg");
+            btnAgregarTablaExcel.setEnabled(true);
+            seleccionTablasExcel.setEnabled(true);
+            jScrollPaneSel1.getVerticalScrollBar().setEnabled(true);
+            //listaTablas = listaTablasSeleccionadas;
+        }
     }//GEN-LAST:event_tablasSelExcelActionPerformed
 
     private void tablasCompletasExcelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tablasCompletasExcelActionPerformed
