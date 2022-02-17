@@ -86,7 +86,7 @@ public class InterfazGrafica extends javax.swing.JFrame {
         cambioCancelado = false;
         
         // Inicialización de variables para leer archivoExcel
-        lector = new LectorExcel(comboHojas, tablaExcel);
+        lector = new LectorExcel(comboHojas, tablaExcel, labelRegExcel, btnAbrir);
     }
     
     /**
@@ -129,21 +129,21 @@ public class InterfazGrafica extends javax.swing.JFrame {
         jPanel12 = new javax.swing.JPanel();
         jPanel13 = new javax.swing.JPanel();
         jScrollPaneSel1 = new javax.swing.JScrollPane();
-        seleccionTablas1 = new javax.swing.JList();
-        btnQuitar1 = new javax.swing.JButton();
-        btnBorrar1 = new javax.swing.JButton();
-        tablasSel1 = new javax.swing.JRadioButton();
-        tablasCompletas1 = new javax.swing.JRadioButton();
+        seleccionTablasExcel = new javax.swing.JList();
+        btnQuitarExcel = new javax.swing.JButton();
+        btnBorrarExcel = new javax.swing.JButton();
+        tablasSelExcel = new javax.swing.JRadioButton();
+        tablasCompletasExcel = new javax.swing.JRadioButton();
         btnExportar1 = new javax.swing.JButton();
         barraProgreso1 = new javax.swing.JProgressBar();
         info1 = new javax.swing.JLabel();
         jLabel11 = new javax.swing.JLabel();
         jPanel9 = new javax.swing.JPanel();
-        btnAgregarTabla1 = new javax.swing.JButton();
+        btnAgregarTablaExcel = new javax.swing.JButton();
         labelSelTablaExcel = new javax.swing.JLabel();
         jLabel12 = new javax.swing.JLabel();
         jPanel15 = new javax.swing.JPanel();
-        labelRegistros1 = new javax.swing.JLabel();
+        labelRegExcel = new javax.swing.JLabel();
         jSeparator2 = new javax.swing.JSeparator();
         btnAbrir = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
@@ -410,9 +410,9 @@ public class InterfazGrafica extends javax.swing.JFrame {
         jScrollPaneSel1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         jScrollPaneSel1.setEnabled(false);
 
-        seleccionTablas1.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
-        seleccionTablas1.setEnabled(false);
-        jScrollPaneSel1.setViewportView(seleccionTablas1);
+        seleccionTablasExcel.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        seleccionTablasExcel.setEnabled(false);
+        jScrollPaneSel1.setViewportView(seleccionTablasExcel);
 
         javax.swing.GroupLayout jPanel13Layout = new javax.swing.GroupLayout(jPanel13);
         jPanel13.setLayout(jPanel13Layout);
@@ -428,38 +428,38 @@ public class InterfazGrafica extends javax.swing.JFrame {
             .addComponent(jScrollPaneSel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 282, Short.MAX_VALUE)
         );
 
-        btnQuitar1.setText("Quitar hoja(s)");
-        btnQuitar1.setEnabled(false);
-        btnQuitar1.addActionListener(new java.awt.event.ActionListener() {
+        btnQuitarExcel.setText("Quitar hoja(s)");
+        btnQuitarExcel.setEnabled(false);
+        btnQuitarExcel.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnQuitar1ActionPerformed(evt);
+                btnQuitarExcelActionPerformed(evt);
             }
         });
 
-        btnBorrar1.setText("Borrar todo");
-        btnBorrar1.setEnabled(false);
-        btnBorrar1.addActionListener(new java.awt.event.ActionListener() {
+        btnBorrarExcel.setText("Borrar todo");
+        btnBorrarExcel.setEnabled(false);
+        btnBorrarExcel.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnBorrar1ActionPerformed(evt);
+                btnBorrarExcelActionPerformed(evt);
             }
         });
 
-        tablasSel1.setBackground(new java.awt.Color(255, 255, 255));
-        buttonGroup2.add(tablasSel1);
-        tablasSel1.setText("Importar solo las hojas seleccionadas");
-        tablasSel1.addActionListener(new java.awt.event.ActionListener() {
+        tablasSelExcel.setBackground(new java.awt.Color(255, 255, 255));
+        buttonGroup2.add(tablasSelExcel);
+        tablasSelExcel.setText("Importar solo las hojas seleccionadas");
+        tablasSelExcel.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                tablasSel1ActionPerformed(evt);
+                tablasSelExcelActionPerformed(evt);
             }
         });
 
-        tablasCompletas1.setBackground(new java.awt.Color(255, 255, 255));
-        buttonGroup2.add(tablasCompletas1);
-        tablasCompletas1.setSelected(true);
-        tablasCompletas1.setText("Importar todas las hojas del archivo");
-        tablasCompletas1.addActionListener(new java.awt.event.ActionListener() {
+        tablasCompletasExcel.setBackground(new java.awt.Color(255, 255, 255));
+        buttonGroup2.add(tablasCompletasExcel);
+        tablasCompletasExcel.setSelected(true);
+        tablasCompletasExcel.setText("Importar todas las hojas del archivo");
+        tablasCompletasExcel.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                tablasCompletas1ActionPerformed(evt);
+                tablasCompletasExcelActionPerformed(evt);
             }
         });
 
@@ -472,27 +472,27 @@ public class InterfazGrafica extends javax.swing.JFrame {
                 .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jPanel13, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(jPanel12Layout.createSequentialGroup()
-                        .addComponent(btnBorrar1, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btnBorrarExcel, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(btnQuitar1, javax.swing.GroupLayout.DEFAULT_SIZE, 134, Short.MAX_VALUE))
+                        .addComponent(btnQuitarExcel, javax.swing.GroupLayout.DEFAULT_SIZE, 134, Short.MAX_VALUE))
                     .addGroup(jPanel12Layout.createSequentialGroup()
                         .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(tablasCompletas1)
-                            .addComponent(tablasSel1))
+                            .addComponent(tablasCompletasExcel)
+                            .addComponent(tablasSelExcel))
                         .addGap(0, 0, Short.MAX_VALUE))))
         );
         jPanel12Layout.setVerticalGroup(
             jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel12Layout.createSequentialGroup()
-                .addComponent(tablasCompletas1)
+                .addComponent(tablasCompletasExcel)
                 .addGap(0, 0, 0)
-                .addComponent(tablasSel1)
+                .addComponent(tablasSelExcel)
                 .addGap(0, 0, 0)
                 .addComponent(jPanel13, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnQuitar1)
-                    .addComponent(btnBorrar1))
+                    .addComponent(btnQuitarExcel)
+                    .addComponent(btnBorrarExcel))
                 .addGap(0, 0, 0))
         );
 
@@ -513,11 +513,11 @@ public class InterfazGrafica extends javax.swing.JFrame {
         jLabel11.setFont(new java.awt.Font("Arial", 1, 18)); // NOI18N
         jLabel11.setText("Crear base de datos a partir de archivo Excel");
 
-        btnAgregarTabla1.setText("Seleccionar hoja");
-        btnAgregarTabla1.setEnabled(false);
-        btnAgregarTabla1.addActionListener(new java.awt.event.ActionListener() {
+        btnAgregarTablaExcel.setText("Seleccionar hoja");
+        btnAgregarTablaExcel.setEnabled(false);
+        btnAgregarTablaExcel.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnAgregarTabla1ActionPerformed(evt);
+                btnAgregarTablaExcelActionPerformed(evt);
             }
         });
 
@@ -526,22 +526,22 @@ public class InterfazGrafica extends javax.swing.JFrame {
         jPanel9Layout.setHorizontalGroup(
             jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel9Layout.createSequentialGroup()
-                .addComponent(btnAgregarTabla1)
+                .addComponent(btnAgregarTablaExcel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(labelSelTablaExcel, javax.swing.GroupLayout.PREFERRED_SIZE, 219, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
         jPanel9Layout.setVerticalGroup(
             jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(btnAgregarTabla1)
+            .addComponent(btnAgregarTablaExcel)
             .addComponent(labelSelTablaExcel, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
         jLabel12.setFont(new java.awt.Font("Dialog", 1, 13)); // NOI18N
         jLabel12.setText("Opciones de importación");
 
-        labelRegistros1.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        labelRegistros1.setText("Seleccione un archivo");
+        labelRegExcel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        labelRegExcel.setText("Seleccione un archivo");
 
         javax.swing.GroupLayout jPanel15Layout = new javax.swing.GroupLayout(jPanel15);
         jPanel15.setLayout(jPanel15Layout);
@@ -549,14 +549,14 @@ public class InterfazGrafica extends javax.swing.JFrame {
             jPanel15Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel15Layout.createSequentialGroup()
                 .addContainerGap(28, Short.MAX_VALUE)
-                .addComponent(labelRegistros1, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(labelRegExcel, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
         jPanel15Layout.setVerticalGroup(
             jPanel15Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel15Layout.createSequentialGroup()
                 .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(labelRegistros1, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(labelRegExcel, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         btnAbrir.setText("Seleccionar archivo");
@@ -1129,40 +1129,50 @@ public class InterfazGrafica extends javax.swing.JFrame {
 
     private void comboHojasItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_comboHojasItemStateChanged
         if(evt.getStateChange()==ItemEvent.SELECTED){
-            System.out.println("...............");
             if(comboHojas.getItemCount()>0){
-                formatoExcel = new FormatoTablaExcel(comboHojas.getSelectedIndex(),lector);
+                formatoExcel = new FormatoTablaExcel(comboHojas.getSelectedIndex(),lector,btnAbrir);
                 formatoExcel.execute();
             }
             labelSelTablaExcel.setText("");
         }
     }//GEN-LAST:event_comboHojasItemStateChanged
 
-    private void btnQuitar1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnQuitar1ActionPerformed
+    private void btnQuitarExcelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnQuitarExcelActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_btnQuitar1ActionPerformed
+    }//GEN-LAST:event_btnQuitarExcelActionPerformed
 
-    private void btnBorrar1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBorrar1ActionPerformed
+    private void btnBorrarExcelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBorrarExcelActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_btnBorrar1ActionPerformed
+    }//GEN-LAST:event_btnBorrarExcelActionPerformed
 
-    private void tablasSel1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tablasSel1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_tablasSel1ActionPerformed
+    private void tablasSelExcelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tablasSelExcelActionPerformed
+        btnAgregarTablaExcel.setEnabled(true);
+        seleccionTablasExcel.setEnabled(true);
+        jScrollPaneSel1.getVerticalScrollBar().setEnabled(true);
+        //listaTablas = listaTablasSeleccionadas;
+    }//GEN-LAST:event_tablasSelExcelActionPerformed
 
-    private void tablasCompletas1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tablasCompletas1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_tablasCompletas1ActionPerformed
+    private void tablasCompletasExcelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tablasCompletasExcelActionPerformed
+        btnQuitarExcel.setEnabled(false);
+        btnBorrarExcel.setEnabled(false);
+        btnAgregarTablaExcel.setEnabled(false);
+        seleccionTablasExcel.setEnabled(false);
+        jScrollPaneSel1.getVerticalScrollBar().setEnabled(false);
+        //listaTablas = listaTablasCompletas;
+    }//GEN-LAST:event_tablasCompletasExcelActionPerformed
 
     private void btnExportar1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExportar1ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_btnExportar1ActionPerformed
 
-    private void btnAgregarTabla1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarTabla1ActionPerformed
+    private void btnAgregarTablaExcelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarTablaExcelActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_btnAgregarTabla1ActionPerformed
+    }//GEN-LAST:event_btnAgregarTablaExcelActionPerformed
 
     private void btnAbrirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAbrirActionPerformed
+        if(lector.getLibro()!=null){
+            lector.cerrarArchivo();
+        }
         SelectorApertura sa = new SelectorApertura(labelArchivo,tablaExcel,lector);
         sa.showOpenDialog(jPanel1);
     }//GEN-LAST:event_btnAbrirActionPerformed
@@ -1294,14 +1304,14 @@ public class InterfazGrafica extends javax.swing.JFrame {
     private javax.swing.JProgressBar barraProgreso1;
     private javax.swing.JButton btnAbrir;
     private javax.swing.JButton btnAgregarTabla;
-    private javax.swing.JButton btnAgregarTabla1;
+    private javax.swing.JButton btnAgregarTablaExcel;
     private javax.swing.JButton btnBorrar;
-    private javax.swing.JButton btnBorrar1;
+    private javax.swing.JButton btnBorrarExcel;
     private javax.swing.JButton btnConectar;
     private javax.swing.JButton btnExportar;
     private javax.swing.JButton btnExportar1;
     private javax.swing.JButton btnQuitar;
-    private javax.swing.JButton btnQuitar1;
+    private javax.swing.JButton btnQuitarExcel;
     private javax.swing.JButton btnSalir;
     private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.ButtonGroup buttonGroup2;
@@ -1348,21 +1358,21 @@ public class InterfazGrafica extends javax.swing.JFrame {
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator2;
     private javax.swing.JLabel labelArchivo;
+    private javax.swing.JLabel labelRegExcel;
     private javax.swing.JLabel labelRegistros;
-    private javax.swing.JLabel labelRegistros1;
     private javax.swing.JLabel labelSelTabla;
     private javax.swing.JLabel labelSelTablaExcel;
     private javax.swing.JTextArea msj;
     private javax.swing.JPanel panelExport;
     private javax.swing.JPanel panelImport;
     private javax.swing.JList seleccionTablas;
-    private javax.swing.JList seleccionTablas1;
+    private javax.swing.JList seleccionTablasExcel;
     private javax.swing.JTable tabla;
     private javax.swing.JTable tablaExcel;
     private javax.swing.JRadioButton tablasCompletas;
-    private javax.swing.JRadioButton tablasCompletas1;
+    private javax.swing.JRadioButton tablasCompletasExcel;
     private javax.swing.JRadioButton tablasSel;
-    private javax.swing.JRadioButton tablasSel1;
+    private javax.swing.JRadioButton tablasSelExcel;
     private javax.swing.JPasswordField txtClave;
     private javax.swing.JTextField txtServidor;
     private javax.swing.JTextField txtUsuario;
