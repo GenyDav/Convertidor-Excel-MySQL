@@ -15,10 +15,13 @@ import java.io.File;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import javax.swing.DefaultListModel;
+import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.UIManager;
 import javax.swing.filechooser.FileSystemView;
+import javax.swing.table.DefaultTableModel;
+import org.apache.poi.ss.usermodel.Workbook;
 
 /**
  *
@@ -43,6 +46,8 @@ public class InterfazGrafica extends javax.swing.JFrame {
     private boolean cambioCancelado;
     
     // Atributos para leer archivo de Excel
+    private String nomArch;
+    private String rutaArch;
     private LectorExcel lector;
     private ArrayList<String> listaHojas;
 
@@ -86,7 +91,9 @@ public class InterfazGrafica extends javax.swing.JFrame {
         cambioCancelado = false;
         
         // Inicialización de variables para leer archivoExcel
-        lector = new LectorExcel(comboHojas, tablaExcel, labelRegExcel, btnAbrir);
+        nomArch = "";
+        rutaArch = "";
+        lector = null;
     }
     
     /**
@@ -146,7 +153,7 @@ public class InterfazGrafica extends javax.swing.JFrame {
         labelRegExcel = new javax.swing.JLabel();
         jSeparator2 = new javax.swing.JSeparator();
         btnAbrir = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
+        btnTipos = new javax.swing.JButton();
         labelArchivo = new javax.swing.JLabel();
         panelExport = new javax.swing.JPanel();
         comboBases = new javax.swing.JComboBox();
@@ -567,8 +574,8 @@ public class InterfazGrafica extends javax.swing.JFrame {
             }
         });
 
-        jButton2.setText("Cambiar tipos");
-        jButton2.setEnabled(false);
+        btnTipos.setText("Cambiar tipos");
+        btnTipos.setEnabled(false);
 
         labelArchivo.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         labelArchivo.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(204, 204, 204)));
@@ -597,7 +604,7 @@ public class InterfazGrafica extends javax.swing.JFrame {
                                     .addComponent(labelArchivo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                                 .addGap(6, 6, 6)
                                 .addGroup(panelImportLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(btnTipos, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                     .addComponent(btnAbrir, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                             .addComponent(jScrollPane2))
                         .addGap(27, 27, 27)
@@ -629,7 +636,7 @@ public class InterfazGrafica extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(panelImportLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelImportLayout.createSequentialGroup()
-                                .addComponent(jButton2)
+                                .addComponent(btnTipos)
                                 .addGap(9, 9, 9))
                             .addGroup(panelImportLayout.createSequentialGroup()
                                 .addGroup(panelImportLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1130,8 +1137,13 @@ public class InterfazGrafica extends javax.swing.JFrame {
 
     private void comboHojasItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_comboHojasItemStateChanged
         if(evt.getStateChange()==ItemEvent.SELECTED){
+            /*if(lector.getLibro()!=null){
+                System.out.println(lector.getLibro());
+            }else{
+                System.out.println("Libro es null");
+            }*/
             if(comboHojas.getItemCount()>0){
-                formatoExcel = new FormatoTablaExcel(comboHojas.getSelectedIndex(),lector,btnAbrir);
+                formatoExcel = new FormatoTablaExcel(comboHojas.getSelectedIndex(),lector);
                 formatoExcel.execute();
             }
             labelSelTablaExcel.setText("");
@@ -1148,11 +1160,9 @@ public class InterfazGrafica extends javax.swing.JFrame {
 
     private void tablasSelExcelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tablasSelExcelActionPerformed
         if(!labelArchivo.getText().equals("")){
-            System.out.println("dgfdgfg");
             btnAgregarTablaExcel.setEnabled(true);
             seleccionTablasExcel.setEnabled(true);
             jScrollPaneSel1.getVerticalScrollBar().setEnabled(true);
-            //listaTablas = listaTablasSeleccionadas;
         }
     }//GEN-LAST:event_tablasSelExcelActionPerformed
 
@@ -1162,7 +1172,6 @@ public class InterfazGrafica extends javax.swing.JFrame {
         btnAgregarTablaExcel.setEnabled(false);
         seleccionTablasExcel.setEnabled(false);
         jScrollPaneSel1.getVerticalScrollBar().setEnabled(false);
-        //listaTablas = listaTablasCompletas;
     }//GEN-LAST:event_tablasCompletasExcelActionPerformed
 
     private void btnExportar1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExportar1ActionPerformed
@@ -1174,11 +1183,37 @@ public class InterfazGrafica extends javax.swing.JFrame {
     }//GEN-LAST:event_btnAgregarTablaExcelActionPerformed
 
     private void btnAbrirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAbrirActionPerformed
-        if(lector.getLibro()!=null){
-            lector.cerrarArchivo();
+        SelectorApertura sa = new SelectorApertura();
+        int opc = sa.showOpenDialog(jPanel1);
+        
+        if(opc == JFileChooser.APPROVE_OPTION){
+            //System.out.println(sa.getSelectedFile().getPath());
+            nomArch = sa.getSelectedFile().getName();
+            rutaArch = sa.getSelectedFile().getPath();
+            File archivo = new File(rutaArch);
+            System.out.println("Tamaño del archivo: " + archivo.length());
+            if(archivo.length()==0){
+                tabla.setModel(new DefaultTableModel());
+                JOptionPane.showMessageDialog(
+                    this, 
+                    nomArch+"\nEl archivo no tiene información.  ", 
+                    "No se puede leer el archivo",
+                    JOptionPane.WARNING_MESSAGE
+                );
+                labelArchivo.setText(""); 
+            }else{
+                try{
+                comboHojas.setEnabled(false);
+                btnAbrir.setEnabled(false);
+                if(lector!=null && lector.getLibro()!=null){
+                    lector.cerrarArchivo();
+                }
+                lector = new LectorExcel(comboHojas,tablaExcel,labelRegExcel,btnAbrir,rutaArch);
+                lector.execute();
+                labelArchivo.setText(nomArch + "  "); 
+                }catch(Exception e){e.printStackTrace();}
+            }
         }
-        SelectorApertura sa = new SelectorApertura(labelArchivo,tablaExcel,lector);
-        sa.showOpenDialog(jPanel1);
     }//GEN-LAST:event_btnAbrirActionPerformed
     
     public void guardarArchivo(){ 
@@ -1317,6 +1352,7 @@ public class InterfazGrafica extends javax.swing.JFrame {
     private javax.swing.JButton btnQuitar;
     private javax.swing.JButton btnQuitarExcel;
     private javax.swing.JButton btnSalir;
+    private javax.swing.JButton btnTipos;
     private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.ButtonGroup buttonGroup2;
     private javax.swing.JComboBox comboBases;
@@ -1326,7 +1362,6 @@ public class InterfazGrafica extends javax.swing.JFrame {
     private javax.swing.JButton guardar_excel;
     private javax.swing.JLabel info;
     private javax.swing.JLabel info1;
-    private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
