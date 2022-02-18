@@ -29,22 +29,19 @@ public class FormatoTablaExcel extends SwingWorker<Void,Void>{
     private int indice; // indice de la hoja que se muestra en pantalla
     private int numColumnas; // de la hoja actual
     
-    private JButton btn;
-    
-    public FormatoTablaExcel(int indiceHoja, LectorExcel lector, JButton boton){
+    public FormatoTablaExcel(int indiceHoja,LectorExcel lector){
         modelo = new DefaultTableModel();
         lector.getTabla().setModel(modelo);
-        //tabla.setModel(modelo);
         this.lector = lector;
         this.indice = indiceHoja;
         hoja = lector.getLibro().getSheetAt(indice);
         numColumnas = 0;
         indiceRengFinal = 0;
         indiceColInicio = 0;
-        btn = boton;
     }
     
     public final void asignarNombresColumnas(){
+        try{
         Row encabezado;
         ArrayList<Object> encabezadosTabla = new ArrayList<>();
 
@@ -63,10 +60,13 @@ public class FormatoTablaExcel extends SwingWorker<Void,Void>{
         }
         numColumnas = encabezado.getPhysicalNumberOfCells();
         //System.out.println("Columnas: "+encabezado.getPhysicalNumberOfCells());
+        
         modelo.setColumnIdentifiers(encabezadosTabla.toArray());
+        }catch(Exception e){System.out.println("Error 1");e.printStackTrace();}
     }
     
     public final void escribirCeldas(){
+        try{
         if(hoja.getPhysicalNumberOfRows()>1){
             indiceRengFinal = hoja.getLastRowNum();
             //System.out.println("Ultima linea: "+indiceRengFinal);
@@ -80,25 +80,21 @@ public class FormatoTablaExcel extends SwingWorker<Void,Void>{
                 for(int i=0;i<numColumnas;i++){
                     //System.out.println("Columna: "+(i+indiceColInicio));
                     renglon[i] = renglonArch.getCell(i+indiceColInicio);
-                }
-                modelo.addRow(renglon);
+                }               
+                modelo.addRow(renglon);             
             }
         }   
+        }catch(Exception e){System.out.println("Error 1");e.printStackTrace();}
     }
     
-    public final void llenarTabla(){
+    @Override
+    public Void doInBackground(){
         //System.out.println("numero de renglones: "+hoja.getPhysicalNumberOfRows());
         if(hoja.getPhysicalNumberOfRows()>0){
             asignarNombresColumnas();
             escribirCeldas();
         }
         lector.getLabel().setText(hoja.getPhysicalNumberOfRows()+ " renglones cargados");
-        btn.setEnabled(true);
-    }
-    
-    @Override
-    public Void doInBackground(){
-        llenarTabla();
         return null;
     }
 }
