@@ -5,17 +5,12 @@
  */
 package interfaz;
 
-import excel.LectorExcel;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
-import java.util.ArrayList;
 import javax.swing.JFileChooser;
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.JTable;
 import javax.swing.filechooser.FileNameExtensionFilter;
-import javax.swing.table.DefaultTableModel;
 
 
 /**
@@ -27,23 +22,13 @@ public class SelectorApertura extends JFileChooser{
     private String rutaArch;    
     private String extension;
     
-    private JLabel label;
-    private JTable tabla;
-    
-    private ArrayList<String> hojas;
-    private LectorExcel lector;
-    
-    public SelectorApertura(JLabel label, JTable tabla, LectorExcel lector){
+    public SelectorApertura(){
         setDialogTitle("Abrir archivo Excel");
         setAcceptAllFileFilterUsed(false);
         setMultiSelectionEnabled(false);
         setFileFilter(new FileNameExtensionFilter("Libro de Excel 97-2003 (*.xls)","xls"));
         setFileFilter(new FileNameExtensionFilter("Libro de Excel (*.xlsx)","xlsx"));
-        
         extension = "xlsx";
-        this.label = label;
-        this.tabla = tabla;
-        this.lector = lector;    
         
         addPropertyChangeListener(JFileChooser.FILE_FILTER_CHANGED_PROPERTY, new PropertyChangeListener(){
             @Override
@@ -51,7 +36,6 @@ public class SelectorApertura extends JFileChooser{
                 FileNameExtensionFilter filtro = (FileNameExtensionFilter)getFileFilter();
                 String nomFiltros[] = filtro.getExtensions();
                 extension = nomFiltros[0];
-                System.out.println("Extensión: "+extension);
             }
         });
     }
@@ -69,25 +53,14 @@ public class SelectorApertura extends JFileChooser{
         }
         File archivo = new File(rutaArch);
         if(!archivo.exists()){
-            mostrarMensaje(this,nomArch+"\nNo se encuentra el archivo.  \nCompruebe el nombre de archivo e intente de nuevo.  ",
-                "No se puede abrir el archivo", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(
+                this, 
+                nomArch+"\nNo se encuentra el archivo.  \nCompruebe el nombre de archivo e intente de nuevo.  ",
+                "No se puede abrir el archivo",
+                JOptionPane.INFORMATION_MESSAGE
+            );
         }else{
             super.approveSelection();
-            System.out.println("Tamaño: "+archivo.length());
-            if(archivo.length()==0){
-                mostrarMensaje(this,nomArch+"\nEl archivo no tiene información.  ",
-                    "No se puede leer el archivo",JOptionPane.WARNING_MESSAGE);
-                tabla.setModel(new DefaultTableModel());
-                label.setText("Selecciona un archivo  "); 
-            }else{
-                lector.setRuta(rutaArch);
-                lector.execute();
-                label.setText(nomArch + "  "); 
-            }
         }
-    }
-    
-    public void mostrarMensaje(JFileChooser ventana, String mensaje, String titulo, int tipoMsj){
-        JOptionPane.showMessageDialog(ventana, mensaje, titulo, tipoMsj);
     }
 }
