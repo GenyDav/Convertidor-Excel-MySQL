@@ -11,7 +11,9 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.SwingWorker;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -21,7 +23,7 @@ import org.apache.poi.ss.usermodel.WorkbookFactory;
  *
  * @author Geny
  */
-public class LectorExcel extends SwingWorker<Void,Void>{ 
+public class LectorExcel extends SwingWorker<Void,Void>{  
     private String ruta;
     //private FileInputStream flujoEntrada;
     private Workbook libro;
@@ -30,10 +32,12 @@ public class LectorExcel extends SwingWorker<Void,Void>{
     private JLabel etiqueta;
     private FormatoTablaExcel formato;
     private JButton boton;
+    private JFrame ventana;
     
-    public LectorExcel(JComboBox combo,JTable tabla,JLabel label,JButton btn,String ruta){
+    public LectorExcel(JFrame ventana,JComboBox combo,JTable tabla,JLabel label,JButton btn,String ruta){
         this.ruta = ruta;
         comboHojas = combo;
+        this.ventana = ventana;
         this.tabla = tabla;
         etiqueta = label;
         boton = btn;
@@ -51,21 +55,23 @@ public class LectorExcel extends SwingWorker<Void,Void>{
         return etiqueta;
     }
     
-    public void leerArchivo(){
-        System.out.println("Método leer archivo...");
+    public void leerArchivo() throws IOException{
         try{
             //flujoEntrada = new FileInputStream(new File(ruta));
             etiqueta.setText("Leyendo archivo...");
-            //boton.setEnabled(false);
-            System.out.println("Creando archivo...");
             libro = WorkbookFactory.create(new File(ruta));
             //libro = new XSSFWorkbook(flujoEntrada);
             System.out.println("Archivo creado...");
             new FormatoTablaExcel(0,this).execute();
         }catch(FileNotFoundException e){
+            JOptionPane.showMessageDialog(
+                ventana, 
+                "El archivo está siendo utilizado por otro programa.  "
+                    + "\nCiérrelo e inténtelo de nuevo.",
+                "No se puede abrir el archivo", 
+                JOptionPane.INFORMATION_MESSAGE
+            );
             e.printStackTrace();
-        }catch(IOException ex){
-            ex.printStackTrace();
         }catch(Exception ex2){
             ex2.printStackTrace();
         }
@@ -106,10 +112,9 @@ public class LectorExcel extends SwingWorker<Void,Void>{
     }
     
     @Override
-    public Void doInBackground(){
+    public Void doInBackground() throws IOException{
         System.out.println("Iniciando lectura...");
         leerArchivo();
-        //obtenerNumHojas();
         obtenerNombresHojas();
         return null;
     }
