@@ -12,6 +12,8 @@ import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.event.ItemEvent;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import javax.swing.DefaultListModel;
@@ -21,7 +23,6 @@ import javax.swing.JTable;
 import javax.swing.UIManager;
 import javax.swing.filechooser.FileSystemView;
 import javax.swing.table.DefaultTableModel;
-import org.apache.poi.ss.usermodel.Workbook;
 
 /**
  *
@@ -1187,31 +1188,30 @@ public class InterfazGrafica extends javax.swing.JFrame {
         int opc = sa.showOpenDialog(jPanel1);
         
         if(opc == JFileChooser.APPROVE_OPTION){
-            //System.out.println(sa.getSelectedFile().getPath());
-            nomArch = sa.getSelectedFile().getName();
-            rutaArch = sa.getSelectedFile().getPath();
-            File archivo = new File(rutaArch);
-            System.out.println("Tamaño del archivo: " + archivo.length());
-            if(archivo.length()==0){
-                tabla.setModel(new DefaultTableModel());
-                JOptionPane.showMessageDialog(
-                    this, 
-                    nomArch+"\nEl archivo no tiene información.  ", 
-                    "No se puede leer el archivo",
-                    JOptionPane.WARNING_MESSAGE
-                );
-                labelArchivo.setText(""); 
-            }else{
-                try{
-                comboHojas.setEnabled(false);
-                btnAbrir.setEnabled(false);
-                if(lector!=null && lector.getLibro()!=null){
-                    lector.cerrarArchivo();
+            try{
+                nomArch = sa.getSelectedFile().getName();
+                rutaArch = sa.getSelectedFile().getPath();
+                File archivo = new File(rutaArch);
+                System.out.println("Tamaño del archivo: " + archivo.length());
+                if(archivo.length()==0){
+                    tabla.setModel(new DefaultTableModel());
+                    JOptionPane.showMessageDialog(
+                        this, nomArch+"\nEl archivo no tiene información.  ", 
+                        "No se puede leer el archivo", JOptionPane.WARNING_MESSAGE
+                    );
+                    labelArchivo.setText(""); 
+                }else{
+                    comboHojas.setEnabled(false);
+                    btnAbrir.setEnabled(false);
+                    if(lector!=null && lector.getLibro()!=null){
+                        lector.cerrarArchivo();
+                    }
+                    lector = new LectorExcel(this,comboHojas,tablaExcel,labelRegExcel,btnAbrir,rutaArch);
+                    lector.execute();
+                    labelArchivo.setText(nomArch + "  ");             
                 }
-                lector = new LectorExcel(comboHojas,tablaExcel,labelRegExcel,btnAbrir,rutaArch);
-                lector.execute();
-                labelArchivo.setText(nomArch + "  "); 
-                }catch(Exception e){e.printStackTrace();}
+            }catch(Exception e3){
+                e3.printStackTrace();
             }
         }
     }//GEN-LAST:event_btnAbrirActionPerformed
