@@ -12,8 +12,6 @@ import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.event.ItemEvent;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import javax.swing.DefaultListModel;
@@ -50,7 +48,10 @@ public class InterfazGrafica extends javax.swing.JFrame {
     private String nomArch;
     private String rutaArch;
     private LectorExcel lector;
-    private ArrayList<String> listaHojas;
+    private ArrayList<String> listaHojasSel;
+    private DefaultListModel modeloListaExcel;
+    private boolean []marcadorHojas;
+    private int numHojasSel;
 
     public InterfazGrafica() {
         UIManager.put("ProgressBar.selectionBackground", Color.black);
@@ -95,6 +96,9 @@ public class InterfazGrafica extends javax.swing.JFrame {
         nomArch = "";
         rutaArch = "";
         lector = null;
+        listaHojasSel = new ArrayList<>();
+        modeloListaExcel = new DefaultListModel();
+        seleccionTablasExcel.setModel(modeloLista);
     }
     
     /**
