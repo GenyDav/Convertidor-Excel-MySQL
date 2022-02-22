@@ -30,7 +30,6 @@ public class LectorExcel extends SwingWorker<Void,Void>{
     private JComboBox comboHojas;
     private JTable tabla;
     private JLabel etiqueta;
-    private FormatoTablaExcel formato;
     private JButton boton;
     private JFrame ventana;
     
@@ -78,17 +77,16 @@ public class LectorExcel extends SwingWorker<Void,Void>{
     }
     
     public int obtenerNumHojas(){
-        System.out.println("Obteniendo número de hojas...");
+        System.out.println("Obteniendo número de hojas..."+libro.getNumberOfSheets());
         return libro.getNumberOfSheets();
     }
     
     public void obtenerNombresHojas(){
         System.out.println("Obteniendo nombres de hojas...");
         comboHojas.removeAllItems();
-        System.out.println(libro.getNumberOfSheets());
         try{
             for(int i=0;i<libro.getNumberOfSheets();i++){
-                System.out.println("i: "+i+ " "+libro.getSheetName(i));
+                //System.out.println("i: "+i+ " "+libro.getSheetName(i));
                 comboHojas.addItem(libro.getSheetName(i));
             }
             comboHojas.setEnabled(true);
