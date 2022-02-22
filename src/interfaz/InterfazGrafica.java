@@ -1065,22 +1065,32 @@ public class InterfazGrafica extends javax.swing.JFrame {
     }//GEN-LAST:event_comboBasesItemStateChanged
 
     private void btnAgregarTablaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarTablaActionPerformed
-        if(!marcadorTablas[comboTablas.getSelectedIndex()]){    
+        /*if(!marcadorTablas[comboTablas.getSelectedIndex()]){    
             modeloLista.addElement(new ElementoLista(comboTablas.getSelectedItem().toString(),comboTablas.getSelectedIndex()));
             listaTablasSeleccionadas.add(comboTablas.getSelectedItem().toString());
             numTablaSel++;
             seleccionTablas.setSelectedIndex(numTablaSel-1);
             
             marcadorTablas[comboTablas.getSelectedIndex()] = true;
-            /*for(int i=0;i<marcadorTablas.length;i++){
+            for(int i=0;i<marcadorTablas.length;i++){
                 System.out.print("["+marcadorTablas[i]+"]");
-            }System.out.println();*/
+            }System.out.println();
             labelSelTabla.setText("Tabla agregada a la lista de exportación");
             btnQuitar.setEnabled(true);
             btnBorrar.setEnabled(true);
         }else{
             labelSelTabla.setText("La tabla ya está en la lista de exportación");
-        }
+        }*/
+        agregarElementoLista(marcadorTablas,
+            modeloLista,
+            listaTablasSeleccionadas,
+            numTablaSel,
+            seleccionTablas,
+            comboTablas, 
+            labelSelTabla,
+            btnQuitar,
+            btnBorrar
+        );
     }//GEN-LAST:event_btnAgregarTablaActionPerformed
 
     private void btnBorrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBorrarActionPerformed
@@ -1190,31 +1200,9 @@ public class InterfazGrafica extends javax.swing.JFrame {
     }//GEN-LAST:event_btnExportar1ActionPerformed
 
     private void btnAgregarTablaExcelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarTablaExcelActionPerformed
-        /*if(!marcadorHojas[comboHojas.getSelectedIndex()]){    
-            modeloListaExcel.addElement(new ElementoLista(comboHojas.getSelectedItem().toString(),comboHojas.getSelectedIndex()));
-            listaHojasSel.add(comboHojas.getSelectedItem().toString());
-            numHojasSel++;
-            seleccionHojasExcel.setSelectedIndex(numHojasSel-1);
-            
-            marcadorHojas[comboHojas.getSelectedIndex()] = true;
-            for(int i=0;i<marcadorHojas.length;i++){
-                System.out.print("["+marcadorHojas[i]+"]");
-            }System.out.println();
-            labelSelTablaExcel.setText("Hoja agregada a la lista de importación");
-            btnQuitarExcel.setEnabled(true);
-            btnBorrarExcel.setEnabled(true);
-        }else{
-            labelSelTablaExcel.setText("La hoja ya está en la lista de importación");
-        }*/
-        agregarElementoLista(marcadorHojas,
-            modeloListaExcel,
-            listaHojasSel,
-            numHojasSel,
-            seleccionHojasExcel,
-            comboHojas, 
-            labelSelTablaExcel,
-            btnQuitarExcel,
-            btnBorrarExcel
+        agregarElementoLista(marcadorHojas, modeloListaExcel, listaHojasSel,
+            numHojasSel, seleccionHojasExcel, comboHojas, labelSelTablaExcel,
+            btnQuitarExcel, btnBorrarExcel
         );
     }//GEN-LAST:event_btnAgregarTablaExcelActionPerformed
 
