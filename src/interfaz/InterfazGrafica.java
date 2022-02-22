@@ -15,7 +15,11 @@ import java.io.File;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import javax.swing.DefaultListModel;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
+import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.UIManager;
@@ -51,7 +55,9 @@ public class InterfazGrafica extends javax.swing.JFrame {
     private ArrayList<String> listaHojasSel;
     private DefaultListModel modeloListaExcel;
     private boolean []marcadorHojas;
+    private int numHojas;
     private int numHojasSel;
+    
 
     public InterfazGrafica() {
         UIManager.put("ProgressBar.selectionBackground", Color.black);
@@ -98,7 +104,7 @@ public class InterfazGrafica extends javax.swing.JFrame {
         lector = null;
         listaHojasSel = new ArrayList<>();
         modeloListaExcel = new DefaultListModel();
-        seleccionTablasExcel.setModel(modeloLista);
+        seleccionHojasExcel.setModel(modeloListaExcel);
     }
     
     /**
@@ -141,7 +147,7 @@ public class InterfazGrafica extends javax.swing.JFrame {
         jPanel12 = new javax.swing.JPanel();
         jPanel13 = new javax.swing.JPanel();
         jScrollPaneSel1 = new javax.swing.JScrollPane();
-        seleccionTablasExcel = new javax.swing.JList();
+        seleccionHojasExcel = new javax.swing.JList();
         btnQuitarExcel = new javax.swing.JButton();
         btnBorrarExcel = new javax.swing.JButton();
         tablasSelExcel = new javax.swing.JRadioButton();
@@ -423,9 +429,9 @@ public class InterfazGrafica extends javax.swing.JFrame {
         jScrollPaneSel1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         jScrollPaneSel1.setEnabled(false);
 
-        seleccionTablasExcel.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
-        seleccionTablasExcel.setEnabled(false);
-        jScrollPaneSel1.setViewportView(seleccionTablasExcel);
+        seleccionHojasExcel.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        seleccionHojasExcel.setEnabled(false);
+        jScrollPaneSel1.setViewportView(seleccionHojasExcel);
 
         javax.swing.GroupLayout jPanel13Layout = new javax.swing.GroupLayout(jPanel13);
         jPanel13.setLayout(jPanel13Layout);
@@ -1166,7 +1172,7 @@ public class InterfazGrafica extends javax.swing.JFrame {
     private void tablasSelExcelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tablasSelExcelActionPerformed
         if(!labelArchivo.getText().equals("")){
             btnAgregarTablaExcel.setEnabled(true);
-            seleccionTablasExcel.setEnabled(true);
+            seleccionHojasExcel.setEnabled(true);
             jScrollPaneSel1.getVerticalScrollBar().setEnabled(true);
         }
     }//GEN-LAST:event_tablasSelExcelActionPerformed
@@ -1175,7 +1181,7 @@ public class InterfazGrafica extends javax.swing.JFrame {
         btnQuitarExcel.setEnabled(false);
         btnBorrarExcel.setEnabled(false);
         btnAgregarTablaExcel.setEnabled(false);
-        seleccionTablasExcel.setEnabled(false);
+        seleccionHojasExcel.setEnabled(false);
         jScrollPaneSel1.getVerticalScrollBar().setEnabled(false);
     }//GEN-LAST:event_tablasCompletasExcelActionPerformed
 
@@ -1184,7 +1190,32 @@ public class InterfazGrafica extends javax.swing.JFrame {
     }//GEN-LAST:event_btnExportar1ActionPerformed
 
     private void btnAgregarTablaExcelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarTablaExcelActionPerformed
-        // TODO add your handling code here:
+        /*if(!marcadorHojas[comboHojas.getSelectedIndex()]){    
+            modeloListaExcel.addElement(new ElementoLista(comboHojas.getSelectedItem().toString(),comboHojas.getSelectedIndex()));
+            listaHojasSel.add(comboHojas.getSelectedItem().toString());
+            numHojasSel++;
+            seleccionHojasExcel.setSelectedIndex(numHojasSel-1);
+            
+            marcadorHojas[comboHojas.getSelectedIndex()] = true;
+            for(int i=0;i<marcadorHojas.length;i++){
+                System.out.print("["+marcadorHojas[i]+"]");
+            }System.out.println();
+            labelSelTablaExcel.setText("Hoja agregada a la lista de importación");
+            btnQuitarExcel.setEnabled(true);
+            btnBorrarExcel.setEnabled(true);
+        }else{
+            labelSelTablaExcel.setText("La hoja ya está en la lista de importación");
+        }*/
+        agregarElementoLista(marcadorHojas,
+            modeloListaExcel,
+            listaHojasSel,
+            numHojasSel,
+            seleccionHojasExcel,
+            comboHojas, 
+            labelSelTablaExcel,
+            btnQuitarExcel,
+            btnBorrarExcel
+        );
     }//GEN-LAST:event_btnAgregarTablaExcelActionPerformed
 
     private void btnAbrirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAbrirActionPerformed
@@ -1212,13 +1243,46 @@ public class InterfazGrafica extends javax.swing.JFrame {
                     }
                     lector = new LectorExcel(this,comboHojas,tablaExcel,labelRegExcel,btnAbrir,rutaArch);
                     lector.execute();
-                    labelArchivo.setText(nomArch + "  ");             
+                    
+                    new Thread(){ // esperar a que se cargue el archivo para obtener el número de hojas
+                        @Override
+                        public void run(){
+                            while(lector.getLibro()==null){
+                                System.out.println("Esperando libro");
+                            }
+                            numHojas = lector.obtenerNumHojas();
+                            marcadorHojas = new boolean[numHojas];
+                            for(int i=0;i<marcadorHojas.length;i++){
+                                marcadorHojas[i] = false;
+                            }
+                        }
+                    }.start();
+                    labelArchivo.setText(nomArch + "  ");    
                 }
             }catch(Exception e3){
                 e3.printStackTrace();
             }
         }
     }//GEN-LAST:event_btnAbrirActionPerformed
+    
+    public void agregarElementoLista(boolean []marcador,DefaultListModel modeloLista,ArrayList<String> lista,int numElem,JList seleccion,JComboBox combo,JLabel label,JButton btnQuitar,JButton btnBorrar){
+        if(!marcador[combo.getSelectedIndex()]){    
+            modeloLista.addElement(new ElementoLista(combo.getSelectedItem().toString(),combo.getSelectedIndex()));
+            lista.add(combo.getSelectedItem().toString());
+            numElem++;
+            seleccion.setSelectedIndex(numElem-1);
+            
+            marcador[combo.getSelectedIndex()] = true;
+            for(int i=0;i<marcador.length;i++){
+                System.out.print("["+marcador[i]+"]");
+            }System.out.println();
+            label.setText("Hoja agregada a la lista de importación");
+            btnQuitar.setEnabled(true);
+            btnBorrar.setEnabled(true);
+        }else{
+            label.setText("La hoja ya está en la lista de importación");
+        }
+    }
     
     public void guardarArchivo(){ 
         try {
@@ -1408,8 +1472,8 @@ public class InterfazGrafica extends javax.swing.JFrame {
     private javax.swing.JTextArea msj;
     private javax.swing.JPanel panelExport;
     private javax.swing.JPanel panelImport;
+    private javax.swing.JList seleccionHojasExcel;
     private javax.swing.JList seleccionTablas;
-    private javax.swing.JList seleccionTablasExcel;
     private javax.swing.JTable tabla;
     private javax.swing.JTable tablaExcel;
     private javax.swing.JRadioButton tablasCompletas;
