@@ -94,7 +94,7 @@ public class FormatoTablaExcel extends SwingWorker<Void,Void>{
             asignarNombresColumnas();
             escribirCeldas();
         }
-        lector.getLabel().setText(hoja.getPhysicalNumberOfRows()+ " renglones cargados");
+        lector.getLabel().setText(hoja.getPhysicalNumberOfRows()-1+ " renglones cargados");
         return null;
     }
 }
