@@ -1051,7 +1051,8 @@ public class InterfazGrafica extends javax.swing.JFrame {
             if(!cambioCancelado){
                 if(evt.getStateChange()==ItemEvent.SELECTED){
                     comboBases.hidePopup();                  
-                    if(limpiarSeleccionTablas("¿Cambiar la base de datos activa?")==0){
+                    if(limpiarSeleccionTablas("¿Borrar todo?","tablas",numTablaSel,modeloLista,
+                        marcadorTablas,listaTablasSeleccionadas,btnQuitar,btnBorrar,labelSelTabla)==0){
                         comboTablas.removeAllItems();
                         cargarListaDeTablas(comboBases.getSelectedItem().toString());
                         labelSelTabla.setText("");
@@ -1088,8 +1089,9 @@ public class InterfazGrafica extends javax.swing.JFrame {
     }//GEN-LAST:event_btnAgregarTablaActionPerformed
 
     private void btnBorrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBorrarActionPerformed
-        limpiarSeleccionTablas("¿Borrar todo?");
-        labelSelTabla.setText("Selección de tablas borrada");
+        limpiarSeleccionTablas("¿Borrar todo?","tablas",numTablaSel,modeloLista,
+            marcadorTablas,listaTablasSeleccionadas,btnQuitar,btnBorrar,labelSelTabla
+        );
     }//GEN-LAST:event_btnBorrarActionPerformed
 
     private void btnQuitarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnQuitarActionPerformed
@@ -1332,29 +1334,31 @@ public class InterfazGrafica extends javax.swing.JFrame {
         }
     }
     
-    public int limpiarSeleccionTablas(String titulo){
+    public int limpiarSeleccionTablas(String titulo,String elemento,int numElem,DefaultListModel modeloLista,
+             boolean marcador[],ArrayList<String> listaAux,JButton btnQuitar,JButton btnBorrar,JLabel label){
         int resp = JOptionPane.showConfirmDialog(
             jPanel1, 
-            "Todas las tablas en la lista se \nborrarán. ¿Continuar?",
+            "Todas las "+elemento+" en la lista se \nborrarán. ¿Continuar?",
             titulo, 
             JOptionPane.OK_CANCEL_OPTION,
             JOptionPane.QUESTION_MESSAGE
         );
         if(resp==JOptionPane.OK_OPTION){
-            numTablaSel = 0;
+            numElem = 0;
             ElementoLista e;
             for(int i=modeloLista.getSize()-1; i>=0; i--){
                 e = (ElementoLista)modeloLista.getElementAt(i);
                 //System.out.println(e.getNombre());
-                marcadorTablas[e.getPosicion()] = false;
+                marcador[e.getPosicion()] = false;
                 /*for(int k=0;k<marcadorTablas.length;k++){
                     System.out.print("["+marcadorTablas[k]+"]");
                 }System.out.println();*/
             }
             modeloLista.clear();
-            listaTablasSeleccionadas.clear();
+            listaAux.clear();
             btnBorrar.setEnabled(false);
             btnQuitar.setEnabled(false);
+            label.setText("Selección de "+elemento+" borrada");
         }
         return resp;
     }
