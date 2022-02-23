@@ -1081,15 +1081,9 @@ public class InterfazGrafica extends javax.swing.JFrame {
         }else{
             labelSelTabla.setText("La tabla ya está en la lista de exportación");
         }*/
-        agregarElementoLista(marcadorTablas,
-            modeloLista,
-            listaTablasSeleccionadas,
-            numTablaSel,
-            seleccionTablas,
-            comboTablas, 
-            labelSelTabla,
-            btnQuitar,
-            btnBorrar
+        agregarElementoLista(marcadorTablas,modeloLista,listaTablasSeleccionadas,numTablaSel,
+            seleccionTablas,comboTablas, labelSelTabla,btnQuitar,btnBorrar,
+            "Tabla agregada a la lista de exportación","La tabla ya está en la lista de exportación"
         );
     }//GEN-LAST:event_btnAgregarTablaActionPerformed
 
@@ -1099,7 +1093,7 @@ public class InterfazGrafica extends javax.swing.JFrame {
     }//GEN-LAST:event_btnBorrarActionPerformed
 
     private void btnQuitarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnQuitarActionPerformed
-        int []tablasBorradas = seleccionTablas.getSelectedIndices();
+        /*int []tablasBorradas = seleccionTablas.getSelectedIndices();
         int acomodo = 0;            // para el desfase que ocurre al eliminar elementos de la lista
         for(int t:tablasBorradas){
             //System.out.println(t);
@@ -1108,9 +1102,9 @@ public class InterfazGrafica extends javax.swing.JFrame {
             ElementoLista e = (ElementoLista)modeloLista.getElementAt(t-acomodo);
             //System.out.println(e.getPosicion());
             marcadorTablas[e.getPosicion()] = false;    
-            /*for(int i=0;i<marcadorTablas.length;i++){
+            for(int i=0;i<marcadorTablas.length;i++){
                 System.out.print("["+marcadorTablas[i]+"]");
-            }System.out.println();*/
+            }System.out.println();
             modeloLista.remove(t-acomodo);
             listaTablasSeleccionadas.remove(t-acomodo);
             numTablaSel--;
@@ -1136,7 +1130,11 @@ public class InterfazGrafica extends javax.swing.JFrame {
         if(modeloLista.isEmpty()){
             btnQuitar.setEnabled(false);
             btnBorrar.setEnabled(false);
-        }
+        }*/
+        borrarElemento(seleccionTablas,modeloLista,marcadorTablas,
+            listaTablasSeleccionadas, numTablaSel,labelSelTabla,btnQuitar,btnBorrar,
+            "Tabla borrada de la lista de exportación","Tablas borradas de la lista de exportación"
+        );
     }//GEN-LAST:event_btnQuitarActionPerformed
 
     private void comboBasesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_comboBasesMouseClicked
@@ -1172,7 +1170,10 @@ public class InterfazGrafica extends javax.swing.JFrame {
     }//GEN-LAST:event_comboHojasItemStateChanged
 
     private void btnQuitarExcelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnQuitarExcelActionPerformed
-        // TODO add your handling code here:
+        borrarElemento(seleccionHojasExcel,modeloListaExcel,marcadorHojas,
+            listaHojasSel, numHojasSel,labelSelTablaExcel,btnQuitarExcel,btnBorrarExcel,
+            "Hoja borrada de la lista de importación","Hojas borradas de la lista de importación"
+        );
     }//GEN-LAST:event_btnQuitarExcelActionPerformed
 
     private void btnBorrarExcelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBorrarExcelActionPerformed
@@ -1202,7 +1203,8 @@ public class InterfazGrafica extends javax.swing.JFrame {
     private void btnAgregarTablaExcelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarTablaExcelActionPerformed
         agregarElementoLista(marcadorHojas, modeloListaExcel, listaHojasSel,
             numHojasSel, seleccionHojasExcel, comboHojas, labelSelTablaExcel,
-            btnQuitarExcel, btnBorrarExcel
+            btnQuitarExcel, btnBorrarExcel,"Hoja agregada a la lista de importación",
+            "La hoja ya está en la lista de importación"
         );
     }//GEN-LAST:event_btnAgregarTablaExcelActionPerformed
 
@@ -1253,7 +1255,8 @@ public class InterfazGrafica extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btnAbrirActionPerformed
     
-    public void agregarElementoLista(boolean []marcador,DefaultListModel modeloLista,ArrayList<String> lista,int numElem,JList seleccion,JComboBox combo,JLabel label,JButton btnQuitar,JButton btnBorrar){
+    // agregar un elemento a la lista de exportacion/importacion
+    public void agregarElementoLista(boolean []marcador,DefaultListModel modeloLista,ArrayList<String> lista,int numElem,JList seleccion,JComboBox combo,JLabel label,JButton btnQuitar,JButton btnBorrar,String msj,String msjAdvertencia){
         if(!marcador[combo.getSelectedIndex()]){    
             modeloLista.addElement(new ElementoLista(combo.getSelectedItem().toString(),combo.getSelectedIndex()));
             lista.add(combo.getSelectedItem().toString());
@@ -1264,11 +1267,51 @@ public class InterfazGrafica extends javax.swing.JFrame {
             for(int i=0;i<marcador.length;i++){
                 System.out.print("["+marcador[i]+"]");
             }System.out.println();
-            label.setText("Hoja agregada a la lista de importación");
+            label.setText(msj);
             btnQuitar.setEnabled(true);
             btnBorrar.setEnabled(true);
         }else{
-            label.setText("La hoja ya está en la lista de importación");
+            label.setText(msjAdvertencia);
+        }
+    }
+    
+    public void borrarElemento(JList seleccion,DefaultListModel modeloLista,boolean []marcador,ArrayList<String> elemSeleccionados,int numElem,JLabel label,JButton btnQuitar,JButton btnBorrar,String msj,String msjPlural){
+        int []elemBorrados = seleccion.getSelectedIndices();
+        int acomodo = 0;            // para el desfase que ocurre al eliminar elementos de la lista
+        for(int t:elemBorrados){
+            //System.out.println(t);
+            //System.out.println(modeloLista.toString());           
+            ElementoLista e = (ElementoLista)modeloLista.getElementAt(t-acomodo);
+            //System.out.println(e.getPosicion());
+            marcador[e.getPosicion()] = false;    
+            /*for(int i=0;i<marcadorTablas.length;i++){
+                System.out.print("["+marcadorTablas[i]+"]");
+            }System.out.println();*/
+            modeloLista.remove(t-acomodo);
+            elemSeleccionados.remove(t-acomodo);
+            numElem--;
+            //System.out.println(t-acomodo);
+            acomodo++;
+        }
+        //seleccionTablas.setSelectedIndex(numTablaSel-1);
+        if(elemBorrados.length>1){
+            label.setText(msjPlural);
+            if(!modeloLista.isEmpty()){
+                seleccion.setSelectedIndex(0);
+            }
+        }else{
+            label.setText(msj); // Si se borran varias tablas
+            //System.out.println(tablasBorradas[0]);
+            //System.out.println(modeloLista.getSize()-1);
+            if(elemBorrados[0]==modeloLista.getSize()){   // si el elemento borrado es el último de la lista
+                seleccion.setSelectedIndex(modeloLista.getSize()-1);
+            }else{
+                seleccion.setSelectedIndex(elemBorrados[0]);    // selec. el elemento sig a eliminado
+            }
+        }
+        if(modeloLista.isEmpty()){
+            btnQuitar.setEnabled(false);
+            btnBorrar.setEnabled(false);
         }
     }
     
