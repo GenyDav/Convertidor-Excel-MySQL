@@ -588,7 +588,7 @@ public class InterfazGrafica extends javax.swing.JFrame {
         btnTipos.setText("Cambiar tipos");
         btnTipos.setEnabled(false);
 
-        labelArchivo.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        labelArchivo.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         labelArchivo.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(204, 204, 204)));
 
         javax.swing.GroupLayout panelImportLayout = new javax.swing.GroupLayout(panelImport);
@@ -1051,7 +1051,7 @@ public class InterfazGrafica extends javax.swing.JFrame {
             if(!cambioCancelado){
                 if(evt.getStateChange()==ItemEvent.SELECTED){
                     comboBases.hidePopup();                  
-                    if(limpiarSeleccionTablas("¿Borrar todo?","tablas",numTablaSel,modeloLista,
+                    if(limpiarSeleccion("tablas",numTablaSel,modeloLista,
                         marcadorTablas,listaTablasSeleccionadas,btnQuitar,btnBorrar,labelSelTabla)==0){
                         comboTablas.removeAllItems();
                         cargarListaDeTablas(comboBases.getSelectedItem().toString());
@@ -1089,7 +1089,7 @@ public class InterfazGrafica extends javax.swing.JFrame {
     }//GEN-LAST:event_btnAgregarTablaActionPerformed
 
     private void btnBorrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBorrarActionPerformed
-        limpiarSeleccionTablas("¿Borrar todo?","tablas",numTablaSel,modeloLista,
+        limpiarSeleccion("tablas",numTablaSel,modeloLista,
             marcadorTablas,listaTablasSeleccionadas,btnQuitar,btnBorrar,labelSelTabla
         );
     }//GEN-LAST:event_btnBorrarActionPerformed
@@ -1179,7 +1179,9 @@ public class InterfazGrafica extends javax.swing.JFrame {
     }//GEN-LAST:event_btnQuitarExcelActionPerformed
 
     private void btnBorrarExcelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBorrarExcelActionPerformed
-        // TODO add your handling code here:
+        limpiarSeleccion("hojas",numHojasSel,modeloListaExcel,
+            marcadorHojas,listaHojasSel,btnQuitarExcel,btnBorrarExcel,labelSelTablaExcel
+        );
     }//GEN-LAST:event_btnBorrarExcelActionPerformed
 
     private void tablasSelExcelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tablasSelExcelActionPerformed
@@ -1211,9 +1213,17 @@ public class InterfazGrafica extends javax.swing.JFrame {
     }//GEN-LAST:event_btnAgregarTablaExcelActionPerformed
 
     private void btnAbrirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAbrirActionPerformed
+        int opc = 100;
         SelectorApertura sa = new SelectorApertura();
-        int opc = sa.showOpenDialog(jPanel1);
         
+        if(modeloListaExcel.isEmpty()){
+            opc = sa.showOpenDialog(jPanel1);
+        }
+        if(!modeloListaExcel.isEmpty()&&limpiarSeleccion("hojas",numHojasSel,modeloListaExcel,
+            marcadorHojas,listaHojasSel,btnQuitarExcel,btnBorrarExcel,labelSelTablaExcel)==0){
+            opc = sa.showOpenDialog(jPanel1);
+        }
+
         if(opc == JFileChooser.APPROVE_OPTION){
             try{
                 nomArch = sa.getSelectedFile().getName();
@@ -1228,6 +1238,8 @@ public class InterfazGrafica extends javax.swing.JFrame {
                     );
                     labelArchivo.setText(""); 
                 }else{
+                    tablaExcel.setModel(new DefaultTableModel());
+                    comboHojas.removeAllItems();
                     comboHojas.setEnabled(false);
                     btnAbrir.setEnabled(false);
                     if(lector!=null && lector.getLibro()!=null){
@@ -1235,12 +1247,12 @@ public class InterfazGrafica extends javax.swing.JFrame {
                     }
                     lector = new LectorExcel(this,comboHojas,tablaExcel,labelRegExcel,btnAbrir,rutaArch);
                     lector.execute();
-                    
+
                     new Thread(){ // esperar a que se cargue el archivo para obtener el número de hojas
                         @Override
                         public void run(){
                             while(lector.getLibro()==null){
-                                System.out.println("Esperando libro");
+                                //System.out.println("Esperando libro");
                             }
                             numHojas = lector.obtenerNumHojas();
                             marcadorHojas = new boolean[numHojas];
@@ -1249,12 +1261,13 @@ public class InterfazGrafica extends javax.swing.JFrame {
                             }
                         }
                     }.start();
-                    labelArchivo.setText(nomArch + "  ");    
+                    labelArchivo.setText("  " + nomArch );    
                 }
             }catch(Exception e3){
                 e3.printStackTrace();
             }
         }
+        
     }//GEN-LAST:event_btnAbrirActionPerformed
     
     // agregar un elemento a la lista de exportacion/importacion
@@ -1334,12 +1347,12 @@ public class InterfazGrafica extends javax.swing.JFrame {
         }
     }
     
-    public int limpiarSeleccionTablas(String titulo,String elemento,int numElem,DefaultListModel modeloLista,
-             boolean marcador[],ArrayList<String> listaAux,JButton btnQuitar,JButton btnBorrar,JLabel label){
+    public int limpiarSeleccion(String elemento,int numElem,DefaultListModel modeloLista,
+            boolean marcador[],ArrayList<String> listaAux,JButton btnQuitar,JButton btnBorrar,JLabel label){
         int resp = JOptionPane.showConfirmDialog(
             jPanel1, 
             "Todas las "+elemento+" en la lista se \nborrarán. ¿Continuar?",
-            titulo, 
+            "¿Borrar todo?", 
             JOptionPane.OK_CANCEL_OPTION,
             JOptionPane.QUESTION_MESSAGE
         );
