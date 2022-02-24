@@ -8,7 +8,6 @@ package interfaz;
 import excel.LectorExcel;
 import java.util.ArrayList;
 import java.util.Iterator;
-import javax.swing.JButton;
 import javax.swing.SwingWorker;
 import javax.swing.table.DefaultTableModel;
 import org.apache.poi.ss.usermodel.Cell;
@@ -23,7 +22,6 @@ public class FormatoTablaExcel extends SwingWorker<Void,Void>{
     private DefaultTableModel modelo; 
     private LectorExcel lector;
     private Sheet hoja;
-    private int indiceRengFinal;
     private int indiceColInicio;
     
     private int indice; // indice de la hoja que se muestra en pantalla
@@ -36,7 +34,6 @@ public class FormatoTablaExcel extends SwingWorker<Void,Void>{
         this.indice = indiceHoja;
         hoja = lector.getLibro().getSheetAt(indice);
         numColumnas = 0;
-        indiceRengFinal = 0;
         indiceColInicio = 0;
     }
     
@@ -68,7 +65,6 @@ public class FormatoTablaExcel extends SwingWorker<Void,Void>{
     public final void escribirCeldas(){
         try{
         if(hoja.getPhysicalNumberOfRows()>1){
-            indiceRengFinal = hoja.getLastRowNum();
             //System.out.println("Ultima linea: "+indiceRengFinal);
             
             Object []renglon = new Object[numColumnas];
