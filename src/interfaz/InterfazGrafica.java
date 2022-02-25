@@ -1282,11 +1282,12 @@ public class InterfazGrafica extends javax.swing.JFrame {
                     comboHojas.removeAllItems();
                     comboHojas.setEnabled(false);
                     btnAbrir.setEnabled(false);
+                    btnTipos.setEnabled(false);
                     btnAgregarHoja.setEnabled(false);
                     if(lector!=null && lector.getLibro()!=null){
                         lector.cerrarArchivo();
                     }
-                    lector = new LectorExcel(this,comboHojas,tablaExcel,labelRegExcel,btnAbrir,rutaArch);
+                    lector = new LectorExcel(this,comboHojas,tablaExcel,labelRegExcel,btnAbrir,rutaArch,btnTipos);
                     lector.execute();
 
                     new Thread(){ // esperar a que se cargue el archivo para obtener el número de hojas
@@ -1303,7 +1304,6 @@ public class InterfazGrafica extends javax.swing.JFrame {
                         }
                     }.start();
                     labelArchivo.setText("  " + nomArch );  
-                    btnTipos.setEnabled(true);
                 }
             }catch(Exception e3){
                 e3.printStackTrace();
