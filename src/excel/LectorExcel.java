@@ -30,16 +30,18 @@ public class LectorExcel extends SwingWorker<Void,Void>{
     private JComboBox comboHojas;
     private JTable tabla;
     private JLabel etiqueta;
-    private JButton boton;
+    private JButton botonAbrir;
+    private JButton btnTipos;
     private JFrame ventana;
     
-    public LectorExcel(JFrame ventana,JComboBox combo,JTable tabla,JLabel label,JButton btn,String ruta){
+    public LectorExcel(JFrame ventana,JComboBox combo,JTable tabla,JLabel label,JButton btn,String ruta,JButton btnTipos){
         this.ruta = ruta;
         comboHojas = combo;
         this.ventana = ventana;
         this.tabla = tabla;
         etiqueta = label;
-        boton = btn;
+        botonAbrir = btn;
+        this.btnTipos = btnTipos;
     }
 
     public void setRuta(String ruta){
@@ -83,14 +85,11 @@ public class LectorExcel extends SwingWorker<Void,Void>{
     
     public void obtenerNombresHojas(){
         System.out.println("Obteniendo nombres de hojas...");
-        comboHojas.removeAllItems();
         try{
             for(int i=0;i<libro.getNumberOfSheets();i++){
                 //System.out.println("i: "+i+ " "+libro.getSheetName(i));
                 comboHojas.addItem(libro.getSheetName(i));
             }
-            comboHojas.setEnabled(true);
-            boton.setEnabled(true);
         }catch(Exception e){
             System.out.println("Error:");
             e.printStackTrace();
@@ -114,6 +113,9 @@ public class LectorExcel extends SwingWorker<Void,Void>{
         System.out.println("Iniciando lectura...");
         leerArchivo();
         obtenerNombresHojas();
+        comboHojas.setEnabled(true);
+        botonAbrir.setEnabled(true);
+        btnTipos.setEnabled(true);
         return null;
     }
 }
