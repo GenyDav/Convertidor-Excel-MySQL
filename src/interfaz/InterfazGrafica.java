@@ -1182,17 +1182,26 @@ public class InterfazGrafica extends javax.swing.JFrame {
             listaHojasSel, numHojasSel,labelSelTablaExcel,btnQuitarExcel,btnBorrarExcel,
             "Hoja borrada de la lista de importación","Hojas borradas de la lista de importación"
         );
+        if(marcadorHojas[comboHojas.getSelectedIndex()]==false){
+            btnTipos.setEnabled(false);
+            btnAgregarHoja.setEnabled(true);
+        }
     }//GEN-LAST:event_btnQuitarExcelActionPerformed
 
     private void btnBorrarExcelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBorrarExcelActionPerformed
-        limpiarSeleccion("hojas",numHojasSel,modeloListaExcel,
+        int res = limpiarSeleccion("hojas",numHojasSel,modeloListaExcel,
             marcadorHojas,listaHojasSel,btnQuitarExcel,btnBorrarExcel,labelSelTablaExcel
         );
+        if(res==JOptionPane.OK_OPTION){
+            if(marcadorHojas[comboHojas.getSelectedIndex()]==false){
+                btnTipos.setEnabled(false);
+                btnAgregarHoja.setEnabled(true);
+            }
+        }
     }//GEN-LAST:event_btnBorrarExcelActionPerformed
 
     private void tablasSelExcelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tablasSelExcelActionPerformed
         if(!labelArchivo.getText().equals("")){
-            btnAgregarHoja.setEnabled(true);
             seleccionHojasExcel.setEnabled(true); // lista con los elementos
             jScrollPaneSel1.getVerticalScrollBar().setEnabled(true);
             if(marcadorHojas[comboHojas.getSelectedIndex()]==true){
@@ -1262,6 +1271,7 @@ public class InterfazGrafica extends javax.swing.JFrame {
                     comboHojas.removeAllItems();
                     comboHojas.setEnabled(false);
                     btnAbrir.setEnabled(false);
+                    btnAgregarHoja.setEnabled(false);
                     if(lector!=null && lector.getLibro()!=null){
                         lector.cerrarArchivo();
                     }
