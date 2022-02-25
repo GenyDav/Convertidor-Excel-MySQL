@@ -1036,6 +1036,13 @@ public class InterfazGrafica extends javax.swing.JFrame {
                 cargarDatos(comboBases.getSelectedItem().toString(),comboTablas.getSelectedItem().toString());
             }
             labelSelTabla.setText("");
+            if(tablasSel.isSelected()){
+                if(marcadorTablas[comboTablas.getSelectedIndex()]==true){
+                    btnAgregarTabla.setEnabled(false); // deshabilitar el boton si el elemento sel. está en la lista
+                }else{
+                    btnAgregarTabla.setEnabled(true);
+                }
+            }
         }
     }//GEN-LAST:event_comboTablasItemStateChanged
 
@@ -1086,6 +1093,7 @@ public class InterfazGrafica extends javax.swing.JFrame {
             seleccionTablas,comboTablas, labelSelTabla,btnQuitar,btnBorrar,
             "Tabla agregada a la lista de exportación","La tabla ya está en la lista de exportación"
         );
+        btnAgregarTabla.setEnabled(false);
     }//GEN-LAST:event_btnAgregarTablaActionPerformed
 
     private void btnBorrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBorrarActionPerformed
@@ -1137,6 +1145,9 @@ public class InterfazGrafica extends javax.swing.JFrame {
             listaTablasSeleccionadas, numTablaSel,labelSelTabla,btnQuitar,btnBorrar,
             "Tabla borrada de la lista de exportación","Tablas borradas de la lista de exportación"
         );
+        if(marcadorTablas[comboTablas.getSelectedIndex()]==false){
+            btnAgregarTabla.setSelected(true);
+        }
     }//GEN-LAST:event_btnQuitarActionPerformed
 
     private void comboBasesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_comboBasesMouseClicked
