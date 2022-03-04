@@ -152,7 +152,7 @@ public class InterfazGrafica extends javax.swing.JFrame {
         btnBorrarExcel = new javax.swing.JButton();
         tablasSelExcel = new javax.swing.JRadioButton();
         tablasCompletasExcel = new javax.swing.JRadioButton();
-        btnExportar1 = new javax.swing.JButton();
+        btnImportar = new javax.swing.JButton();
         barraProgreso1 = new javax.swing.JProgressBar();
         info1 = new javax.swing.JLabel();
         jLabel11 = new javax.swing.JLabel();
@@ -515,10 +515,10 @@ public class InterfazGrafica extends javax.swing.JFrame {
                 .addGap(0, 0, 0))
         );
 
-        btnExportar1.setText("Crear base de datos");
-        btnExportar1.addActionListener(new java.awt.event.ActionListener() {
+        btnImportar.setText("Crear base de datos");
+        btnImportar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnExportar1ActionPerformed(evt);
+                btnImportarActionPerformed(evt);
             }
         });
 
@@ -587,6 +587,11 @@ public class InterfazGrafica extends javax.swing.JFrame {
 
         btnTipos.setText("Cambiar tipos");
         btnTipos.setEnabled(false);
+        btnTipos.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnTiposActionPerformed(evt);
+            }
+        });
 
         labelArchivo.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         labelArchivo.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(204, 204, 204)));
@@ -621,7 +626,7 @@ public class InterfazGrafica extends javax.swing.JFrame {
                         .addGap(27, 27, 27)
                         .addGroup(panelImportLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(jLabel12)
-                            .addComponent(btnExportar1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(btnImportar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(jPanel12, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                     .addComponent(jSeparator2, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(barraProgreso1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -661,7 +666,7 @@ public class InterfazGrafica extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelImportLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jPanel9, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnExportar1)
+                    .addComponent(btnImportar)
                     .addComponent(jPanel15, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(24, 24, 24)
                 .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 4, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -1238,9 +1243,9 @@ public class InterfazGrafica extends javax.swing.JFrame {
         jScrollPaneSel1.getVerticalScrollBar().setEnabled(false);
     }//GEN-LAST:event_tablasCompletasExcelActionPerformed
 
-    private void btnExportar1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExportar1ActionPerformed
+    private void btnImportarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnImportarActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_btnExportar1ActionPerformed
+    }//GEN-LAST:event_btnImportarActionPerformed
 
     private void btnAgregarHojaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarHojaActionPerformed
         agregarElementoLista(marcadorHojas, modeloListaExcel, listaHojasSel,
@@ -1310,6 +1315,10 @@ public class InterfazGrafica extends javax.swing.JFrame {
             }
         }
     }//GEN-LAST:event_btnAbrirActionPerformed
+
+    private void btnTiposActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTiposActionPerformed
+        new ConfigTipos(this,true,"nomHoja").setVisible(true);
+    }//GEN-LAST:event_btnTiposActionPerformed
     
     // agregar un elemento a la lista de exportacion/importacion
     public void agregarElementoLista(boolean []marcador,DefaultListModel modeloLista,ArrayList<String> lista,int numElem,JList seleccion,JComboBox combo,JLabel label,JButton btnQuitar,JButton btnBorrar,String msj,String msjAdvertencia){
@@ -1505,7 +1514,7 @@ public class InterfazGrafica extends javax.swing.JFrame {
     private javax.swing.JButton btnBorrarExcel;
     private javax.swing.JButton btnConectar;
     private javax.swing.JButton btnExportar;
-    private javax.swing.JButton btnExportar1;
+    private javax.swing.JButton btnImportar;
     private javax.swing.JButton btnQuitar;
     private javax.swing.JButton btnQuitarExcel;
     private javax.swing.JButton btnSalir;
