@@ -40,18 +40,19 @@ public class PanelColumna extends javax.swing.JPanel {
         jCheckBox5 = new javax.swing.JCheckBox();
 
         jPanel2.setBackground(new java.awt.Color(255, 255, 255));
-        jPanel2.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(153, 153, 153), 1, true));
+        jPanel2.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(102, 102, 102), 1, true));
 
         jLabel1.setBackground(new java.awt.Color(255, 255, 255));
         jLabel1.setText("Columna1");
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "INTEGER", "VARCHAR", "FLOAT", "BLOB" }));
+        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "TINYINT", "SMALLINT", "MEDIUMINT", "INT", "BIGINT", "CHAR", "VARCHAR", "BINARY", "VARBINARY", "TINYBLOB", "TINYTEXT", "BLOB", "TEXT", "MEDIUMBLOB", "MEDIUMTEXT", "LONGBLOB", "LONGTEX", "ENUM", "DATE", "DATETIME", "TIME", "TIMESTAMP", "YEAR" }));
         jComboBox1.setPreferredSize(new java.awt.Dimension(84, 20));
 
         jTextField1.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         jTextField1.setText("0");
 
-        jCheckBox1.setBackground(new java.awt.Color(204, 255, 204));
+        jCheckBox1.setBackground(new java.awt.Color(102, 102, 102));
+        jCheckBox1.setForeground(new java.awt.Color(255, 255, 255));
         jCheckBox1.setText("PK");
         jCheckBox1.setToolTipText("Llave primaria");
 
@@ -60,16 +61,19 @@ public class PanelColumna extends javax.swing.JPanel {
 
         jCheckBox3.setBackground(new java.awt.Color(204, 204, 204));
         jCheckBox3.setText("UQ");
+        jCheckBox3.setToolTipText("Índice único");
 
         jSeparator1.setOrientation(javax.swing.SwingConstants.VERTICAL);
 
         jCheckBox4.setBackground(new java.awt.Color(204, 204, 204));
         jCheckBox4.setText("UN");
+        jCheckBox4.setToolTipText("Unsigned");
 
         jSeparator4.setOrientation(javax.swing.SwingConstants.VERTICAL);
 
         jCheckBox5.setBackground(new java.awt.Color(204, 204, 204));
         jCheckBox5.setText("AI");
+        jCheckBox5.setToolTipText("Auto Increment");
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -104,7 +108,8 @@ public class PanelColumna extends javax.swing.JPanel {
                 .addGap(3, 3, 3)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jSeparator1)
-                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jSeparator4, javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(jTextField1)
@@ -112,7 +117,6 @@ public class PanelColumna extends javax.swing.JPanel {
                         .addComponent(jCheckBox2)
                         .addComponent(jCheckBox3)
                         .addComponent(jCheckBox4)
-                        .addComponent(jSeparator4)
                         .addComponent(jCheckBox5)))
                 .addGap(3, 3, 3))
         );
@@ -121,7 +125,7 @@ public class PanelColumna extends javax.swing.JPanel {
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, 522, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
