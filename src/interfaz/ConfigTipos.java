@@ -21,7 +21,7 @@ public class ConfigTipos extends javax.swing.JDialog {
     public ConfigTipos(java.awt.Frame parent, boolean modal, String hoja) {
         super(parent, modal);
         initComponents();
-        setTitle("Editar los tipos de datos de las columnas ("+hoja+")");
+        setTitle(hoja+": Configurar columnas");
         setPreferredSize(new Dimension(565,374));
         pack();
         setLocationRelativeTo(parent);
@@ -63,7 +63,7 @@ public class ConfigTipos extends javax.swing.JDialog {
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setPreferredSize(new java.awt.Dimension(530, 300));
 
-        jPanel1.setBackground(new java.awt.Color(51, 51, 51));
+        jPanel1.setBackground(new java.awt.Color(102, 102, 102));
 
         jScrollPane1.setToolTipText("");
         jScrollPane1.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
