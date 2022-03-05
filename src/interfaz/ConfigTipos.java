@@ -22,23 +22,23 @@ public class ConfigTipos extends javax.swing.JDialog {
         super(parent, modal);
         initComponents();
         setTitle("Editar los tipos de datos de las columnas ("+hoja+")");
-        setPreferredSize(new Dimension(556,365));
+        setPreferredSize(new Dimension(565,374));
         pack();
         setLocationRelativeTo(parent);
-        setResizable(false);       
+        //setResizable(false);       
         
         jPanel2.setLayout(new FlowLayout(FlowLayout.CENTER));
-        jPanel2.add(new PanelColumna());
-        jPanel2.add(new PanelColumna());
-        jPanel2.add(new PanelColumna());
-        jPanel2.add(new PanelColumna());
-        jPanel2.add(new PanelColumna());
-        jPanel2.add(new PanelColumna());
-        jPanel2.add(new PanelColumna());
-        jPanel2.add(new PanelColumna());
-        jPanel2.add(new PanelColumna());
-        jPanel2.add(new PanelColumna());
-        jPanel2.add(new PanelColumna());
+        jPanel2.add(new PanelColumna("columna1"));
+        jPanel2.add(new PanelColumna("columna2"));
+        jPanel2.add(new PanelColumna("columna3"));
+        jPanel2.add(new PanelColumna("columna4"));
+        jPanel2.add(new PanelColumna("columna5"));
+        jPanel2.add(new PanelColumna("columna6"));
+        jPanel2.add(new PanelColumna("columna7"));
+        jPanel2.add(new PanelColumna("columna8"));
+        jPanel2.add(new PanelColumna("columna9"));
+        jPanel2.add(new PanelColumna("columna10"));
+        jPanel2.add(new PanelColumna("columna11"));
         
         jPanel1.setPreferredSize(new Dimension(550,300));
         jPanel2.setPreferredSize(new Dimension(520, ((32+4)*11)+5));
