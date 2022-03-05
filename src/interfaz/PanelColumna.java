@@ -29,15 +29,15 @@ public class PanelColumna extends javax.swing.JPanel {
 
         jPanel2 = new javax.swing.JPanel();
         nombreCol = new javax.swing.JLabel();
-        jComboBox1 = new javax.swing.JComboBox();
-        jTextField1 = new javax.swing.JTextField();
-        jCheckBox1 = new javax.swing.JCheckBox();
-        jCheckBox2 = new javax.swing.JCheckBox();
-        jCheckBox3 = new javax.swing.JCheckBox();
+        tipoCol = new javax.swing.JComboBox();
+        tamCol = new javax.swing.JTextField();
+        checkPK = new javax.swing.JCheckBox();
+        checkNN = new javax.swing.JCheckBox();
+        checkUQ = new javax.swing.JCheckBox();
         jSeparator1 = new javax.swing.JSeparator();
-        jCheckBox4 = new javax.swing.JCheckBox();
+        checkUN = new javax.swing.JCheckBox();
         jSeparator4 = new javax.swing.JSeparator();
-        jCheckBox5 = new javax.swing.JCheckBox();
+        checkAI = new javax.swing.JCheckBox();
 
         jPanel2.setBackground(new java.awt.Color(255, 255, 255));
         jPanel2.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(102, 102, 102), 1, true));
@@ -46,38 +46,43 @@ public class PanelColumna extends javax.swing.JPanel {
         nombreCol.setText("Columna1");
         nombreCol.setToolTipText("Nombre de la columna");
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "TINYINT", "SMALLINT", "MEDIUMINT", "INT", "BIGINT", "CHAR", "VARCHAR", "BINARY", "VARBINARY", "TINYBLOB", "TINYTEXT", "BLOB", "TEXT", "MEDIUMBLOB", "MEDIUMTEXT", "LONGBLOB", "LONGTEX", "ENUM", "DATE", "DATETIME", "TIME", "TIMESTAMP", "YEAR" }));
-        jComboBox1.setToolTipText("Tipo de dato de la columna");
-        jComboBox1.setPreferredSize(new java.awt.Dimension(84, 20));
+        tipoCol.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "TINYINT", "SMALLINT", "MEDIUMINT", "INT", "BIGINT", "FLOAT", "DOUBLE", "DECIMAL", "CHAR", "VARCHAR", "BINARY", "VARBINARY", "TINYBLOB", "TINYTEXT", "BLOB", "TEXT", "MEDIUMBLOB", "MEDIUMTEXT", "LONGBLOB", "LONGTEX", "ENUM", "DATE", "DATETIME", "TIME", "TIMESTAMP", "YEAR" }));
+        tipoCol.setToolTipText("Tipo de dato de la columna");
+        tipoCol.setPreferredSize(new java.awt.Dimension(84, 20));
 
-        jTextField1.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
-        jTextField1.setText("0");
-        jTextField1.setToolTipText("Tamaño");
+        tamCol.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        tamCol.setText("0");
+        tamCol.setToolTipText("Tamaño");
+        tamCol.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                tamColActionPerformed(evt);
+            }
+        });
 
-        jCheckBox1.setBackground(new java.awt.Color(102, 102, 102));
-        jCheckBox1.setForeground(new java.awt.Color(255, 255, 255));
-        jCheckBox1.setText("PK");
-        jCheckBox1.setToolTipText("Llave primaria");
+        checkPK.setBackground(new java.awt.Color(102, 102, 102));
+        checkPK.setForeground(new java.awt.Color(255, 255, 255));
+        checkPK.setText("PK");
+        checkPK.setToolTipText("Llave primaria");
 
-        jCheckBox2.setBackground(new java.awt.Color(204, 204, 204));
-        jCheckBox2.setText("NN");
-        jCheckBox2.setToolTipText("No nulo");
+        checkNN.setBackground(new java.awt.Color(204, 204, 204));
+        checkNN.setText("NN");
+        checkNN.setToolTipText("No nulo");
 
-        jCheckBox3.setBackground(new java.awt.Color(204, 204, 204));
-        jCheckBox3.setText("UQ");
-        jCheckBox3.setToolTipText("Índice único");
+        checkUQ.setBackground(new java.awt.Color(204, 204, 204));
+        checkUQ.setText("UQ");
+        checkUQ.setToolTipText("Índice único");
 
         jSeparator1.setOrientation(javax.swing.SwingConstants.VERTICAL);
 
-        jCheckBox4.setBackground(new java.awt.Color(204, 204, 204));
-        jCheckBox4.setText("UN");
-        jCheckBox4.setToolTipText("Sin signo");
+        checkUN.setBackground(new java.awt.Color(204, 204, 204));
+        checkUN.setText("UN");
+        checkUN.setToolTipText("Sin signo");
 
         jSeparator4.setOrientation(javax.swing.SwingConstants.VERTICAL);
 
-        jCheckBox5.setBackground(new java.awt.Color(204, 204, 204));
-        jCheckBox5.setText("AI");
-        jCheckBox5.setToolTipText("Auto Incremento");
+        checkAI.setBackground(new java.awt.Color(204, 204, 204));
+        checkAI.setText("AI");
+        checkAI.setToolTipText("Auto Incremento");
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -89,21 +94,21 @@ public class PanelColumna extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jSeparator4, javax.swing.GroupLayout.PREFERRED_SIZE, 3, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(5, 5, 5)
-                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(tipoCol, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(tamCol, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(5, 5, 5)
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 9, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, 0)
-                .addComponent(jCheckBox1)
+                .addComponent(checkPK)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jCheckBox2)
+                .addComponent(checkNN)
                 .addGap(4, 4, 4)
-                .addComponent(jCheckBox3)
+                .addComponent(checkUQ)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jCheckBox4)
+                .addComponent(checkUN)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jCheckBox5)
+                .addComponent(checkAI)
                 .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
@@ -115,13 +120,13 @@ public class PanelColumna extends javax.swing.JPanel {
                     .addComponent(jSeparator4, javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(nombreCol, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jTextField1)
-                        .addComponent(jCheckBox1)
-                        .addComponent(jCheckBox2)
-                        .addComponent(jCheckBox3)
-                        .addComponent(jCheckBox4)
-                        .addComponent(jCheckBox5)))
+                        .addComponent(tipoCol, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(tamCol)
+                        .addComponent(checkPK)
+                        .addComponent(checkNN)
+                        .addComponent(checkUQ)
+                        .addComponent(checkUN)
+                        .addComponent(checkAI)))
                 .addGap(3, 3, 3))
         );
 
@@ -129,7 +134,7 @@ public class PanelColumna extends javax.swing.JPanel {
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, 522, Short.MAX_VALUE)
+            .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -139,17 +144,21 @@ public class PanelColumna extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    private void tamColActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tamColActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_tamColActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JCheckBox jCheckBox1;
-    private javax.swing.JCheckBox jCheckBox2;
-    private javax.swing.JCheckBox jCheckBox3;
-    private javax.swing.JCheckBox jCheckBox4;
-    private javax.swing.JCheckBox jCheckBox5;
-    private javax.swing.JComboBox jComboBox1;
+    private javax.swing.JCheckBox checkAI;
+    private javax.swing.JCheckBox checkNN;
+    private javax.swing.JCheckBox checkPK;
+    private javax.swing.JCheckBox checkUN;
+    private javax.swing.JCheckBox checkUQ;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator4;
-    private javax.swing.JTextField jTextField1;
     private javax.swing.JLabel nombreCol;
+    private javax.swing.JTextField tamCol;
+    private javax.swing.JComboBox tipoCol;
     // End of variables declaration//GEN-END:variables
 }
