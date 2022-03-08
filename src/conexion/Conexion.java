@@ -5,6 +5,7 @@
  */
 package conexion;
 
+import interfaz.ElementoLista;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
@@ -40,14 +41,18 @@ public class Conexion {
         return b;
     }
      
-    public ArrayList<String> obtenerTablas(String nomBase) throws SQLException{
-        ArrayList<String> t = new ArrayList<>();
+    public ArrayList<ElementoLista> obtenerTablas(String nomBase) throws SQLException{
+        ArrayList<ElementoLista> t = new ArrayList<>();
         rs = info.getTables(nomBase,null,null,null);
+        int cont = 0;
         while(rs.next()) {
-           t.add(rs.getString(3));  // la tercer columna contiene el nombre de la tabla
+            t.add(new ElementoLista(rs.getString(3),cont));
+            // la tercer columna contiene el nombre de la tabla
+            cont++;
         }
         return t;
     }
+
     
     public ResultSet obtenerRegistros(String base,String tabla) throws SQLException{
         rs = s.executeQuery("Select * from " + base + "." + tabla + ";");
