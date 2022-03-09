@@ -12,10 +12,12 @@ package interfaz;
 public class ElementoLista {
     private String nombre;
     private int posicion;
+    private boolean seleccionado;
 
     public ElementoLista(String nombre, int posicion) {
         this.nombre = nombre;
         this.posicion = posicion;
+        seleccionado = false;
     }
 
     public String getNombre() {
@@ -26,8 +28,17 @@ public class ElementoLista {
         return posicion;
     }
     
+    public boolean getSeleccionado(){
+        return seleccionado;
+    }
+    
+    public void setSeleccionado(boolean sel){
+        seleccionado = sel;
+    }
+    
     @Override
     public String toString(){
-        return nombre+" "+posicion;
+        //return nombre+" "+posicion;
+        return nombre;
     }
 }
