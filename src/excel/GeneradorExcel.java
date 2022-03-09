@@ -6,6 +6,7 @@
 package excel;
 
 import conexion.Conexion;
+import interfaz.ElementoLista;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -39,7 +40,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
  */
 public class GeneradorExcel extends SwingWorker<Void,Integer>{
     private String nombreBase;
-    private ArrayList<String> tablas;
+    private ArrayList<ElementoLista> tablas;
     private int numTablas;
     private int indiceTablaAct;
     private Conexion conn;
@@ -53,12 +54,12 @@ public class GeneradorExcel extends SwingWorker<Void,Integer>{
     private JFrame ventana;
     private int numRegistros;
     
-    public GeneradorExcel(Conexion c, String base, ArrayList<String>tablas, JLabel label, JProgressBar barra, JFrame ventana){
+    public GeneradorExcel(Conexion c, String base, List<ElementoLista>tablas, JLabel label, JProgressBar barra, JFrame ventana){
         conn = c;
         nombreBase = base;
         libro = null;
         indiceTablaAct = 0;
-        this.tablas = tablas;
+        this.tablas = (ArrayList<ElementoLista>) tablas;
         numTablas = tablas.size();
         rutaArch = null;
         tipoArch = null;
@@ -82,10 +83,12 @@ public class GeneradorExcel extends SwingWorker<Void,Integer>{
                 }else{
                     libro = new XSSFWorkbook();
                 }
+
                 for(int i=0;i<numTablas;i++){
                     indiceTablaAct = i;
-                    crearHoja(tablas.get(i));
+                    crearHoja(tablas.get(i).getNombre());
                 }
+                
                 libro.write(flujoSalida);
                 libro.close();
                 libro = null;
