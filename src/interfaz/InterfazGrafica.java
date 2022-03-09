@@ -14,7 +14,9 @@ import java.awt.event.ItemEvent;
 import java.io.File;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -1072,8 +1074,8 @@ public class InterfazGrafica extends javax.swing.JFrame {
             if(!cambioCancelado){
                 if(evt.getStateChange()==ItemEvent.SELECTED){
                     comboBases.hidePopup();                  
-                    if(limpiarSeleccion("tablas",numTablaSel,modeloLista,
-                        marcadorTablas,listaTablasSeleccionadas,btnQuitar,btnBorrar,labelSelTabla)==0){
+                    if(limpiarSeleccion("tablas",modeloLista,
+                        listaElementos,btnQuitar,btnBorrar,labelSelTabla)==0){
                         comboTablas.removeAllItems();
                         cargarListaDeTablas(comboBases.getSelectedItem().toString());
                         labelSelTabla.setText("");
@@ -1112,9 +1114,14 @@ public class InterfazGrafica extends javax.swing.JFrame {
     }//GEN-LAST:event_btnAgregarTablaActionPerformed
 
     private void btnBorrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBorrarActionPerformed
-        limpiarSeleccion("tablas",numTablaSel,modeloLista,
-            marcadorTablas,listaTablasSeleccionadas,btnQuitar,btnBorrar,labelSelTabla
+        limpiarSeleccion("tablas",modeloLista,
+            listaElementos,btnQuitar,btnBorrar,labelSelTabla
         );
+        if(!listaElementos.get(comboTablas.getSelectedIndex()).getSeleccionado()){
+        //if(marcadorTablas[comboTablas.getSelectedIndex()]==false){
+            //System.out.println("ya no esta seleccionado");
+            btnAgregarTabla.setEnabled(true);
+        }
     }//GEN-LAST:event_btnBorrarActionPerformed
 
     private void btnQuitarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnQuitarActionPerformed
@@ -1219,7 +1226,7 @@ public class InterfazGrafica extends javax.swing.JFrame {
     }//GEN-LAST:event_btnQuitarExcelActionPerformed
 
     private void btnBorrarExcelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBorrarExcelActionPerformed
-        int res = limpiarSeleccion("hojas",numHojasSel,modeloListaExcel,
+        /*int res = limpiarSeleccion("hojas",numHojasSel,modeloListaExcel,
             marcadorHojas,listaHojasSel,btnQuitarExcel,btnBorrarExcel,labelSelTablaExcel
         );
         if(res==JOptionPane.OK_OPTION){
@@ -1227,7 +1234,7 @@ public class InterfazGrafica extends javax.swing.JFrame {
                 btnTipos.setEnabled(false);
                 btnAgregarHoja.setEnabled(true);
             }
-        }
+        }*/
     }//GEN-LAST:event_btnBorrarExcelActionPerformed
 
     private void tablasSelExcelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tablasSelExcelActionPerformed
@@ -1278,10 +1285,10 @@ public class InterfazGrafica extends javax.swing.JFrame {
         if(modeloListaExcel.isEmpty()){
             opc = sa.showOpenDialog(jPanel1);
         }
-        if(!modeloListaExcel.isEmpty()&&limpiarSeleccion("hojas",numHojasSel,modeloListaExcel,
+        /*if(!modeloListaExcel.isEmpty()&&limpiarSeleccion("hojas",numHojasSel,modeloListaExcel,
             marcadorHojas,listaHojasSel,btnQuitarExcel,btnBorrarExcel,labelSelTablaExcel)==0){
             opc = sa.showOpenDialog(jPanel1);
-        }
+        }*/
 
         if(opc == JFileChooser.APPROVE_OPTION){
             try{
@@ -1347,9 +1354,9 @@ public class InterfazGrafica extends javax.swing.JFrame {
             seleccion.setSelectedIndex(modeloLista.getSize()-1);
             lista.get(combo.getSelectedIndex()).setSeleccionado(true);
             //marcador[combo.getSelectedIndex()] = true;
-            /*for(int i=0;i<lista.size();i++){
+            for(int i=0;i<lista.size();i++){
                 System.out.print("["+lista.get(i).getSeleccionado()+"]");
-            }System.out.println();*/
+            }System.out.println();
             label.setText(msj);
             btnQuitar.setEnabled(true);
             btnBorrar.setEnabled(true);
@@ -1405,8 +1412,15 @@ public class InterfazGrafica extends javax.swing.JFrame {
         try {
             String bd = comboBases.getSelectedItem().toString(); 
             Conexion con2 = new Conexion(servidor,usuario,clave);
-            
-            GeneradorExcel generador = new GeneradorExcel(con2, bd, listaTablas, info, barraProgreso, this);
+            List<ElementoLista> lista;
+            if(tablasCompletas.isSelected()){
+               lista = listaElementos; 
+            }else{
+                lista = listaElementos.stream()
+                    .filter(elemento->elemento.getSeleccionado())
+                    .collect(Collectors.toList());
+            }
+            GeneradorExcel generador = new GeneradorExcel(con2, bd, lista, info, barraProgreso, this);
             String directorio = FileSystemView.getFileSystemView().getDefaultDirectory().getPath();
             SelectorGuarda sg = new SelectorGuarda(new File(directorio+"\\"+bd+".xlsx"),generador);
             sg.showSaveDialog(jPanel1);
@@ -1418,8 +1432,8 @@ public class InterfazGrafica extends javax.swing.JFrame {
         }
     }
     
-    public int limpiarSeleccion(String elemento,int numElem,DefaultListModel modeloLista,boolean marcador[],
-            ArrayList<String> listaAux,JButton btnQuitar,JButton btnBorrar,JLabel label){
+    public int limpiarSeleccion(String elemento,DefaultListModel modeloLista,
+            ArrayList<ElementoLista> listaAux,JButton btnQuitar,JButton btnBorrar,JLabel label){
         int resp = JOptionPane.showConfirmDialog(
             jPanel1, 
             "Todas las "+elemento+" en la lista se \nborrarán. ¿Continuar?",
@@ -1428,18 +1442,20 @@ public class InterfazGrafica extends javax.swing.JFrame {
             JOptionPane.QUESTION_MESSAGE
         );
         if(resp==JOptionPane.OK_OPTION){
-            numElem = 0;
-            ElementoLista e;
+            //numElem = 0;
+            ElementoLista elem;
             for(int i=modeloLista.getSize()-1; i>=0; i--){
-                e = (ElementoLista)modeloLista.getElementAt(i);
+                elem = (ElementoLista)modeloLista.getElementAt(i);
+                listaAux.get(elem.getPosicion()).setSeleccionado(false);
                 //System.out.println(e.getNombre());
-                marcador[e.getPosicion()] = false;
+                
+                //marcador[elem.getPosicion()] = false;
                 /*for(int k=0;k<marcadorTablas.length;k++){
                     System.out.print("["+marcadorTablas[k]+"]");
                 }System.out.println();*/
             }
             modeloLista.clear();
-            listaAux.clear();
+            //listaAux.clear();
             btnBorrar.setEnabled(false);
             btnQuitar.setEnabled(false);
             label.setText("Selección de "+elemento+" borrada");
