@@ -1100,62 +1100,18 @@ public class InterfazGrafica extends javax.swing.JFrame {
     }//GEN-LAST:event_btnAgregarTablaActionPerformed
 
     private void btnBorrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBorrarActionPerformed
-        limpiarSeleccion("tablas",modeloLista,
-            listaElementos,btnQuitar,btnBorrar,labelSelTabla
-        );
+        limpiarSeleccion("tablas",modeloLista,listaElementos,btnQuitar,btnBorrar,labelSelTabla);
         if(!listaElementos.get(comboTablas.getSelectedIndex()).getSeleccionado()){
-        //if(marcadorTablas[comboTablas.getSelectedIndex()]==false){
-            //System.out.println("ya no esta seleccionado");
             btnAgregarTabla.setEnabled(true);
         }
     }//GEN-LAST:event_btnBorrarActionPerformed
 
     private void btnQuitarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnQuitarActionPerformed
-        /*int []tablasBorradas = seleccionTablas.getSelectedIndices();
-        int acomodo = 0;            // para el desfase que ocurre al eliminar elementos de la lista
-        for(int t:tablasBorradas){
-            //System.out.println(t);
-            //System.out.println(modeloLista.toString());
-            
-            ElementoLista e = (ElementoLista)modeloLista.getElementAt(t-acomodo);
-            //System.out.println(e.getPosicion());
-            marcadorTablas[e.getPosicion()] = false;    
-            for(int i=0;i<marcadorTablas.length;i++){
-                System.out.print("["+marcadorTablas[i]+"]");
-            }System.out.println();
-            modeloLista.remove(t-acomodo);
-            listaTablasSeleccionadas.remove(t-acomodo);
-            numTablaSel--;
-            //System.out.println(t-acomodo);
-            acomodo++;
-        }
-        //seleccionTablas.setSelectedIndex(numTablaSel-1);
-        if(tablasBorradas.length>1){
-            labelSelTabla.setText("Tablas borradas de la lista de exportación");
-            if(!modeloLista.isEmpty()){
-                seleccionTablas.setSelectedIndex(0);
-            }
-        }else{
-            labelSelTabla.setText("Tabla borrada de la lista de exportación");
-            //System.out.println(tablasBorradas[0]);
-            //System.out.println(modeloLista.getSize()-1);
-            if(tablasBorradas[0]==modeloLista.getSize()){   // si el elemento borrado es el último de la lista
-                seleccionTablas.setSelectedIndex(modeloLista.getSize()-1);
-            }else{
-                seleccionTablas.setSelectedIndex(tablasBorradas[0]);    // selec. el elemento sig a eliminado
-            }
-        }
-        if(modeloLista.isEmpty()){
-            btnQuitar.setEnabled(false);
-            btnBorrar.setEnabled(false);
-        }*/
         borrarElemento(seleccionTablas,modeloLista,
             listaElementos,labelSelTabla,btnQuitar,btnBorrar,
             "Tabla borrada de la lista de exportación","Tablas borradas de la lista de exportación"
         );
-        
         if(!listaElementos.get(comboTablas.getSelectedIndex()).getSeleccionado()){
-        //if(marcadorTablas[comboTablas.getSelectedIndex()]==false){
             btnAgregarTabla.setEnabled(true);
         }
     }//GEN-LAST:event_btnQuitarActionPerformed
@@ -1331,9 +1287,6 @@ public class InterfazGrafica extends javax.swing.JFrame {
         if(!lista.get(combo.getSelectedIndex()).getSeleccionado()){            
             //System.out.println("No seleccionado..." + combo.getSelectedIndex());
             modeloLista.addElement(new ElementoLista(combo.getSelectedItem().toString(),combo.getSelectedIndex()));
-            //lista.add(combo.getSelectedItem().toString());
-            //numElem++;
-            //System.out.println("elementos seleccionados: "+numElem);
             seleccion.setSelectedIndex(modeloLista.getSize()-1);
             lista.get(combo.getSelectedIndex()).setSeleccionado(true);
             //marcador[combo.getSelectedIndex()] = true;
@@ -1420,13 +1373,11 @@ public class InterfazGrafica extends javax.swing.JFrame {
             for(int i=modeloLista.getSize()-1; i>=0; i--){
                 elem = (ElementoLista)modeloLista.getElementAt(i);
                 listaAux.get(elem.getPosicion()).setSeleccionado(false);
-                //System.out.println(e.getNombre());
-                
-                //marcador[elem.getPosicion()] = false;
-                /*for(int k=0;k<marcadorTablas.length;k++){
-                    System.out.print("["+marcadorTablas[k]+"]");
-                }System.out.println();*/
             }
+            System.out.println("Borrados todos los elementos");
+            for(int k=0;k<listaAux.size();k++){
+                System.out.print("["+listaAux.get(k).getSeleccionado()+"]");
+            }System.out.println();
             modeloLista.clear();
             btnBorrar.setEnabled(false);
             btnQuitar.setEnabled(false);
@@ -1467,10 +1418,6 @@ public class InterfazGrafica extends javax.swing.JFrame {
                     comboTablas.addItem(e1.getNombre());
                 }
             });
-            //marcadorTablas = new boolean[listaTablasCompletas.size()];
-            /*for(int i=0;i<listaTablasCompletas.size();i++){
-                marcadorTablas[i] = false;
-            }*/
         }catch(SQLException e){
             info.setText("No se pudo cargar la información "
             + "(Error MySQL " + e.getErrorCode() + ": " + e.getMessage() + ".");
