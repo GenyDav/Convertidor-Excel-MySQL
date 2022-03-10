@@ -45,10 +45,10 @@ public class InterfazGrafica extends javax.swing.JFrame {
     private DefaultListModel modeloLista;
     
     private ArrayList<ElementoLista> listaElementos;
-    private ArrayList<String> listaTablas;      // lista de tablas que van a ser exportadas
-    private ArrayList<String> listaTablasCompletas;
-    private ArrayList<String> listaTablasSeleccionadas;
-    private boolean []marcadorTablas;
+    //private ArrayList<String> listaTablas;      // lista de tablas que van a ser exportadas
+    //private ArrayList<String> listaTablasCompletas;
+    //private ArrayList<String> listaTablasSeleccionadas;
+    //private boolean []marcadorTablas;
     
     private int numTablaSel;            // cantidad de tablas seleccionadas
     private int indiceTablaAct;
@@ -99,9 +99,9 @@ public class InterfazGrafica extends javax.swing.JFrame {
         seleccionTablas.setModel(modeloLista);
         
         listaElementos = new ArrayList<>();
-        listaTablas = new ArrayList();
-        listaTablasCompletas = new ArrayList();
-        listaTablasSeleccionadas = new ArrayList();
+        //listaTablas = new ArrayList();
+        //listaTablasCompletas = new ArrayList();
+        //listaTablasSeleccionadas = new ArrayList();
         
         numTablaSel = 0;
         indiceTablaAct = 0;
@@ -1030,14 +1030,12 @@ public class InterfazGrafica extends javax.swing.JFrame {
         btnAgregarTabla.setEnabled(false);
         seleccionTablas.setEnabled(false);
         jScrollPaneSel.getVerticalScrollBar().setEnabled(false);
-        //listaTablas = listaTablasCompletas;
     }//GEN-LAST:event_tablasCompletasActionPerformed
 
     private void tablasSelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tablasSelActionPerformed
         btnAgregarTabla.setEnabled(true);
         seleccionTablas.setEnabled(true);
         jScrollPaneSel.getVerticalScrollBar().setEnabled(true);
-        //listaTablas = listaTablasSeleccionadas;
     }//GEN-LAST:event_tablasSelActionPerformed
 
     /**
@@ -1053,10 +1051,8 @@ public class InterfazGrafica extends javax.swing.JFrame {
             if(tablasSel.isSelected()){
                 if(listaElementos.get(comboTablas.getSelectedIndex()).getSeleccionado()){
                     btnAgregarTabla.setEnabled(false); // deshabilitar el boton si el elemento sel. está en la lista
-                    //System.out.println("Deshabilitado");
                 }else{
                     btnAgregarTabla.setEnabled(true);
-                    //System.out.println("Habilitado");
                 }
             }
         }
@@ -1089,28 +1085,18 @@ public class InterfazGrafica extends javax.swing.JFrame {
     }//GEN-LAST:event_comboBasesItemStateChanged
 
     private void btnAgregarTablaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarTablaActionPerformed
-        /*if(!marcadorTablas[comboTablas.getSelectedIndex()]){    
+        if(!listaElementos.get(comboTablas.getSelectedIndex()).getSeleccionado()){            
             modeloLista.addElement(new ElementoLista(comboTablas.getSelectedItem().toString(),comboTablas.getSelectedIndex()));
-            listaTablasSeleccionadas.add(comboTablas.getSelectedItem().toString());
-            numTablaSel++;
-            seleccionTablas.setSelectedIndex(numTablaSel-1);
-            
-            marcadorTablas[comboTablas.getSelectedIndex()] = true;
-            for(int i=0;i<marcadorTablas.length;i++){
-                System.out.print("["+marcadorTablas[i]+"]");
-            }System.out.println();
+            seleccionTablas.setSelectedIndex(modeloLista.getSize()-1);
+            listaElementos.get(comboTablas.getSelectedIndex()).setSeleccionado(true);
+            /*for(int i=0;i<listaElementos.size();i++){
+                System.out.print("["+listaElementos.get(i).getSeleccionado()+"]");
+            }System.out.println();*/
             labelSelTabla.setText("Tabla agregada a la lista de exportación");
             btnQuitar.setEnabled(true);
             btnBorrar.setEnabled(true);
-        }else{
-            labelSelTabla.setText("La tabla ya está en la lista de exportación");
-        }*/
-        agregarElementoLista(modeloLista,listaElementos,
-            seleccionTablas,comboTablas, labelSelTabla,btnQuitar,btnBorrar,
-            "Tabla agregada a la lista de exportación","La tabla ya está en la lista de exportación"
-        );
+        }   
         btnAgregarTabla.setEnabled(false);
-        
     }//GEN-LAST:event_btnAgregarTablaActionPerformed
 
     private void btnBorrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBorrarActionPerformed
@@ -1168,10 +1154,8 @@ public class InterfazGrafica extends javax.swing.JFrame {
             "Tabla borrada de la lista de exportación","Tablas borradas de la lista de exportación"
         );
         
-        //System.out.println("Valor: "+listaElementos.get(comboTablas.getSelectedIndex()).getSeleccionado());
         if(!listaElementos.get(comboTablas.getSelectedIndex()).getSeleccionado()){
         //if(marcadorTablas[comboTablas.getSelectedIndex()]==false){
-            //System.out.println("ya no esta seleccionado");
             btnAgregarTabla.setEnabled(true);
         }
     }//GEN-LAST:event_btnQuitarActionPerformed
@@ -1348,7 +1332,6 @@ public class InterfazGrafica extends javax.swing.JFrame {
             //System.out.println("No seleccionado..." + combo.getSelectedIndex());
             modeloLista.addElement(new ElementoLista(combo.getSelectedItem().toString(),combo.getSelectedIndex()));
             //lista.add(combo.getSelectedItem().toString());
-            
             //numElem++;
             //System.out.println("elementos seleccionados: "+numElem);
             seleccion.setSelectedIndex(modeloLista.getSize()-1);
@@ -1366,27 +1349,18 @@ public class InterfazGrafica extends javax.swing.JFrame {
     }
     
     public void borrarElemento(JList seleccion,DefaultListModel modeloLista,ArrayList<ElementoLista> lista,JLabel label,JButton btnQuitar,JButton btnBorrar,String msj,String msjPlural){
-        int []elemBorrados = seleccion.getSelectedIndices();
-        int acomodo = 0;            // para el desfase que ocurre al eliminar elementos de la lista
-        for(int t:elemBorrados){
-            //System.out.println(t);
-            //System.out.println(modeloLista.toString());           
-            ElementoLista elemento = (ElementoLista)modeloLista.getElementAt(t-acomodo);
-            
-            //System.out.println(e.getPosicion());
-            //marcador[e.getPosicion()] = false;    
+        int []elemBorrados = seleccion.getSelectedIndices(); // posiciones de los elementos a eliminar
+        int acomodo = 0;    // para el desfase que ocurre al eliminar elementos de la lista
+        for(int t:elemBorrados){     
+            ElementoLista elemento = (ElementoLista)modeloLista.getElementAt(t-acomodo);      
             lista.get(elemento.getPosicion()).setSeleccionado(false);
-            /*for(int i=0;i<lista.size();i++){
+            for(int i=0;i<lista.size();i++){
                 System.out.print("["+lista.get(i).getSeleccionado()+"]");
-            }System.out.println();*/
+            }System.out.println();
             modeloLista.remove(t-acomodo);
-            //lista.remove(t-acomodo);
-            
-            //numElem--;
             //System.out.println(t-acomodo);
             acomodo++;
         }
-        //seleccionTablas.setSelectedIndex(numTablaSel-1);
         if(elemBorrados.length>1){  // si se seleccionaron varios elementos para borrarlos
             label.setText(msjPlural);
             if(!modeloLista.isEmpty()){
@@ -1394,8 +1368,8 @@ public class InterfazGrafica extends javax.swing.JFrame {
             }
         }else{ // solo se elimina un elemento
             label.setText(msj);
-            System.out.println(elemBorrados[0]);
-            System.out.println(modeloLista.getSize()-1);
+            //System.out.println(elemBorrados[0]);
+            //System.out.println(modeloLista.getSize()-1);
             if(elemBorrados[0]==modeloLista.getSize()){   // si el elemento borrado es el último de la lista
                 seleccion.setSelectedIndex(modeloLista.getSize()-1); // se selecciona el elemento anterior al eliminado
             }else{
@@ -1442,7 +1416,6 @@ public class InterfazGrafica extends javax.swing.JFrame {
             JOptionPane.QUESTION_MESSAGE
         );
         if(resp==JOptionPane.OK_OPTION){
-            //numElem = 0;
             ElementoLista elem;
             for(int i=modeloLista.getSize()-1; i>=0; i--){
                 elem = (ElementoLista)modeloLista.getElementAt(i);
@@ -1455,7 +1428,6 @@ public class InterfazGrafica extends javax.swing.JFrame {
                 }System.out.println();*/
             }
             modeloLista.clear();
-            //listaAux.clear();
             btnBorrar.setEnabled(false);
             btnQuitar.setEnabled(false);
             label.setText("Selección de "+elemento+" borrada");
@@ -1488,19 +1460,17 @@ public class InterfazGrafica extends javax.swing.JFrame {
     
     public void cargarListaDeTablas(String nomBase){
         try{
-            //listaTablasCompletas = conn.obtenerTablas(nomBase);
             listaElementos = conn.obtenerTablas(nomBase);
             listaElementos.stream().forEach(new Consumer<ElementoLista>(){
+                @Override
                 public void accept(ElementoLista e1) {
                     comboTablas.addItem(e1.getNombre());
                 }
             });
-            //System.out.println(listaTablas.size());
             //marcadorTablas = new boolean[listaTablasCompletas.size()];
             /*for(int i=0;i<listaTablasCompletas.size();i++){
                 marcadorTablas[i] = false;
             }*/
-            //listaTablas = listaTablasCompletas;
         }catch(SQLException e){
             info.setText("No se pudo cargar la información "
             + "(Error MySQL " + e.getErrorCode() + ": " + e.getMessage() + ".");
