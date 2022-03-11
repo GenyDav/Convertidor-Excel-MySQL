@@ -7,6 +7,7 @@ package interfaz;
 
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.util.ArrayList;
 import javax.swing.UIManager;
 
 /**
@@ -14,21 +15,27 @@ import javax.swing.UIManager;
  * @author Geny
  */
 public class ConfigTipos extends javax.swing.JDialog {
-
+    ArrayList<InfoColumna> listaColumnas;
+    
     /**
      * Creates new form ConfTipos
+     * @param parent
+     * @param modal
+     * @param col
+     * @param hoja
      */
-    public ConfigTipos(java.awt.Frame parent, boolean modal, String hoja) {
+    public ConfigTipos(java.awt.Frame parent, boolean modal, String hoja,ArrayList<InfoColumna> col) {
         super(parent, modal);
         initComponents();
-        setTitle(hoja+": Configurar columnas");
+        setTitle("Configurar tipos de la columna " + hoja);
         setPreferredSize(new Dimension(565,374));
         pack();
         setLocationRelativeTo(parent);
         //setResizable(false);       
+        listaColumnas = col;
         
         jPanel2.setLayout(new FlowLayout(FlowLayout.CENTER));
-        jPanel2.add(new PanelColumna("columna1"));
+        /*jPanel2.add(new PanelColumna("columna1"));
         jPanel2.add(new PanelColumna("columna2"));
         jPanel2.add(new PanelColumna("columna3"));
         jPanel2.add(new PanelColumna("columna4"));
@@ -39,9 +46,13 @@ public class ConfigTipos extends javax.swing.JDialog {
         jPanel2.add(new PanelColumna("columna9"));
         jPanel2.add(new PanelColumna("columna10"));
         jPanel2.add(new PanelColumna("columna11"));
+        */
+        for(int i=0;i<listaColumnas.size();i++){
+            jPanel2.add(new PanelColumna(listaColumnas.get(i).getNombre(),listaColumnas,i));
+        }
         
         jPanel1.setPreferredSize(new Dimension(550,300));
-        jPanel2.setPreferredSize(new Dimension(520, ((32+4)*11)+5));
+        jPanel2.setPreferredSize(new Dimension(520,((32+4)*listaColumnas.size())+5));
         jScrollPane1.setPreferredSize(new Dimension(530, 300));
     }
 
@@ -127,7 +138,7 @@ public class ConfigTipos extends javax.swing.JDialog {
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
+    /*public static void main(String args[]) {
         try {    
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         } catch (Exception ex) {
@@ -135,7 +146,7 @@ public class ConfigTipos extends javax.swing.JDialog {
         }
 
         /* Create and display the dialog */
-        java.awt.EventQueue.invokeLater(new Runnable() {
+        /*java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 ConfigTipos dialog = new ConfigTipos(new javax.swing.JFrame(), true, "hoja");
                 dialog.addWindowListener(new java.awt.event.WindowAdapter() {
@@ -147,7 +158,7 @@ public class ConfigTipos extends javax.swing.JDialog {
                 dialog.setVisible(true);
             }
         });
-    }
+    }*/
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
