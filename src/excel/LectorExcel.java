@@ -6,9 +6,13 @@
 package excel;
 
 import interfaz.FormatoTablaExcel;
+import interfaz.InfoColumna;
+import interfaz.TablaLista;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Iterator;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
@@ -16,6 +20,9 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.SwingWorker;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 
@@ -33,8 +40,9 @@ public class LectorExcel extends SwingWorker<Void,Void>{
     private JButton botonAbrir;
     private JButton btnTipos;
     private JFrame ventana;
+    private ArrayList<TablaLista> hojas;
     
-    public LectorExcel(JFrame ventana,JComboBox combo,JTable tabla,JLabel label,JButton btn,String ruta,JButton btnTipos){
+    public LectorExcel(JFrame ventana,JComboBox combo,JTable tabla,JLabel label,JButton btn,String ruta,JButton btnTipos,ArrayList<TablaLista>hojas){
         this.ruta = ruta;
         comboHojas = combo;
         this.ventana = ventana;
@@ -42,6 +50,7 @@ public class LectorExcel extends SwingWorker<Void,Void>{
         etiqueta = label;
         botonAbrir = btn;
         this.btnTipos = btnTipos;
+        this.hojas = hojas;
     }
 
     public void setRuta(String ruta){
@@ -63,6 +72,24 @@ public class LectorExcel extends SwingWorker<Void,Void>{
             libro = WorkbookFactory.create(new File(ruta));
             //libro = new XSSFWorkbook(flujoEntrada);
             System.out.println("Archivo creado...");
+            
+            Sheet hojaActual;
+            Row encabezado; 
+
+            for(int i=0;i<libro.getNumberOfSheets();i++){
+                System.out.println("Llenando hoja...");
+                hojaActual = libro.getSheetAt(i);
+                hojas.add(new TablaLista(hojaActual.getSheetName(),i));
+                //System.out.println("encabezado: "+hoja.getFirstRowNum());
+                encabezado = hojaActual.getRow(hojaActual.getFirstRowNum());
+
+                Iterator<Cell> iterador = encabezado.cellIterator();
+                while(iterador.hasNext()){
+                    //System.out.println(iterador.next().toString());
+                    hojas.get(i).agregarColumna(new InfoColumna(iterador.next().toString()));
+                }
+            }
+            
             new FormatoTablaExcel(0,this).execute();
         }catch(FileNotFoundException e){
             JOptionPane.showMessageDialog(
@@ -108,6 +135,10 @@ public class LectorExcel extends SwingWorker<Void,Void>{
         }
     }
     
+    public ArrayList<TablaLista> obtenerInfoArchivo(){
+        return hojas;
+    }
+    
     @Override
     public Void doInBackground() throws IOException{
         System.out.println("Iniciando lectura...");
@@ -116,6 +147,13 @@ public class LectorExcel extends SwingWorker<Void,Void>{
         comboHojas.setEnabled(true);
         botonAbrir.setEnabled(true);
         btnTipos.setEnabled(true);
+        /*TablaLista tabla;
+        System.out.println("Información");
+        for(int i=0;i<hojas.size();i++){
+            tabla = hojas.get(i);
+            tabla.mostrarColumnas();
+            System.out.println();
+        }  */
         return null;
     }
 }
