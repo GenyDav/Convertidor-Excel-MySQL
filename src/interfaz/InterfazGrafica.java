@@ -104,7 +104,7 @@ public class InterfazGrafica extends javax.swing.JFrame {
         nomArch = "";
         rutaArch = "";
         lector = null;
-        //listaHojasSel = new ArrayList<>();
+
         listaHojas = new ArrayList<>();
         modeloListaExcel = new DefaultListModel();
         seleccionHojasExcel.setModel(modeloListaExcel);
@@ -1283,7 +1283,9 @@ public class InterfazGrafica extends javax.swing.JFrame {
             tabla.mostrarColumnas();
             System.out.println();
         }
-        new ConfigTipos(this,true,"nomHoja").setVisible(true);
+        String nomTabla = listaHojas.get(comboHojas.getSelectedIndex()).getNombre();
+        ArrayList<InfoColumna> columnas = listaHojas.get(comboHojas.getSelectedIndex()).obtenerColumnas();
+        new ConfigTipos(this,true,nomTabla,columnas).setVisible(true);
     }//GEN-LAST:event_btnTiposActionPerformed
     
     // agregar un elemento a la lista de exportacion/importacion
@@ -1372,8 +1374,7 @@ public class InterfazGrafica extends javax.swing.JFrame {
             JOptionPane.OK_CANCEL_OPTION,
             JOptionPane.QUESTION_MESSAGE
         );
-        if(resp==JOptionPane.OK_OPTION){         
-            
+        if(resp==JOptionPane.OK_OPTION){                
             ElementoLista elem;
             for(int i=modeloLista.getSize()-1; i>=0; i--){
                 elem = (ElementoLista)modeloLista.getElementAt(i);
