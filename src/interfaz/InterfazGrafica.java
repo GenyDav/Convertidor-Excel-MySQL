@@ -45,23 +45,20 @@ public class InterfazGrafica extends javax.swing.JFrame {
     private DefaultListModel modeloLista;
     
     private ArrayList<ElementoLista> listaElementos;
-    //private ArrayList<String> listaTablas;      // lista de tablas que van a ser exportadas
-    //private ArrayList<String> listaTablasCompletas;
-    //private ArrayList<String> listaTablasSeleccionadas;
-    //private boolean []marcadorTablas;
     
-    private int numTablaSel;            // cantidad de tablas seleccionadas
     private int indiceTablaAct;
     private boolean cambioCancelado;
-    ElementoLista e;
     
     // Atributos para leer archivo de Excel
     private String nomArch;
     private String rutaArch;
     private LectorExcel lector;
-    private ArrayList<String> listaHojas;
-    private ArrayList<String> listaHojasSel;
-    private ArrayList<String> listaHojasCompletas;
+    //private ArrayList<String> listaHojas;
+    //private ArrayList<String> listaHojasSel;
+    //private ArrayList<String> listaHojasCompletas;
+    
+    private ArrayList<TablaLista> listaHojas;
+    
     private DefaultListModel modeloListaExcel;
     private boolean []marcadorHojas;
     private int numHojas;
@@ -99,11 +96,7 @@ public class InterfazGrafica extends javax.swing.JFrame {
         seleccionTablas.setModel(modeloLista);
         
         listaElementos = new ArrayList<>();
-        //listaTablas = new ArrayList();
-        //listaTablasCompletas = new ArrayList();
-        //listaTablasSeleccionadas = new ArrayList();
-        
-        numTablaSel = 0;
+                
         indiceTablaAct = 0;
         cambioCancelado = false;
         
@@ -111,7 +104,8 @@ public class InterfazGrafica extends javax.swing.JFrame {
         nomArch = "";
         rutaArch = "";
         lector = null;
-        listaHojasSel = new ArrayList<>();
+        //listaHojasSel = new ArrayList<>();
+        listaHojas = new ArrayList<>();
         modeloListaExcel = new DefaultListModel();
         seleccionHojasExcel.setModel(modeloListaExcel);
     }
@@ -1062,6 +1056,7 @@ public class InterfazGrafica extends javax.swing.JFrame {
         if(modeloLista.isEmpty()){
             if(evt.getStateChange()==ItemEvent.SELECTED){
                 cargarListaDeTablas(comboBases.getSelectedItem().toString());
+                indiceTablaAct = comboBases.getSelectedIndex();
                 labelSelTabla.setText("");
             }else{         
                 comboTablas.removeAllItems();
@@ -1209,13 +1204,13 @@ public class InterfazGrafica extends javax.swing.JFrame {
     }//GEN-LAST:event_btnImportarActionPerformed
 
     private void btnAgregarHojaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarHojaActionPerformed
-        /*agregarElementoLista(marcadorHojas, modeloListaExcel, listaHojasSel,
-            numHojasSel, seleccionHojasExcel, comboHojas, labelSelTablaExcel,
+        agregarElementoLista(modeloListaExcel, listaHojas,
+             seleccionHojasExcel, comboHojas, labelSelTablaExcel,
             btnQuitarExcel, btnBorrarExcel,"Hoja agregada a la lista de importación",
             "La hoja ya está en la lista de importación"
         );
         btnTipos.setEnabled(true);
-        btnAgregarHoja.setEnabled(false);*/
+        btnAgregarHoja.setEnabled(false);
     }//GEN-LAST:event_btnAgregarHojaActionPerformed
 
     private void btnAbrirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAbrirActionPerformed
@@ -1225,8 +1220,8 @@ public class InterfazGrafica extends javax.swing.JFrame {
         if(modeloListaExcel.isEmpty()){
             opc = sa.showOpenDialog(jPanel1);
         }
-        /*if(!modeloListaExcel.isEmpty()&&limpiarSeleccion("hojas",numHojasSel,modeloListaExcel,
-            marcadorHojas,listaHojasSel,btnQuitarExcel,btnBorrarExcel,labelSelTablaExcel)==0){
+        /*if(!modeloListaExcel.isEmpty()&&limpiarSeleccion("hojas",modeloListaExcel,
+            listaHojas,btnQuitarExcel,btnBorrarExcel,labelSelTablaExcel)==0){
             opc = sa.showOpenDialog(jPanel1);
         }*/
 
@@ -1253,20 +1248,23 @@ public class InterfazGrafica extends javax.swing.JFrame {
                     if(lector!=null && lector.getLibro()!=null){
                         lector.cerrarArchivo();
                     }
-                    lector = new LectorExcel(this,comboHojas,tablaExcel,labelRegExcel,btnAbrir,rutaArch,btnTipos);
+                    listaHojas.clear();
+                    lector = new LectorExcel(this,comboHojas,tablaExcel,labelRegExcel,btnAbrir,rutaArch,btnTipos,listaHojas);
                     lector.execute();
 
                     new Thread(){ // esperar a que se cargue el archivo para obtener el número de hojas
                         @Override
                         public void run(){
+                            System.out.println("Ejecutando hilo");
                             while(lector.getLibro()==null){
                                 //System.out.println("Esperando libro");
                             }
+                            System.out.println("Cargando Información");
                             numHojas = lector.obtenerNumHojas();
-                            marcadorHojas = new boolean[numHojas];
+                            /*marcadorHojas = new boolean[numHojas];
                             for(int i=0;i<marcadorHojas.length;i++){
                                 marcadorHojas[i] = false;
-                            }
+                            }*/                       
                         }
                     }.start();
                     labelArchivo.setText("  " + nomArch );  
@@ -1278,12 +1276,18 @@ public class InterfazGrafica extends javax.swing.JFrame {
     }//GEN-LAST:event_btnAbrirActionPerformed
 
     private void btnTiposActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTiposActionPerformed
-        
+        TablaLista tabla;
+        System.out.println("Información - número de hojas: " +listaHojas.size());
+        for(int i=0;i<listaHojas.size();i++){
+            tabla = listaHojas.get(i);
+            tabla.mostrarColumnas();
+            System.out.println();
+        }
         new ConfigTipos(this,true,"nomHoja").setVisible(true);
     }//GEN-LAST:event_btnTiposActionPerformed
     
     // agregar un elemento a la lista de exportacion/importacion
-    public void agregarElementoLista(DefaultListModel modeloLista,ArrayList<ElementoLista> lista,JList seleccion,JComboBox combo,JLabel label,JButton btnQuitar,JButton btnBorrar,String msj,String msjAdvertencia){
+    public void agregarElementoLista(DefaultListModel modeloLista,ArrayList<TablaLista> lista,JList seleccion,JComboBox combo,JLabel label,JButton btnQuitar,JButton btnBorrar,String msj,String msjAdvertencia){
         if(!lista.get(combo.getSelectedIndex()).getSeleccionado()){            
             //System.out.println("No seleccionado..." + combo.getSelectedIndex());
             modeloLista.addElement(new ElementoLista(combo.getSelectedItem().toString(),combo.getSelectedIndex()));
@@ -1359,8 +1363,8 @@ public class InterfazGrafica extends javax.swing.JFrame {
         }
     }
     
-    public int limpiarSeleccion(String elemento,DefaultListModel modeloLista,
-            ArrayList<ElementoLista> listaAux,JButton btnQuitar,JButton btnBorrar,JLabel label){
+    public <T extends ElementoLista> int limpiarSeleccion(String elemento,DefaultListModel modeloLista,
+            ArrayList<T> listaAux,JButton btnQuitar,JButton btnBorrar,JLabel label){
         int resp = JOptionPane.showConfirmDialog(
             jPanel1, 
             "Todas las "+elemento+" en la lista se \nborrarán. ¿Continuar?",
@@ -1368,7 +1372,8 @@ public class InterfazGrafica extends javax.swing.JFrame {
             JOptionPane.OK_CANCEL_OPTION,
             JOptionPane.QUESTION_MESSAGE
         );
-        if(resp==JOptionPane.OK_OPTION){
+        if(resp==JOptionPane.OK_OPTION){         
+            
             ElementoLista elem;
             for(int i=modeloLista.getSize()-1; i>=0; i--){
                 elem = (ElementoLista)modeloLista.getElementAt(i);
