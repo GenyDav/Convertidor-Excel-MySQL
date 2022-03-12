@@ -48,7 +48,7 @@ public class ConfigTipos extends javax.swing.JDialog {
         jPanel2.add(new PanelColumna("columna11"));
         */
         for(int i=0;i<listaColumnas.size();i++){
-            jPanel2.add(new PanelColumna(listaColumnas.get(i).getNombre(),listaColumnas,i));
+            jPanel2.add(new PanelColumna(listaColumnas.get(i)));
         }
         
         jPanel1.setPreferredSize(new Dimension(550,300));
