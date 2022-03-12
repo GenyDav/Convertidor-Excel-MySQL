@@ -5,17 +5,29 @@
  */
 package interfaz;
 
+import java.util.ArrayList;
+
 /**
  *
  * @author Geny
  */
 public class PanelColumna extends javax.swing.JPanel {
+    //int posicion;
+    ArrayList<InfoColumna> columnas;
+    InfoColumna info;
+    
     /**
      * Creates new form PanelColumna
+     * @param col
      */
-    public PanelColumna(String nomColumna) {
+    public PanelColumna(InfoColumna col) {
         initComponents();
-        nombreCol.setText(nomColumna);
+        //columnas = col;
+        info = col;
+        //this.posicion = posicion;
+        //info = columnas.get(posicion);
+
+        cargarDatos();
     }
 
     /**
@@ -53,36 +65,56 @@ public class PanelColumna extends javax.swing.JPanel {
         tamCol.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         tamCol.setText("0");
         tamCol.setToolTipText("Tamaño");
-        tamCol.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                tamColActionPerformed(evt);
-            }
-        });
 
-        checkPK.setBackground(new java.awt.Color(102, 102, 102));
-        checkPK.setForeground(new java.awt.Color(255, 255, 255));
+        checkPK.setBackground(new java.awt.Color(153, 153, 153));
+        checkPK.setForeground(new java.awt.Color(0, 0, 0));
         checkPK.setText("PK");
         checkPK.setToolTipText("Llave primaria");
+        checkPK.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                checkPKActionPerformed(evt);
+            }
+        });
 
         checkNN.setBackground(new java.awt.Color(204, 204, 204));
         checkNN.setText("NN");
         checkNN.setToolTipText("No nulo");
+        checkNN.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                checkNNActionPerformed(evt);
+            }
+        });
 
         checkUQ.setBackground(new java.awt.Color(204, 204, 204));
         checkUQ.setText("UQ");
         checkUQ.setToolTipText("Índice único");
+        checkUQ.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                checkUQActionPerformed(evt);
+            }
+        });
 
         jSeparator1.setOrientation(javax.swing.SwingConstants.VERTICAL);
 
         checkUN.setBackground(new java.awt.Color(204, 204, 204));
         checkUN.setText("UN");
         checkUN.setToolTipText("Sin signo");
+        checkUN.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                checkUNActionPerformed(evt);
+            }
+        });
 
         jSeparator4.setOrientation(javax.swing.SwingConstants.VERTICAL);
 
         checkAI.setBackground(new java.awt.Color(204, 204, 204));
         checkAI.setText("AI");
         checkAI.setToolTipText("Auto Incremento");
+        checkAI.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                checkAIActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -144,9 +176,47 @@ public class PanelColumna extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    private void tamColActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tamColActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_tamColActionPerformed
+    private void cargarDatos(){
+        nombreCol.setText(info.getNombre());
+        /*if(columnas.get(posicion).primaryKey){
+            checkPK.setSelected(true);
+        }*/
+        checkPK.setSelected(info.getPK());
+        checkNN.setSelected(info.getNN());
+        checkUQ.setSelected(info.getUQ());
+        checkUN.setSelected(info.getUN());
+        checkAI.setSelected(info.getAI());
+    }
+    
+    private void checkPKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkPKActionPerformed
+        if(checkPK.isSelected()){
+            info.setPK(true);
+            info.setNN(true);
+            checkNN.setSelected(true);
+        }else{
+            //checkNN.setSelected(false);
+            info.setPK(false);
+        }
+    }//GEN-LAST:event_checkPKActionPerformed
+
+    private void checkNNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkNNActionPerformed
+        /*if(checkNN.isSelected()){
+            info.setNN(true);
+        }*/
+        info.setNN(checkNN.isSelected());
+    }//GEN-LAST:event_checkNNActionPerformed
+
+    private void checkUQActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkUQActionPerformed
+        info.setUQ(checkUQ.isSelected());
+    }//GEN-LAST:event_checkUQActionPerformed
+
+    private void checkUNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkUNActionPerformed
+        info.setUN(checkUN.isSelected());
+    }//GEN-LAST:event_checkUNActionPerformed
+
+    private void checkAIActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkAIActionPerformed
+        info.setAI(checkAI.isSelected());
+    }//GEN-LAST:event_checkAIActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JCheckBox checkAI;
