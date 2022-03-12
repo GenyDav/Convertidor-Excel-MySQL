@@ -10,10 +10,10 @@ package interfaz;
  * @author Geny
  */
 public class InfoColumna{
-    String nombre;
-    int tipo;
-    int tam;
-    boolean primaryKey, notNull, unique, unsigned, autoIncrement;
+    private String nombre;
+    private int tipo;
+    private int tam;
+    private boolean primaryKey, notNull, unique, unsigned, autoIncrement;
     
     public InfoColumna(String nombre){
         this.nombre = nombre;
@@ -28,64 +28,64 @@ public class InfoColumna{
     public String getNombre() {
         return nombre;
     }
-
-    /*public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }*/
     
     public int getTipo() {
         return tipo;
-    }
-
-    public void setTipo(int tipo) {
-        this.tipo = tipo;
     }
 
     public int getTam() {
         return tam;
     }
 
-    public void setTam(int tam) {
-        this.tam = tam;
-    }
-
-    public boolean isPk() {
+    public boolean getPK() {
         return primaryKey;
     }
 
-    public void setPk(boolean pk) {
-        this.primaryKey = pk;
-    }
-
-    public boolean isNn() {
+    public boolean getNN() {
         return notNull;
     }
 
-    public void setNn(boolean nn) {
-        this.notNull = nn;
-    }
-
-    public boolean isUq() {
+    public boolean getUQ() {
         return unique;
     }
 
-    public void setUq(boolean uq) {
-        this.unique = uq;
-    }
-
-    public boolean isUn() {
+    public boolean getUN() {
         return unsigned;
     }
 
-    public void setUn(boolean un) {
-        this.unsigned = un;
-    }
-
-    public boolean isAi() {
+    public boolean getAI() {
         return autoIncrement;
     }
-
-    public void setAi(boolean ai) {
+    
+    /*public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }*/
+    
+    public void setTipo(int tipo) {
+        this.tipo = tipo;
+    }
+    
+    public void setTam(int tam) {
+        this.tam = tam;
+    }
+    
+    public void setPK(boolean pk) {
+        this.primaryKey = pk;
+    }
+    
+    public void setNN(boolean nn) {
+        this.notNull = nn;
+    }
+    
+    public void setUQ(boolean uq) {
+        this.unique = uq;
+    }
+    
+    public void setUN(boolean un) {
+        this.unsigned = un;
+    }
+    
+    public void setAI(boolean ai) {
         this.autoIncrement = ai;
     }
 }
