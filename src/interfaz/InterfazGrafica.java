@@ -60,9 +60,9 @@ public class InterfazGrafica extends javax.swing.JFrame {
     private ArrayList<TablaLista> listaHojas;
     
     private DefaultListModel modeloListaExcel;
-    private boolean []marcadorHojas;
+    //private boolean []marcadorHojas;
     private int numHojas;
-    private int numHojasSel;
+    //private int numHojasSel;
     
     public InterfazGrafica() {
         UIManager.put("ProgressBar.selectionBackground", Color.black);
@@ -1132,7 +1132,8 @@ public class InterfazGrafica extends javax.swing.JFrame {
         if(evt.getStateChange()==ItemEvent.SELECTED){
             System.out.println(comboHojas.getSelectedIndex());
             if(tablasSelExcel.isSelected()){
-                if(marcadorHojas[comboHojas.getSelectedIndex()]==true){
+                //if(marcadorHojas[comboHojas.getSelectedIndex()]==true){
+                if(listaHojas.get(comboHojas.getSelectedIndex()).getSeleccionado()){
                     btnTipos.setEnabled(true);
                     btnAgregarHoja.setEnabled(false);
                 }else{
@@ -1176,7 +1177,8 @@ public class InterfazGrafica extends javax.swing.JFrame {
         if(!labelArchivo.getText().equals("")){
             seleccionHojasExcel.setEnabled(true); // lista con los elementos
             jScrollPaneSel1.getVerticalScrollBar().setEnabled(true);
-            if(marcadorHojas[comboHojas.getSelectedIndex()]==true){
+            //if(marcadorHojas[comboHojas.getSelectedIndex()]==true){
+            if(listaHojas.get(comboHojas.getSelectedIndex()).getSeleccionado()){
                 btnTipos.setEnabled(true);
                 btnAgregarHoja.setEnabled(false);
             }else{
@@ -1295,7 +1297,6 @@ public class InterfazGrafica extends javax.swing.JFrame {
             modeloLista.addElement(new ElementoLista(combo.getSelectedItem().toString(),combo.getSelectedIndex()));
             seleccion.setSelectedIndex(modeloLista.getSize()-1);
             lista.get(combo.getSelectedIndex()).setSeleccionado(true);
-            //marcador[combo.getSelectedIndex()] = true;
             for(int i=0;i<lista.size();i++){
                 System.out.print("["+lista.get(i).getSeleccionado()+"]");
             }System.out.println();
