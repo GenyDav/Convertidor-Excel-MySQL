@@ -12,7 +12,6 @@ import java.util.ArrayList;
  * @author Geny
  */
 public class PanelColumna extends javax.swing.JPanel {
-    //int posicion;
     ArrayList<InfoColumna> columnas;
     InfoColumna info;
     
@@ -58,9 +57,14 @@ public class PanelColumna extends javax.swing.JPanel {
         nombreCol.setText("Columna1");
         nombreCol.setToolTipText("Nombre de la columna");
 
-        tipoCol.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "TINYINT", "SMALLINT", "MEDIUMINT", "INT", "BIGINT", "FLOAT", "DOUBLE", "DECIMAL", "CHAR", "VARCHAR", "BINARY", "VARBINARY", "TINYBLOB", "TINYTEXT", "BLOB", "TEXT", "MEDIUMBLOB", "MEDIUMTEXT", "LONGBLOB", "LONGTEX", "ENUM", "DATE", "DATETIME", "TIME", "TIMESTAMP", "YEAR" }));
+        tipoCol.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "TINYINT", "SMALLINT", "MEDIUMINT", "INT", "BIGINT", "FLOAT", "DOUBLE", "DECIMAL", "CHAR", "VARCHAR", "BINARY", "VARBINARY", "TINYBLOB", "MEDIUMBLOB", "BLOB", "LONGBLOB", "TINYTEXT", "TEXT", "MEDIUMTEXT", "LONGTEXT", "SET", "ENUM", "DATE", "DATETIME", "TIME", "TIMESTAMP", "YEAR" }));
         tipoCol.setToolTipText("Tipo de dato de la columna");
         tipoCol.setPreferredSize(new java.awt.Dimension(84, 20));
+        tipoCol.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                comboTipoStateChanged(evt);
+            }
+        });
 
         tamCol.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         tamCol.setText("0");
@@ -186,6 +190,7 @@ public class PanelColumna extends javax.swing.JPanel {
         checkUQ.setSelected(info.getUQ());
         checkUN.setSelected(info.getUN());
         checkAI.setSelected(info.getAI());
+        tipoCol.setSelectedIndex(info.getTipo());
     }
     
     private void checkPKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkPKActionPerformed
@@ -217,6 +222,10 @@ public class PanelColumna extends javax.swing.JPanel {
     private void checkAIActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkAIActionPerformed
         info.setAI(checkAI.isSelected());
     }//GEN-LAST:event_checkAIActionPerformed
+
+    private void comboTipoStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_comboTipoStateChanged
+        info.setTipo(tipoCol.getSelectedIndex());
+    }//GEN-LAST:event_comboTipoStateChanged
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JCheckBox checkAI;
