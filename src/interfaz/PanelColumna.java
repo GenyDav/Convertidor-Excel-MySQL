@@ -21,7 +21,6 @@ public class PanelColumna extends javax.swing.JPanel {
      */
     public PanelColumna(InfoColumna col) {
         initComponents();
-        //columnas = col;
         info = col;
         //this.posicion = posicion;
         //info = columnas.get(posicion);
@@ -50,13 +49,13 @@ public class PanelColumna extends javax.swing.JPanel {
         jSeparator4 = new javax.swing.JSeparator();
         checkAI = new javax.swing.JCheckBox();
 
-        jPanel2.setBackground(new java.awt.Color(255, 255, 255));
         jPanel2.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(102, 102, 102), 1, true));
 
         nombreCol.setBackground(new java.awt.Color(255, 255, 255));
         nombreCol.setText("Columna1");
         nombreCol.setToolTipText("Nombre de la columna");
 
+        tipoCol.setBackground(new java.awt.Color(255, 255, 255));
         tipoCol.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "TINYINT", "SMALLINT", "MEDIUMINT", "INT", "BIGINT", "FLOAT", "DOUBLE", "DECIMAL", "CHAR", "VARCHAR", "BINARY", "VARBINARY", "TINYBLOB", "MEDIUMBLOB", "BLOB", "LONGBLOB", "TINYTEXT", "TEXT", "MEDIUMTEXT", "LONGTEXT", "SET", "ENUM", "DATE", "DATETIME", "TIME", "TIMESTAMP", "YEAR" }));
         tipoCol.setToolTipText("Tipo de dato de la columna");
         tipoCol.setPreferredSize(new java.awt.Dimension(84, 20));
@@ -70,8 +69,8 @@ public class PanelColumna extends javax.swing.JPanel {
         tamCol.setText("0");
         tamCol.setToolTipText("Tamaño");
 
-        checkPK.setBackground(new java.awt.Color(153, 153, 153));
-        checkPK.setForeground(new java.awt.Color(0, 0, 0));
+        checkPK.setBackground(new java.awt.Color(102, 102, 102));
+        checkPK.setForeground(new java.awt.Color(255, 255, 255));
         checkPK.setText("PK");
         checkPK.setToolTipText("Llave primaria");
         checkPK.addActionListener(new java.awt.event.ActionListener() {
@@ -80,7 +79,8 @@ public class PanelColumna extends javax.swing.JPanel {
             }
         });
 
-        checkNN.setBackground(new java.awt.Color(204, 204, 204));
+        checkNN.setBackground(new java.awt.Color(153, 153, 153));
+        checkNN.setForeground(new java.awt.Color(255, 255, 255));
         checkNN.setText("NN");
         checkNN.setToolTipText("No nulo");
         checkNN.addActionListener(new java.awt.event.ActionListener() {
@@ -89,7 +89,8 @@ public class PanelColumna extends javax.swing.JPanel {
             }
         });
 
-        checkUQ.setBackground(new java.awt.Color(204, 204, 204));
+        checkUQ.setBackground(new java.awt.Color(153, 153, 153));
+        checkUQ.setForeground(new java.awt.Color(255, 255, 255));
         checkUQ.setText("UQ");
         checkUQ.setToolTipText("Índice único");
         checkUQ.addActionListener(new java.awt.event.ActionListener() {
@@ -100,7 +101,8 @@ public class PanelColumna extends javax.swing.JPanel {
 
         jSeparator1.setOrientation(javax.swing.SwingConstants.VERTICAL);
 
-        checkUN.setBackground(new java.awt.Color(204, 204, 204));
+        checkUN.setBackground(new java.awt.Color(153, 153, 153));
+        checkUN.setForeground(new java.awt.Color(255, 255, 255));
         checkUN.setText("UN");
         checkUN.setToolTipText("Sin signo");
         checkUN.addActionListener(new java.awt.event.ActionListener() {
@@ -111,7 +113,8 @@ public class PanelColumna extends javax.swing.JPanel {
 
         jSeparator4.setOrientation(javax.swing.SwingConstants.VERTICAL);
 
-        checkAI.setBackground(new java.awt.Color(204, 204, 204));
+        checkAI.setBackground(new java.awt.Color(153, 153, 153));
+        checkAI.setForeground(new java.awt.Color(255, 255, 255));
         checkAI.setText("AI");
         checkAI.setToolTipText("Auto Incremento");
         checkAI.addActionListener(new java.awt.event.ActionListener() {
