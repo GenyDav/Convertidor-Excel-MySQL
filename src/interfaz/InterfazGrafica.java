@@ -761,7 +761,7 @@ public class InterfazGrafica extends javax.swing.JFrame {
 
         tablasSel.setBackground(new java.awt.Color(255, 255, 255));
         buttonGroup1.add(tablasSel);
-        tablasSel.setText("Exportar solo las tablas seleccionadas");
+        tablasSel.setText("Exportar sólo las tablas seleccionadas");
         tablasSel.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 tablasSelActionPerformed(evt);
@@ -1030,6 +1030,11 @@ public class InterfazGrafica extends javax.swing.JFrame {
         btnAgregarTabla.setEnabled(true);
         seleccionTablas.setEnabled(true);
         jScrollPaneSel.getVerticalScrollBar().setEnabled(true);
+        if(modeloLista.isEmpty()){
+            btnExportar.setEnabled(false);
+        }else{
+            btnExportar.setEnabled(true);
+        }
     }//GEN-LAST:event_tablasSelActionPerformed
 
     /**
@@ -1092,6 +1097,7 @@ public class InterfazGrafica extends javax.swing.JFrame {
             btnBorrar.setEnabled(true);
         }   
         btnAgregarTabla.setEnabled(false);
+        btnExportar.setEnabled(true);
     }//GEN-LAST:event_btnAgregarTablaActionPerformed
 
     private void btnBorrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBorrarActionPerformed
@@ -1099,11 +1105,12 @@ public class InterfazGrafica extends javax.swing.JFrame {
         if(!listaElementos.get(comboTablas.getSelectedIndex()).getSeleccionado()){
             btnAgregarTabla.setEnabled(true);
         }
+        btnExportar.setEnabled(false);
     }//GEN-LAST:event_btnBorrarActionPerformed
 
     private void btnQuitarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnQuitarActionPerformed
         borrarElemento(seleccionTablas,modeloLista,
-            listaElementos,labelSelTabla,btnQuitar,btnBorrar,
+            listaElementos,labelSelTabla,btnQuitar,btnBorrar,btnExportar,
             "Tabla borrada de la lista de exportación","Tablas borradas de la lista de exportación"
         );
         if(!listaElementos.get(comboTablas.getSelectedIndex()).getSeleccionado()){
@@ -1308,7 +1315,7 @@ public class InterfazGrafica extends javax.swing.JFrame {
         }
     }
     
-    public void borrarElemento(JList seleccion,DefaultListModel modeloLista,ArrayList<ElementoLista> lista,JLabel label,JButton btnQuitar,JButton btnBorrar,String msj,String msjPlural){
+    public void borrarElemento(JList seleccion,DefaultListModel modeloLista,ArrayList<ElementoLista> lista,JLabel label,JButton btnQuitar,JButton btnBorrar,JButton btnOperacion,String msj,String msjPlural){
         int []elemBorrados = seleccion.getSelectedIndices(); // posiciones de los elementos a eliminar
         int acomodo = 0;    // para el desfase que ocurre al eliminar elementos de la lista
         for(int t:elemBorrados){     
@@ -1339,6 +1346,7 @@ public class InterfazGrafica extends javax.swing.JFrame {
         if(modeloLista.isEmpty()){
             btnQuitar.setEnabled(false);
             btnBorrar.setEnabled(false);
+            btnOperacion.setEnabled(false);
         }
     }
     
