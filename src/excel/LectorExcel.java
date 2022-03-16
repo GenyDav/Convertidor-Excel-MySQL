@@ -78,6 +78,7 @@ public class LectorExcel extends SwingWorker<Void,Void>{
 
             for(int i=0;i<libro.getNumberOfSheets();i++){
                 System.out.println("Llenando hoja...");
+                int numCol = 0;
                 hojaActual = libro.getSheetAt(i);
                 hojas.add(new TablaLista(hojaActual.getSheetName(),i));
                 //System.out.println("encabezado: "+hoja.getFirstRowNum());
@@ -86,10 +87,17 @@ public class LectorExcel extends SwingWorker<Void,Void>{
                 Iterator<Cell> iterador = encabezado.cellIterator();
                 while(iterador.hasNext()){
                     //System.out.println(iterador.next().toString());
-                    hojas.get(i).agregarColumna(new InfoColumna(iterador.next().toString()));
+                    //hojas.get(i).agregarColumna(new InfoColumna(iterador.next().toString()));
+                    // identificar la primer columna y preasignarle el tipo de dato int
+                    if(numCol==0){
+                       hojas.get(i).agregarColumna(new InfoColumna(iterador.next().toString(),3));
+                    }else{
+                        hojas.get(i).agregarColumna(new InfoColumna(iterador.next().toString()));
+                    }
+                    numCol++;
                 }
-            }
-            
+                numCol = 0;
+            }      
             new FormatoTablaExcel(0,this).execute();
         }catch(FileNotFoundException e){
             JOptionPane.showMessageDialog(
