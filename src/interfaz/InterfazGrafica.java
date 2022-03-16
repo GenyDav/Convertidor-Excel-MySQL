@@ -46,7 +46,7 @@ public class InterfazGrafica extends javax.swing.JFrame {
     
     private ArrayList<ElementoLista> listaElementos;
     
-    private int indiceTablaAct;
+    private int indiceTablaAct;     // variable para el cambio de base de datos
     private boolean cambioCancelado;
     
     // Atributos para leer archivo de Excel
@@ -1137,9 +1137,7 @@ public class InterfazGrafica extends javax.swing.JFrame {
 
     private void comboHojasItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_comboHojasItemStateChanged
         if(evt.getStateChange()==ItemEvent.SELECTED){
-            System.out.println(comboHojas.getSelectedIndex());
             if(tablasSelExcel.isSelected()){
-                //if(marcadorHojas[comboHojas.getSelectedIndex()]==true){
                 if(listaHojas.get(comboHojas.getSelectedIndex()).getSeleccionado()){
                     btnTipos.setEnabled(true);
                     btnAgregarHoja.setEnabled(false);
@@ -1184,7 +1182,6 @@ public class InterfazGrafica extends javax.swing.JFrame {
         if(!labelArchivo.getText().equals("")){
             seleccionHojasExcel.setEnabled(true); // lista con los elementos
             jScrollPaneSel1.getVerticalScrollBar().setEnabled(true);
-            //if(marcadorHojas[comboHojas.getSelectedIndex()]==true){
             if(listaHojas.get(comboHojas.getSelectedIndex()).getSeleccionado()){
                 btnTipos.setEnabled(true);
                 btnAgregarHoja.setEnabled(false);
@@ -1213,13 +1210,20 @@ public class InterfazGrafica extends javax.swing.JFrame {
     }//GEN-LAST:event_btnImportarActionPerformed
 
     private void btnAgregarHojaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarHojaActionPerformed
-        agregarElementoLista(modeloListaExcel, listaHojas,
-             seleccionHojasExcel, comboHojas, labelSelTablaExcel,
-            btnQuitarExcel, btnBorrarExcel,"Hoja agregada a la lista de importación",
-            "La hoja ya está en la lista de importación"
-        );
+        if(!listaHojas.get(comboHojas.getSelectedIndex()).getSeleccionado()){            
+            modeloListaExcel.addElement(new ElementoLista(comboHojas.getSelectedItem().toString(),comboHojas.getSelectedIndex()));
+            seleccionHojasExcel.setSelectedIndex(modeloListaExcel.getSize()-1);
+            listaHojas.get(comboHojas.getSelectedIndex()).setSeleccionado(true);
+            for(int i=0;i<listaHojas.size();i++){
+                System.out.print("["+listaHojas.get(i).getSeleccionado()+"]");
+            }System.out.println();
+            labelSelTablaExcel.setText("Tabla agregada a la lista de importación");
+            btnQuitarExcel.setEnabled(true);
+            btnBorrarExcel.setEnabled(true);
+        }   
         btnTipos.setEnabled(true);
         btnAgregarHoja.setEnabled(false);
+        btnImportar.setEnabled(true);
     }//GEN-LAST:event_btnAgregarHojaActionPerformed
 
     private void btnAbrirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAbrirActionPerformed
@@ -1298,7 +1302,7 @@ public class InterfazGrafica extends javax.swing.JFrame {
     }//GEN-LAST:event_btnTiposActionPerformed
     
     // agregar un elemento a la lista de exportacion/importacion
-    public void agregarElementoLista(DefaultListModel modeloLista,ArrayList<TablaLista> lista,JList seleccion,JComboBox combo,JLabel label,JButton btnQuitar,JButton btnBorrar,String msj,String msjAdvertencia){
+    /*public void agregarElementoLista(DefaultListModel modeloLista,ArrayList<TablaLista> lista,JList seleccion,JComboBox combo,JLabel label,JButton btnQuitar,JButton btnBorrar,String msj,String msjAdvertencia){
         if(!lista.get(combo.getSelectedIndex()).getSeleccionado()){            
             //System.out.println("No seleccionado..." + combo.getSelectedIndex());
             modeloLista.addElement(new ElementoLista(combo.getSelectedItem().toString(),combo.getSelectedIndex()));
@@ -1313,7 +1317,7 @@ public class InterfazGrafica extends javax.swing.JFrame {
         }else{
             label.setText(msjAdvertencia);
         }
-    }
+    }*/
     
     public void borrarElemento(JList seleccion,DefaultListModel modeloLista,ArrayList<ElementoLista> lista,JLabel label,JButton btnQuitar,JButton btnBorrar,JButton btnOperacion,String msj,String msjPlural){
         int []elemBorrados = seleccion.getSelectedIndices(); // posiciones de los elementos a eliminar
@@ -1346,7 +1350,7 @@ public class InterfazGrafica extends javax.swing.JFrame {
         if(modeloLista.isEmpty()){
             btnQuitar.setEnabled(false);
             btnBorrar.setEnabled(false);
-            btnOperacion.setEnabled(false);
+            btnOperacion.setEnabled(false); 
         }
     }
     
