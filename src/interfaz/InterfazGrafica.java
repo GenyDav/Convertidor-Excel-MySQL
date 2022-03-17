@@ -19,7 +19,6 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
-import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JList;
@@ -53,16 +52,9 @@ public class InterfazGrafica extends javax.swing.JFrame {
     private String nomArch;
     private String rutaArch;
     private LectorExcel lector;
-    //private ArrayList<String> listaHojas;
-    //private ArrayList<String> listaHojasSel;
-    //private ArrayList<String> listaHojasCompletas;
-    
+ 
     private ArrayList<TablaLista> listaHojas;
-    
     private DefaultListModel modeloListaExcel;
-    //private boolean []marcadorHojas;
-    //private int numHojas;
-    //private int numHojasSel;
     
     public InterfazGrafica() {
         UIManager.put("ProgressBar.selectionBackground", Color.black);
@@ -1102,11 +1094,6 @@ public class InterfazGrafica extends javax.swing.JFrame {
     }//GEN-LAST:event_btnAgregarTablaActionPerformed
 
     private void btnBorrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBorrarActionPerformed
-        /*limpiarSeleccion("tablas",modeloLista,listaElementos,btnQuitar,btnBorrar,labelSelTabla);
-        if(!listaElementos.get(comboTablas.getSelectedIndex()).getSeleccionado()){
-            btnAgregarTabla.setEnabled(true);
-        }
-        */
         if(limpiarSeleccion("tablas",modeloLista,listaElementos,btnQuitar,btnBorrar,labelSelTabla)==JOptionPane.OK_OPTION){
             btnAgregarTabla.setEnabled(true);
             btnExportar.setEnabled(false);
@@ -1235,11 +1222,11 @@ public class InterfazGrafica extends javax.swing.JFrame {
         if(modeloListaExcel.isEmpty()){
             opc = sa.showOpenDialog(jPanel1);
         }
-        /*if(!modeloListaExcel.isEmpty()&&limpiarSeleccion("hojas",modeloListaExcel,
+        if(!modeloListaExcel.isEmpty()&&limpiarSeleccion("hojas",modeloListaExcel,
             listaHojas,btnQuitarExcel,btnBorrarExcel,labelSelTablaExcel)==0){
             opc = sa.showOpenDialog(jPanel1);
-        }*/
-
+        }
+  
         if(opc == JFileChooser.APPROVE_OPTION){
             try{
                 nomArch = sa.getSelectedFile().getName();
@@ -1273,8 +1260,7 @@ public class InterfazGrafica extends javax.swing.JFrame {
                             System.out.println("Ejecutando hilo");
                             while(lector.getLibro()==null){
                                 //System.out.println("Esperando libro");
-                            }
-                            //numHojas = lector.obtenerNumHojas();                       
+                            }                       
                         }
                     }.start();
                     labelArchivo.setText("  " + nomArch );  
