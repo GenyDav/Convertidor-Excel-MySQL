@@ -61,7 +61,7 @@ public class InterfazGrafica extends javax.swing.JFrame {
     
     private DefaultListModel modeloListaExcel;
     //private boolean []marcadorHojas;
-    private int numHojas;
+    //private int numHojas;
     //private int numHojasSel;
     
     public InterfazGrafica() {
@@ -1023,6 +1023,7 @@ public class InterfazGrafica extends javax.swing.JFrame {
         btnBorrar.setEnabled(false);
         btnAgregarTabla.setEnabled(false);
         seleccionTablas.setEnabled(false);
+        btnExportar.setEnabled(true);
         jScrollPaneSel.getVerticalScrollBar().setEnabled(false);
     }//GEN-LAST:event_tablasCompletasActionPerformed
 
@@ -1101,11 +1102,17 @@ public class InterfazGrafica extends javax.swing.JFrame {
     }//GEN-LAST:event_btnAgregarTablaActionPerformed
 
     private void btnBorrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBorrarActionPerformed
-        limpiarSeleccion("tablas",modeloLista,listaElementos,btnQuitar,btnBorrar,labelSelTabla);
+         /*limpiarSeleccion("tablas",modeloLista,listaElementos,btnQuitar,btnBorrar,labelSelTabla);
         if(!listaElementos.get(comboTablas.getSelectedIndex()).getSeleccionado()){
             btnAgregarTabla.setEnabled(true);
         }
-        btnExportar.setEnabled(false);
+        */
+        int res = limpiarSeleccion("tablas",modeloLista,listaElementos,btnQuitar,btnBorrar,labelSelTabla);
+            //if(!listaElementos.get(comboTablas.getSelectedIndex()).getSeleccionado()){
+        if(res==JOptionPane.OK_OPTION){
+            btnAgregarTabla.setEnabled(true);
+            btnExportar.setEnabled(false);
+        } 
     }//GEN-LAST:event_btnBorrarActionPerformed
 
     private void btnQuitarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnQuitarActionPerformed
@@ -1167,15 +1174,11 @@ public class InterfazGrafica extends javax.swing.JFrame {
     }//GEN-LAST:event_btnQuitarExcelActionPerformed
 
     private void btnBorrarExcelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBorrarExcelActionPerformed
-        /*int res = limpiarSeleccion("hojas",numHojasSel,modeloListaExcel,
-            marcadorHojas,listaHojasSel,btnQuitarExcel,btnBorrarExcel,labelSelTablaExcel
-        );
-        if(res==JOptionPane.OK_OPTION){
-            if(marcadorHojas[comboHojas.getSelectedIndex()]==false){
-                btnTipos.setEnabled(false);
-                btnAgregarHoja.setEnabled(true);
-            }
-        }*/
+        if(limpiarSeleccion("hojas",modeloListaExcel,listaHojas,btnQuitarExcel,btnBorrarExcel,labelSelTablaExcel)==JOptionPane.OK_OPTION){
+            btnTipos.setEnabled(false);
+            btnAgregarHoja.setEnabled(true);
+            btnImportar.setEnabled(false);
+        }
     }//GEN-LAST:event_btnBorrarExcelActionPerformed
 
     private void tablasSelExcelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tablasSelExcelActionPerformed
@@ -1202,6 +1205,7 @@ public class InterfazGrafica extends javax.swing.JFrame {
         btnAgregarHoja.setEnabled(false);
         seleccionHojasExcel.setEnabled(false);
         btnTipos.setEnabled(true);
+        btnImportar.setEnabled(true);
         jScrollPaneSel1.getVerticalScrollBar().setEnabled(false);
     }//GEN-LAST:event_tablasCompletasExcelActionPerformed
 
@@ -1272,12 +1276,7 @@ public class InterfazGrafica extends javax.swing.JFrame {
                             while(lector.getLibro()==null){
                                 //System.out.println("Esperando libro");
                             }
-                            System.out.println("Cargando Información");
-                            numHojas = lector.obtenerNumHojas();
-                            /*marcadorHojas = new boolean[numHojas];
-                            for(int i=0;i<marcadorHojas.length;i++){
-                                marcadorHojas[i] = false;
-                            }*/                       
+                            //numHojas = lector.obtenerNumHojas();                       
                         }
                     }.start();
                     labelArchivo.setText("  " + nomArch );  
@@ -1393,10 +1392,10 @@ public class InterfazGrafica extends javax.swing.JFrame {
                 elem = (ElementoLista)modeloLista.getElementAt(i);
                 listaAux.get(elem.getPosicion()).setSeleccionado(false);
             }
-            System.out.println("Borrados todos los elementos");
+            /*System.out.println("Borrados todos los elementos");
             for(int k=0;k<listaAux.size();k++){
                 System.out.print("["+listaAux.get(k).getSeleccionado()+"]");
-            }System.out.println();
+            }System.out.println();*/
             modeloLista.clear();
             btnBorrar.setEnabled(false);
             btnQuitar.setEnabled(false);
