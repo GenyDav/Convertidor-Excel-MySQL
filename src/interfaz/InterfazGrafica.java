@@ -1102,22 +1102,20 @@ public class InterfazGrafica extends javax.swing.JFrame {
     }//GEN-LAST:event_btnAgregarTablaActionPerformed
 
     private void btnBorrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBorrarActionPerformed
-         /*limpiarSeleccion("tablas",modeloLista,listaElementos,btnQuitar,btnBorrar,labelSelTabla);
+        /*limpiarSeleccion("tablas",modeloLista,listaElementos,btnQuitar,btnBorrar,labelSelTabla);
         if(!listaElementos.get(comboTablas.getSelectedIndex()).getSeleccionado()){
             btnAgregarTabla.setEnabled(true);
         }
         */
-        int res = limpiarSeleccion("tablas",modeloLista,listaElementos,btnQuitar,btnBorrar,labelSelTabla);
-            //if(!listaElementos.get(comboTablas.getSelectedIndex()).getSeleccionado()){
-        if(res==JOptionPane.OK_OPTION){
+        if(limpiarSeleccion("tablas",modeloLista,listaElementos,btnQuitar,btnBorrar,labelSelTabla)==JOptionPane.OK_OPTION){
             btnAgregarTabla.setEnabled(true);
             btnExportar.setEnabled(false);
         } 
     }//GEN-LAST:event_btnBorrarActionPerformed
 
     private void btnQuitarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnQuitarActionPerformed
-        borrarElemento(seleccionTablas,modeloLista,
-            listaElementos,labelSelTabla,btnQuitar,btnBorrar,btnExportar,
+        borrarElemento(seleccionTablas,modeloLista,listaElementos,labelSelTabla,
+            btnQuitar,btnBorrar,btnExportar,
             "Tabla borrada de la lista de exportación","Tablas borradas de la lista de exportación"
         );
         if(!listaElementos.get(comboTablas.getSelectedIndex()).getSeleccionado()){
@@ -1163,14 +1161,14 @@ public class InterfazGrafica extends javax.swing.JFrame {
     }//GEN-LAST:event_comboHojasItemStateChanged
 
     private void btnQuitarExcelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnQuitarExcelActionPerformed
-        /*borrarElemento(seleccionHojasExcel,modeloListaExcel,
-            listaHojasSel, numHojasSel,labelSelTablaExcel,btnQuitarExcel,btnBorrarExcel,
+        borrarElemento(seleccionHojasExcel,modeloListaExcel,listaHojas,labelSelTablaExcel,
+            btnQuitarExcel,btnBorrarExcel,btnImportar,
             "Hoja borrada de la lista de importación","Hojas borradas de la lista de importación"
         );
-        if(marcadorHojas[comboHojas.getSelectedIndex()]==false){
+        if(!listaHojas.get(comboHojas.getSelectedIndex()).getSeleccionado()){
             btnTipos.setEnabled(false);
             btnAgregarHoja.setEnabled(true);
-        }*/
+        }
     }//GEN-LAST:event_btnQuitarExcelActionPerformed
 
     private void btnBorrarExcelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBorrarExcelActionPerformed
@@ -1318,7 +1316,7 @@ public class InterfazGrafica extends javax.swing.JFrame {
         }
     }*/
     
-    public void borrarElemento(JList seleccion,DefaultListModel modeloLista,ArrayList<ElementoLista> lista,JLabel label,JButton btnQuitar,JButton btnBorrar,JButton btnOperacion,String msj,String msjPlural){
+    public <T extends ElementoLista> void borrarElemento(JList seleccion,DefaultListModel modeloLista,ArrayList<T> lista,JLabel label,JButton btnQuitar,JButton btnBorrar,JButton btnOperacion,String msj,String msjPlural){
         int []elemBorrados = seleccion.getSelectedIndices(); // posiciones de los elementos a eliminar
         int acomodo = 0;    // para el desfase que ocurre al eliminar elementos de la lista
         for(int t:elemBorrados){     
