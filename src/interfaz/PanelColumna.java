@@ -12,7 +12,7 @@ import java.util.ArrayList;
  * @author Geny
  */
 public class PanelColumna extends javax.swing.JPanel {
-    ArrayList<InfoColumna> columnas;
+    //ArrayList<InfoColumna> columnas;
     InfoColumna info;
     
     /**
@@ -56,7 +56,7 @@ public class PanelColumna extends javax.swing.JPanel {
         nombreCol.setToolTipText("Nombre de la columna");
 
         tipoCol.setBackground(new java.awt.Color(255, 255, 255));
-        tipoCol.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "TINYINT", "SMALLINT", "MEDIUMINT", "INT", "BIGINT", "FLOAT", "DOUBLE", "DECIMAL", "CHAR", "VARCHAR", "BINARY", "VARBINARY", "TINYBLOB", "MEDIUMBLOB", "BLOB", "LONGBLOB", "TINYTEXT", "TEXT", "MEDIUMTEXT", "LONGTEXT", "SET", "ENUM", "DATE", "DATETIME", "TIME", "TIMESTAMP", "YEAR" }));
+        tipoCol.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "TINYINT", "SMALLINT", "MEDIUMINT", "INT", "BIGINT", "FLOAT", "DOUBLE", "DECIMAL", "CHAR", "VARCHAR", "BINARY", "VARBINARY", "TEXT", "SET", "ENUM", "DATE", "DATETIME", "TIME", "TIMESTAMP", "YEAR" }));
         tipoCol.setToolTipText("Tipo de dato de la columna");
         tipoCol.setPreferredSize(new java.awt.Dimension(84, 20));
         tipoCol.addItemListener(new java.awt.event.ItemListener() {
@@ -185,9 +185,6 @@ public class PanelColumna extends javax.swing.JPanel {
 
     private void cargarDatos(){
         nombreCol.setText(info.getNombre());
-        /*if(columnas.get(posicion).primaryKey){
-            checkPK.setSelected(true);
-        }*/
         checkPK.setSelected(info.getPK());
         checkNN.setSelected(info.getNN());
         checkUQ.setSelected(info.getUQ());
@@ -208,9 +205,6 @@ public class PanelColumna extends javax.swing.JPanel {
     }//GEN-LAST:event_checkPKActionPerformed
 
     private void checkNNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkNNActionPerformed
-        /*if(checkNN.isSelected()){
-            info.setNN(true);
-        }*/
         info.setNN(checkNN.isSelected());
     }//GEN-LAST:event_checkNNActionPerformed
 
@@ -228,6 +222,21 @@ public class PanelColumna extends javax.swing.JPanel {
 
     private void comboTipoStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_comboTipoStateChanged
         info.setTipo(tipoCol.getSelectedIndex());
+        switch(tipoCol.getSelectedIndex()){
+            case Tipo.DOUBLE: 
+            case Tipo.DATE: 
+            case Tipo.DATETIME:
+            case Tipo.TIME:
+            case Tipo.TIMESTAMP:
+            case Tipo.YEAR:   
+                tamCol.setText("");
+                tamCol.setEnabled(false);
+                tamCol.setToolTipText("");
+            break;
+            default:
+                tamCol.setEnabled(true);
+            break;
+        }
     }//GEN-LAST:event_comboTipoStateChanged
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
