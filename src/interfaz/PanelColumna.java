@@ -38,7 +38,7 @@ public class PanelColumna extends javax.swing.JPanel {
         jPanel2 = new javax.swing.JPanel();
         nombreCol = new javax.swing.JLabel();
         tipoCol = new javax.swing.JComboBox();
-        tamCol = new javax.swing.JTextField();
+        parametros = new javax.swing.JTextField();
         checkPK = new javax.swing.JCheckBox();
         checkNN = new javax.swing.JCheckBox();
         checkUQ = new javax.swing.JCheckBox();
@@ -63,9 +63,14 @@ public class PanelColumna extends javax.swing.JPanel {
             }
         });
 
-        tamCol.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
-        tamCol.setText("0");
-        tamCol.setToolTipText("Tamaño");
+        parametros.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        parametros.setText("0");
+        parametros.setToolTipText("Tamaño");
+        parametros.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                parametrosFocusLost(evt);
+            }
+        });
 
         checkPK.setBackground(new java.awt.Color(102, 102, 102));
         checkPK.setForeground(new java.awt.Color(255, 255, 255));
@@ -133,7 +138,7 @@ public class PanelColumna extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(tipoCol, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(tamCol, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(parametros, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(5, 5, 5)
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 9, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, 0)
@@ -158,7 +163,7 @@ public class PanelColumna extends javax.swing.JPanel {
                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(nombreCol, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(tipoCol, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(tamCol)
+                        .addComponent(parametros)
                         .addComponent(checkPK)
                         .addComponent(checkNN)
                         .addComponent(checkUQ)
@@ -226,30 +231,34 @@ public class PanelColumna extends javax.swing.JPanel {
             case Tipo.MEDIUMINT:
             case Tipo.INT:
             case Tipo.BIGINT:
-                tamCol.setText("");
-                tamCol.setEnabled(true);
-                tamCol.setToolTipText("Ancho de visualización");
-                break;
+                parametros.setText("");
+                parametros.setEnabled(true);
+                parametros.setToolTipText("Ancho de visualización");
+                break;              
             case Tipo.FLOAT:
             case Tipo.CHAR:
-            case Tipo.VARCHAR:
             case Tipo.BINARY:
-            case Tipo.VARBINARY:
             case Tipo.TEXT:
-                tamCol.setText("0");
-                tamCol.setEnabled(true);
-                tamCol.setToolTipText("Tamaño");
+                parametros.setText("");
+                parametros.setEnabled(true);
+                parametros.setToolTipText("Tamaño");
+                break;
+            case Tipo.VARCHAR:
+            case Tipo.VARBINARY:
+                parametros.setText("45");
+                parametros.setEnabled(true);
+                parametros.setToolTipText("Tamaño");
                 break;
             case Tipo.DECIMAL:
-                tamCol.setText("");
-                tamCol.setEnabled(true);
-                tamCol.setToolTipText("Número de digitos");
+                parametros.setText("");
+                parametros.setEnabled(true);
+                parametros.setToolTipText("Número de digitos");
                 break;
             case Tipo.SET:
             case Tipo.ENUM:
-                tamCol.setText("");
-                tamCol.setEnabled(true);
-                tamCol.setToolTipText("Lista de elementos");
+                parametros.setText("");
+                parametros.setEnabled(true);
+                parametros.setToolTipText("Lista de elementos");
                 break;
             case Tipo.DOUBLE: 
             case Tipo.DATE: 
@@ -257,15 +266,16 @@ public class PanelColumna extends javax.swing.JPanel {
             case Tipo.TIME:
             case Tipo.TIMESTAMP:
             case Tipo.YEAR:   
-                tamCol.setText("");
-                tamCol.setEnabled(false);
-                tamCol.setToolTipText("");
-                break;
-            default:
-                tamCol.setEnabled(true);
+                parametros.setText("");
+                parametros.setEnabled(false);
+                parametros.setToolTipText("");
                 break;
         }
     }//GEN-LAST:event_comboTipoStateChanged
+
+    private void parametrosFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_parametrosFocusLost
+        System.out.println("Foco perdido");
+    }//GEN-LAST:event_parametrosFocusLost
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JCheckBox checkAI;
@@ -277,7 +287,7 @@ public class PanelColumna extends javax.swing.JPanel {
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator4;
     private javax.swing.JLabel nombreCol;
-    private javax.swing.JTextField tamCol;
+    private javax.swing.JTextField parametros;
     private javax.swing.JComboBox tipoCol;
     // End of variables declaration//GEN-END:variables
 }
