@@ -5,8 +5,6 @@
  */
 package interfaz;
 
-import java.util.ArrayList;
-
 /**
  *
  * @author Geny
@@ -232,6 +230,27 @@ public class PanelColumna extends javax.swing.JPanel {
                 tamCol.setEnabled(true);
                 tamCol.setToolTipText("Ancho de visualización");
                 break;
+            case Tipo.FLOAT:
+            case Tipo.CHAR:
+            case Tipo.VARCHAR:
+            case Tipo.BINARY:
+            case Tipo.VARBINARY:
+            case Tipo.TEXT:
+                tamCol.setText("0");
+                tamCol.setEnabled(true);
+                tamCol.setToolTipText("Tamaño");
+                break;
+            case Tipo.DECIMAL:
+                tamCol.setText("");
+                tamCol.setEnabled(true);
+                tamCol.setToolTipText("Número de digitos");
+                break;
+            case Tipo.SET:
+            case Tipo.ENUM:
+                tamCol.setText("");
+                tamCol.setEnabled(true);
+                tamCol.setToolTipText("Lista de elementos");
+                break;
             case Tipo.DOUBLE: 
             case Tipo.DATE: 
             case Tipo.DATETIME:
@@ -246,7 +265,6 @@ public class PanelColumna extends javax.swing.JPanel {
                 tamCol.setEnabled(true);
                 break;
         }
-        
     }//GEN-LAST:event_comboTipoStateChanged
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
