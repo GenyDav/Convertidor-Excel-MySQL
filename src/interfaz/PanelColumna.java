@@ -223,6 +223,15 @@ public class PanelColumna extends javax.swing.JPanel {
     private void comboTipoStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_comboTipoStateChanged
         info.setTipo(tipoCol.getSelectedIndex());
         switch(tipoCol.getSelectedIndex()){
+            case Tipo.TINYINT:
+            case Tipo.SMALLINT:
+            case Tipo.MEDIUMINT:
+            case Tipo.INT:
+            case Tipo.BIGINT:
+                tamCol.setText("");
+                tamCol.setEnabled(true);
+                tamCol.setToolTipText("Ancho de visualización");
+                break;
             case Tipo.DOUBLE: 
             case Tipo.DATE: 
             case Tipo.DATETIME:
@@ -232,11 +241,12 @@ public class PanelColumna extends javax.swing.JPanel {
                 tamCol.setText("");
                 tamCol.setEnabled(false);
                 tamCol.setToolTipText("");
-            break;
+                break;
             default:
                 tamCol.setEnabled(true);
-            break;
+                break;
         }
+        
     }//GEN-LAST:event_comboTipoStateChanged
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
