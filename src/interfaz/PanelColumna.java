@@ -302,6 +302,27 @@ public class PanelColumna extends javax.swing.JPanel {
                     parametros.setText("");
                 }
                 break;
+            case Tipo.TEXT:
+                try{
+                    if(!parametros.getText().equals("")){
+                        int tam = Integer.parseInt(parametros.getText());
+                        if(tam<0){
+                            throw new Exception();
+                        }else{
+                            info.setTam(tam);
+                        }
+                    }
+                }catch(Exception e){
+                    JOptionPane.showMessageDialog(
+                        null, 
+                        "El valor dado contiene errores."
+                        + "\nPuede dejar el campo vacío o incluir"
+                        + "\nun valor numérico igual o mayor a cero  ",
+                        "No se puede aceptar el valor", 
+                        JOptionPane.ERROR_MESSAGE
+                    );
+                }
+                break;
         }
     }//GEN-LAST:event_parametrosFocusLost
 
