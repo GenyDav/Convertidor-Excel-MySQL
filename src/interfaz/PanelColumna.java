@@ -5,6 +5,8 @@
  */
 package interfaz;
 
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author Geny
@@ -202,7 +204,6 @@ public class PanelColumna extends javax.swing.JPanel {
             info.setNN(true);
             checkNN.setSelected(true);
         }else{
-            //checkNN.setSelected(false);
             info.setPK(false);
         }
     }//GEN-LAST:event_checkPKActionPerformed
@@ -274,7 +275,34 @@ public class PanelColumna extends javax.swing.JPanel {
     }//GEN-LAST:event_comboTipoStateChanged
 
     private void parametrosFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_parametrosFocusLost
-        System.out.println("Foco perdido");
+        switch(tipoCol.getSelectedIndex()){
+            case Tipo.TINYINT:
+            case Tipo.SMALLINT:
+            case Tipo.MEDIUMINT:
+            case Tipo.INT:
+            case Tipo.BIGINT:
+                try{
+                    if(!parametros.getText().equals("")){
+                        int tam = Integer.parseInt(parametros.getText());
+                        if(tam<1||tam>255){
+                            throw new Exception();
+                        }else{
+                            info.setTam(tam);
+                        }
+                    }   
+                }catch(Exception e){
+                    JOptionPane.showMessageDialog(
+                        null, 
+                        "El valor dado contiene errores."
+                        + "\nPuede dejar el campo vacío o incluir"
+                        + "\nun valor numérico ubicado entre 1 y 255  ",
+                        "No se puede aceptar el valor", 
+                        JOptionPane.ERROR_MESSAGE
+                    );
+                    parametros.setText("");
+                }
+                break;
+        }
     }//GEN-LAST:event_parametrosFocusLost
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
