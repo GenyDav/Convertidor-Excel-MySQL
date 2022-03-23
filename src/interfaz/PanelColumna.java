@@ -321,6 +321,29 @@ public class PanelColumna extends javax.swing.JPanel {
                         "No se puede aceptar el valor", 
                         JOptionPane.ERROR_MESSAGE
                     );
+                    parametros.setText("");
+                }
+                break;
+            case Tipo.CHAR:
+                try{
+                    if(!parametros.getText().equals("")){
+                        int tam = Integer.parseInt(parametros.getText());
+                        if(tam<0||tam>255){
+                            throw new Exception();
+                        }else{
+                            info.setTam(tam);
+                        }
+                    }
+                }catch(Exception e){
+                    JOptionPane.showMessageDialog(
+                        null, 
+                        "El valor dado contiene errores."
+                        + "\nPuede dejar el campo vacío o incluir"
+                        + "\nun valor numérico ubicado entre 0 y 255  ",
+                        "No se puede aceptar el valor", 
+                        JOptionPane.ERROR_MESSAGE
+                    );
+                    parametros.setText("");
                 }
                 break;
         }
