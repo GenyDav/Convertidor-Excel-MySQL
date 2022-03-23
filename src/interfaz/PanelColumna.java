@@ -325,6 +325,7 @@ public class PanelColumna extends javax.swing.JPanel {
                 }
                 break;
             case Tipo.CHAR:
+            case Tipo.BINARY:
                 try{
                     if(!parametros.getText().equals("")){
                         int tam = Integer.parseInt(parametros.getText());
@@ -344,6 +345,27 @@ public class PanelColumna extends javax.swing.JPanel {
                         JOptionPane.ERROR_MESSAGE
                     );
                     parametros.setText("");
+                }
+                break;
+            case Tipo.VARCHAR:
+            case Tipo.VARBINARY:
+                try{
+                    int tam = Integer.parseInt(parametros.getText());
+                    if(tam<0||tam>65535){
+                        throw new Exception();
+                    }else{
+                        info.setTam(tam);
+                    }
+                }catch(Exception e){
+                    JOptionPane.showMessageDialog(
+                        null, 
+                        "El valor dado contiene errores."
+                        + "\nPuede incluir un valor numérico ubicado entre  "
+                        + "\n0 y 65,535",
+                        "No se puede aceptar el valor", 
+                        JOptionPane.ERROR_MESSAGE
+                    );
+                    parametros.setText("45");
                 }
                 break;
         }
