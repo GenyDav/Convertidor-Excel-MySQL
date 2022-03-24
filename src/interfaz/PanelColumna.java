@@ -5,6 +5,8 @@
  */
 package interfaz;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javax.swing.JOptionPane;
 
 /**
@@ -14,6 +16,8 @@ import javax.swing.JOptionPane;
 public class PanelColumna extends javax.swing.JPanel {
     //ArrayList<InfoColumna> columnas;
     InfoColumna info;
+    String expDecimal;
+    Pattern pat;
     
     /**
      * Creates new form PanelColumna
@@ -24,7 +28,10 @@ public class PanelColumna extends javax.swing.JPanel {
         info = col;
         //this.posicion = posicion;
         //info = columnas.get(posicion);
-
+        
+        expDecimal = "(\\d+)\\s*,\\s*(\\d+)";
+        pat = Pattern.compile(expDecimal);
+                
         cargarDatos();
     }
 
@@ -253,7 +260,7 @@ public class PanelColumna extends javax.swing.JPanel {
             case Tipo.DECIMAL:
                 parametros.setText("");
                 parametros.setEnabled(true);
-                parametros.setToolTipText("Número de digitos");
+                parametros.setToolTipText("Número total de dígitos, número de dígitos decimales");
                 break;
             case Tipo.SET:
             case Tipo.ENUM:
@@ -296,6 +303,41 @@ public class PanelColumna extends javax.swing.JPanel {
                         "El valor dado contiene errores."
                         + "\nPuede dejar el campo vacío o incluir"
                         + "\nun valor numérico ubicado entre 1 y 255  ",
+                        "No se puede aceptar el valor", 
+                        JOptionPane.ERROR_MESSAGE
+                    );
+                    parametros.setText("");
+                }
+                break;
+            case Tipo.DECIMAL:               
+                //String expDecimal = "(\\d+)\\s*,\\s*(\\d+)";
+                //Pattern pat = Pattern.compile(expDecimal);
+                String input = parametros.getText();
+                try{
+                    if(!input.equals("")){
+                        Matcher mat = pat.matcher(input);
+                        int n1,n2;
+                        if (mat.matches()) {
+                            System.out.println("Regexp encontrada");
+                            n1 = Integer.parseInt(mat.group(1));
+                            n2 = Integer.parseInt(mat.group(2));
+                            System.out.println("Sujeto:"+mat.group(1));
+                            System.out.println("Sujeto:"+mat.group(2));
+                            if(n1>65||n2>30||n1<n2){
+                                throw new Exception(); 
+                            }
+                        } else {
+                            System.err.println("Regexp NO encontrada");
+                            throw new Exception(); 
+                        }
+                    }
+                }catch(Exception e){
+                    JOptionPane.showMessageDialog(
+                        null, 
+                        "El valor dado contiene errores. Puede dejar el campo vacío o incluir dos valores "
+                        + "\nnuméricos separados por coma (M,D).  "
+                        + "\nEl valor máximo aceptado para M es 65, el valor máximo aceptado para D es 30. "
+                        + "\nM debe ser mayor o igual a D.",
                         "No se puede aceptar el valor", 
                         JOptionPane.ERROR_MESSAGE
                     );
