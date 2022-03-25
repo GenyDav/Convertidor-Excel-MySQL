@@ -18,6 +18,8 @@ public class PanelColumna extends javax.swing.JPanel {
     InfoColumna info;
     String expDecimal;
     Pattern pat;
+    String expEnum;
+    Pattern patronEnum;
     
     /**
      * Creates new form PanelColumna
@@ -31,6 +33,8 @@ public class PanelColumna extends javax.swing.JPanel {
         
         expDecimal = "(\\d+)\\s*,\\s*(\\d+)";
         pat = Pattern.compile(expDecimal);
+        expEnum = "('(\\w+)'\\s*,\\s*)*'(\\w*)'";
+        patronEnum = Pattern.compile(expEnum);
                 
         cargarDatos();
     }
@@ -263,8 +267,12 @@ public class PanelColumna extends javax.swing.JPanel {
                 parametros.setToolTipText("Número total de dígitos, número de dígitos decimales");
                 break;
             case Tipo.SET:
-            case Tipo.ENUM:
                 parametros.setText("");
+                parametros.setEnabled(true);
+                parametros.setToolTipText("Lista de elementos");
+                break;
+            case Tipo.ENUM:
+                parametros.setText("''");
                 parametros.setEnabled(true);
                 parametros.setToolTipText("Lista de elementos");
                 break;
@@ -282,6 +290,7 @@ public class PanelColumna extends javax.swing.JPanel {
     }//GEN-LAST:event_comboTipoStateChanged
 
     private void parametrosFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_parametrosFocusLost
+        String input = parametros.getText();
         switch(tipoCol.getSelectedIndex()){
             case Tipo.TINYINT:
             case Tipo.SMALLINT:
@@ -312,7 +321,7 @@ public class PanelColumna extends javax.swing.JPanel {
             case Tipo.DECIMAL:               
                 //String expDecimal = "(\\d+)\\s*,\\s*(\\d+)";
                 //Pattern pat = Pattern.compile(expDecimal);
-                String input = parametros.getText();
+                //String input = parametros.getText();
                 try{
                     if(!input.equals("")){
                         Matcher mat = pat.matcher(input);
@@ -386,6 +395,28 @@ public class PanelColumna extends javax.swing.JPanel {
                         JOptionPane.ERROR_MESSAGE
                     );
                     parametros.setText("");
+                }
+                break;
+            case Tipo.ENUM:
+                //String input = parametros.getText();
+                Matcher mat = patronEnum.matcher(input);
+                try{
+                    if (mat.matches()) {
+                        System.out.println("Regexp encontrada");  
+                    } else {
+                        System.err.println("Regexp NO encontrada");
+                        throw new Exception();
+                    }
+                }catch(Exception e){
+                    JOptionPane.showMessageDialog(
+                        null, 
+                        "El valor dado contiene errores."
+                        + "\nDebe incluir valores alfanuméricos entre comillas  "
+                        + "\nsimples ('') y separarlos con coma ( , ). ",
+                        "No se puede aceptar el valor", 
+                        JOptionPane.ERROR_MESSAGE
+                    );
+                    parametros.setText("''");
                 }
                 break;
             case Tipo.CHAR:
