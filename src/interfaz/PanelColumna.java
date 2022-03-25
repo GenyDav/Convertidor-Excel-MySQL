@@ -249,34 +249,24 @@ public class PanelColumna extends javax.swing.JPanel {
             case Tipo.MEDIUMINT:
             case Tipo.INT:
             case Tipo.BIGINT:
-                parametros.setText("");
-                parametros.setEnabled(true);
-                parametros.setToolTipText("Ancho de visualización");
+                configCampoParametros("",true,"Ancho de visualización");
                 break;              
             case Tipo.FLOAT:
             case Tipo.CHAR:
             case Tipo.BINARY:
             case Tipo.TEXT:
-                parametros.setText("");
-                parametros.setEnabled(true);
-                parametros.setToolTipText("Tamaño");
+                configCampoParametros("",true,"Tamaño");
                 break;
             case Tipo.VARCHAR:
             case Tipo.VARBINARY:
-                parametros.setText("45");
-                parametros.setEnabled(true);
-                parametros.setToolTipText("Tamaño");
+                configCampoParametros("45",true,"Tamaño");
                 break;
             case Tipo.DECIMAL:
-                parametros.setText("");
-                parametros.setEnabled(true);
-                parametros.setToolTipText("Número total de dígitos, número de dígitos decimales");
+                configCampoParametros("",true,"Número total de dígitos, número de dígitos decimales");
                 break;
             case Tipo.SET:
             case Tipo.ENUM:
-                parametros.setText("''");
-                parametros.setEnabled(true);
-                parametros.setToolTipText("Lista de elementos");
+                configCampoParametros("''",true,"Lista de elementos");
                 break;
             case Tipo.DOUBLE: 
             case Tipo.DATE: 
@@ -284,16 +274,18 @@ public class PanelColumna extends javax.swing.JPanel {
             case Tipo.TIME:
             case Tipo.TIMESTAMP:
             case Tipo.YEAR:   
-                parametros.setText("");
-                parametros.setEnabled(false);
-                parametros.setToolTipText("");
+                configCampoParametros("",false,"");
                 break;
         }
     }//GEN-LAST:event_comboTipoStateChanged
 
+    private void configCampoParametros(String texto,boolean enabled,String toolTip){
+        parametros.setText(texto);
+        parametros.setEnabled(enabled);
+        parametros.setToolTipText(toolTip);
+    }
+    
     private void parametrosFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_parametrosFocusLost
-        //parametros.requestFocus();
-        
         String input = parametros.getText();
         switch(tipoCol.getSelectedIndex()){
             case Tipo.TINYINT:
@@ -320,6 +312,7 @@ public class PanelColumna extends javax.swing.JPanel {
                         JOptionPane.ERROR_MESSAGE
                     );
                     parametros.setText("");
+                    parametros.requestFocus();
                 }
                 break;
             case Tipo.DECIMAL:               
