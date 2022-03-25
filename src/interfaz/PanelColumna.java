@@ -18,8 +18,8 @@ public class PanelColumna extends javax.swing.JPanel {
     InfoColumna info;
     String expDecimal;
     Pattern pat;
-    String expEnum;
-    Pattern patronEnum;
+    String expEnumSet;
+    Pattern patronEnumSet;
     
     /**
      * Creates new form PanelColumna
@@ -33,8 +33,8 @@ public class PanelColumna extends javax.swing.JPanel {
         
         expDecimal = "(\\d+)\\s*,\\s*(\\d+)";
         pat = Pattern.compile(expDecimal);
-        expEnum = "('(\\w+)'\\s*,\\s*)*'(\\w*)'";
-        patronEnum = Pattern.compile(expEnum);
+        expEnumSet = "('(\\w+)'\\s*,\\s*)*'(\\w*)'";
+        patronEnumSet = Pattern.compile(expEnumSet);
                 
         cargarDatos();
     }
@@ -267,10 +267,6 @@ public class PanelColumna extends javax.swing.JPanel {
                 parametros.setToolTipText("Número total de dígitos, número de dígitos decimales");
                 break;
             case Tipo.SET:
-                parametros.setText("");
-                parametros.setEnabled(true);
-                parametros.setToolTipText("Lista de elementos");
-                break;
             case Tipo.ENUM:
                 parametros.setText("''");
                 parametros.setEnabled(true);
@@ -398,8 +394,9 @@ public class PanelColumna extends javax.swing.JPanel {
                 }
                 break;
             case Tipo.ENUM:
+            case Tipo.SET:
                 //String input = parametros.getText();
-                Matcher mat = patronEnum.matcher(input);
+                Matcher mat = patronEnumSet.matcher(input);
                 try{
                     if (mat.matches()) {
                         System.out.println("Regexp encontrada");  
