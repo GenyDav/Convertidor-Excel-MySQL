@@ -5,6 +5,7 @@
  */
 package interfaz;
 
+import java.awt.event.KeyEvent;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.swing.JOptionPane;
@@ -82,6 +83,11 @@ public class PanelColumna extends javax.swing.JPanel {
         parametros.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
                 parametrosFocusLost(evt);
+            }
+        });
+        parametros.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                parametrosKeyReleased(evt);
             }
         });
 
@@ -286,6 +292,8 @@ public class PanelColumna extends javax.swing.JPanel {
     }//GEN-LAST:event_comboTipoStateChanged
 
     private void parametrosFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_parametrosFocusLost
+        //parametros.requestFocus();
+        
         String input = parametros.getText();
         switch(tipoCol.getSelectedIndex()){
             case Tipo.TINYINT:
@@ -462,6 +470,12 @@ public class PanelColumna extends javax.swing.JPanel {
                 break;
         }
     }//GEN-LAST:event_parametrosFocusLost
+
+    private void parametrosKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_parametrosKeyReleased
+        if(evt.getKeyCode()==KeyEvent.VK_ENTER){
+            parametros.transferFocus();
+        }
+    }//GEN-LAST:event_parametrosKeyReleased
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JCheckBox checkAI;
