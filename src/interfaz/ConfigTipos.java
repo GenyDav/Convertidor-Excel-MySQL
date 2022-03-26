@@ -48,7 +48,7 @@ public class ConfigTipos extends javax.swing.JDialog {
         jPanel2.add(new PanelColumna("columna11"));
         */
         for(int i=0;i<listaColumnas.size();i++){
-            jPanel2.add(new PanelColumna(listaColumnas.get(i)));
+            jPanel2.add(new PanelColumna(listaColumnas.get(i),this));
         }
         
         jPanel1.setPreferredSize(new Dimension(550,300));
@@ -77,7 +77,7 @@ public class ConfigTipos extends javax.swing.JDialog {
         jScrollPane1.setToolTipText("");
         jScrollPane1.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 
-        jPanel2.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel2.setBackground(new java.awt.Color(51, 51, 51));
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
