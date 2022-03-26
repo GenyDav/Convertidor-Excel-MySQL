@@ -8,6 +8,7 @@ package interfaz;
 import java.awt.event.KeyEvent;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 
 /**
@@ -26,7 +27,7 @@ public class PanelColumna extends javax.swing.JPanel {
      * Creates new form PanelColumna
      * @param col
      */
-    public PanelColumna(InfoColumna col) {
+    public PanelColumna(InfoColumna col,ConfigTipos ventana) {
         initComponents();
         info = col;
         //this.posicion = posicion;
@@ -286,7 +287,7 @@ public class PanelColumna extends javax.swing.JPanel {
     }
     
     private void parametrosFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_parametrosFocusLost
-        String input = parametros.getText();
+        String entrada = parametros.getText();
         switch(tipoCol.getSelectedIndex()){
             case Tipo.TINYINT:
             case Tipo.SMALLINT:
@@ -294,8 +295,8 @@ public class PanelColumna extends javax.swing.JPanel {
             case Tipo.INT:
             case Tipo.BIGINT:
                 try{
-                    if(!parametros.getText().equals("")){
-                        int tam = Integer.parseInt(parametros.getText());
+                    if(!entrada.equals("")){
+                        int tam = Integer.parseInt(entrada);
                         if(tam<1||tam>255){
                             throw new Exception();
                         }else{
@@ -303,16 +304,11 @@ public class PanelColumna extends javax.swing.JPanel {
                         }
                     }   
                 }catch(Exception e){
-                    JOptionPane.showMessageDialog(
-                        null, 
-                        "El valor dado contiene errores."
-                        + "\nPuede dejar el campo vacío o incluir"
-                        + "\nun valor numérico ubicado entre 1 y 255  ",
-                        "No se puede aceptar el valor", 
-                        JOptionPane.ERROR_MESSAGE
+                    mostrarMsgError(
+                        "\nPuede dejar el campo vacío o incluir"
+                        + "\nun valor numérico ubicado entre 1 y 255.  "
                     );
                     parametros.setText("");
-                    parametros.requestFocus();
                 }
                 break;
             case Tipo.DECIMAL:               
@@ -320,15 +316,15 @@ public class PanelColumna extends javax.swing.JPanel {
                 //Pattern pat = Pattern.compile(expDecimal);
                 //String input = parametros.getText();
                 try{
-                    if(!input.equals("")){
-                        Matcher mat = pat.matcher(input);
+                    if(!entrada.equals("")){
+                        Matcher mat = pat.matcher(entrada);
                         int n1,n2;
                         if (mat.matches()) {
                             System.out.println("Regexp encontrada");
                             n1 = Integer.parseInt(mat.group(1));
                             n2 = Integer.parseInt(mat.group(2));
-                            System.out.println("Sujeto:"+mat.group(1));
-                            System.out.println("Sujeto:"+mat.group(2));
+                            //System.out.println("Sujeto:"+mat.group(1));
+                            //System.out.println("Sujeto:"+mat.group(2));
                             if(n1>65||n2>30||n1<n2){
                                 throw new Exception(); 
                             }
@@ -338,22 +334,19 @@ public class PanelColumna extends javax.swing.JPanel {
                         }
                     }
                 }catch(Exception e){
-                    JOptionPane.showMessageDialog(
-                        null, 
-                        "El valor dado contiene errores. Puede dejar el campo vacío o incluir dos valores "
+                    mostrarMsgError(
+                        " Puede dejar el campo vacío o incluir dos valores  "
                         + "\nnuméricos separados por coma (M,D).  "
                         + "\nEl valor máximo aceptado para M es 65, el valor máximo aceptado para D es 30. "
-                        + "\nM debe ser mayor o igual a D.",
-                        "No se puede aceptar el valor", 
-                        JOptionPane.ERROR_MESSAGE
+                        + "\nM debe ser mayor o igual a D."
                     );
                     parametros.setText("");
                 }
                 break;
             case Tipo.FLOAT:
                 try{
-                    if(!parametros.getText().equals("")){
-                        int tam = Integer.parseInt(parametros.getText());
+                    if(!entrada.equals("")){
+                        int tam = Integer.parseInt(entrada);
                         if(tam<0||tam>53){
                             throw new Exception();
                         }else{
@@ -361,21 +354,17 @@ public class PanelColumna extends javax.swing.JPanel {
                         }
                     }
                 }catch(Exception e){
-                    JOptionPane.showMessageDialog(
-                        null, 
-                        "El valor dado contiene errores."
-                        + "\nPuede dejar el campo vacío o incluir"
-                        + "\nun valor numérico ubicado entre 0 y 53  ",
-                        "No se puede aceptar el valor", 
-                        JOptionPane.ERROR_MESSAGE
+                    mostrarMsgError(
+                        "\nPuede dejar el campo vacío o incluir"
+                        + "\nun valor numérico ubicado entre 0 y 53.  "
                     );
                     parametros.setText("");
                 }
                 break;
             case Tipo.TEXT:
                 try{
-                    if(!parametros.getText().equals("")){
-                        int tam = Integer.parseInt(parametros.getText());
+                    if(!entrada.equals("")){
+                        int tam = Integer.parseInt(entrada);
                         if(tam<0){
                             throw new Exception();
                         }else{
@@ -383,21 +372,16 @@ public class PanelColumna extends javax.swing.JPanel {
                         }
                     }
                 }catch(Exception e){
-                    JOptionPane.showMessageDialog(
-                        null, 
-                        "El valor dado contiene errores."
-                        + "\nPuede dejar el campo vacío o incluir"
-                        + "\nun valor numérico igual o mayor a cero  ",
-                        "No se puede aceptar el valor", 
-                        JOptionPane.ERROR_MESSAGE
+                    mostrarMsgError(
+                        "\nPuede dejar el campo vacío o incluir"
+                        + "\nun valor numérico igual o mayor a cero.  "
                     );
                     parametros.setText("");
                 }
                 break;
             case Tipo.ENUM:
             case Tipo.SET:
-                //String input = parametros.getText();
-                Matcher mat = patronEnumSet.matcher(input);
+                Matcher mat = patronEnumSet.matcher(entrada);
                 try{
                     if (mat.matches()) {
                         System.out.println("Regexp encontrada");  
@@ -406,13 +390,9 @@ public class PanelColumna extends javax.swing.JPanel {
                         throw new Exception();
                     }
                 }catch(Exception e){
-                    JOptionPane.showMessageDialog(
-                        null, 
-                        "El valor dado contiene errores."
-                        + "\nDebe incluir valores alfanuméricos entre comillas  "
-                        + "\nsimples ('') y separarlos con coma ( , ). ",
-                        "No se puede aceptar el valor", 
-                        JOptionPane.ERROR_MESSAGE
+                    mostrarMsgError(
+                        "\nDebe incluir valores alfanuméricos entre comillas  "
+                        + "\nsimples ('') y separarlos con coma ( , ). "
                     );
                     parametros.setText("''");
                 }
@@ -420,8 +400,8 @@ public class PanelColumna extends javax.swing.JPanel {
             case Tipo.CHAR:
             case Tipo.BINARY:
                 try{
-                    if(!parametros.getText().equals("")){
-                        int tam = Integer.parseInt(parametros.getText());
+                    if(!entrada.equals("")){
+                        int tam = Integer.parseInt(entrada);
                         if(tam<0||tam>255){
                             throw new Exception();
                         }else{
@@ -429,13 +409,9 @@ public class PanelColumna extends javax.swing.JPanel {
                         }
                     }
                 }catch(Exception e){
-                    JOptionPane.showMessageDialog(
-                        null, 
-                        "El valor dado contiene errores."
-                        + "\nPuede dejar el campo vacío o incluir"
-                        + "\nun valor numérico ubicado entre 0 y 255  ",
-                        "No se puede aceptar el valor", 
-                        JOptionPane.ERROR_MESSAGE
+                    mostrarMsgError(
+                        "\nPuede dejar el campo vacío o incluir"
+                        + "\nun valor numérico ubicado entre 0 y 255.  "
                     );
                     parametros.setText("");
                 }
@@ -443,27 +419,33 @@ public class PanelColumna extends javax.swing.JPanel {
             case Tipo.VARCHAR:
             case Tipo.VARBINARY:
                 try{
-                    int tam = Integer.parseInt(parametros.getText());
+                    int tam = Integer.parseInt(entrada);
                     if(tam<0||tam>65535){
                         throw new Exception();
                     }else{
                         info.setTam(tam);
                     }
                 }catch(Exception e){
-                    JOptionPane.showMessageDialog(
-                        null, 
-                        "El valor dado contiene errores."
-                        + "\nPuede incluir un valor numérico ubicado entre  "
-                        + "\n0 y 65,535",
-                        "No se puede aceptar el valor", 
-                        JOptionPane.ERROR_MESSAGE
-                    );
+                    mostrarMsgError(
+                        "\nPuede incluir un valor numérico ubicado entre  "
+                        + "\n0 y 65,535."
+                );
                     parametros.setText("45");
                 }
                 break;
         }
     }//GEN-LAST:event_parametrosFocusLost
 
+    private void mostrarMsgError(String mensaje){
+        JOptionPane.showMessageDialog(
+            null, 
+            "El valor dado contiene errores."
+            + mensaje,
+            "No se puede aceptar el valor", 
+            JOptionPane.ERROR_MESSAGE
+        );
+    }
+    
     private void parametrosKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_parametrosKeyReleased
         if(evt.getKeyCode()==KeyEvent.VK_ENTER){
             parametros.transferFocus();
