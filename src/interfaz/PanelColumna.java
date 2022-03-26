@@ -22,6 +22,7 @@ public class PanelColumna extends javax.swing.JPanel {
     Pattern pat;
     String expEnumSet;
     Pattern patronEnumSet;
+    Pattern coma;
     JDialog ventana;
     
     /**
@@ -40,7 +41,8 @@ public class PanelColumna extends javax.swing.JPanel {
         pat = Pattern.compile(expDecimal);
         expEnumSet = "('(\\w+)'\\s*,\\s*)*'(\\w*)'";
         patronEnumSet = Pattern.compile(expEnumSet);
-                
+        coma = Pattern.compile(",");
+        
         cargarDatos();
     }
 
@@ -303,7 +305,7 @@ public class PanelColumna extends javax.swing.JPanel {
                         if(tam<1||tam>255){
                             throw new Exception();
                         }else{
-                            info.setTam(tam);
+                            info.setParametros(entrada);
                         }
                     }   
                 }catch(Exception e){
@@ -330,6 +332,8 @@ public class PanelColumna extends javax.swing.JPanel {
                             //System.out.println("Sujeto:"+mat.group(2));
                             if(n1>65||n2>30||n1<n2){
                                 throw new Exception(); 
+                            }else{
+                                info.setParametros(entrada);
                             }
                         } else {
                             System.err.println("Regexp NO encontrada");
@@ -353,7 +357,7 @@ public class PanelColumna extends javax.swing.JPanel {
                         if(tam<0||tam>53){
                             throw new Exception();
                         }else{
-                            info.setTam(tam);
+                            info.setParametros(entrada);
                         }
                     }
                 }catch(Exception e){
@@ -371,7 +375,7 @@ public class PanelColumna extends javax.swing.JPanel {
                         if(tam<0){
                             throw new Exception();
                         }else{
-                            info.setTam(tam);
+                            info.setParametros(entrada);
                         }
                     }
                 }catch(Exception e){
@@ -386,9 +390,15 @@ public class PanelColumna extends javax.swing.JPanel {
             case Tipo.SET:
                 Matcher mat = patronEnumSet.matcher(entrada);
                 try{
-                    if (mat.matches()) {
-                        System.out.println("Regexp encontrada");  
-                    } else {
+                    if(mat.matches()){
+                        System.out.println("Regexp encontrada"); 
+                        info.setParametros(entrada);
+                        // Verificar el número de elementos en la lista
+                        if((tipoCol.getSelectedIndex()==Tipo.SET && obtenerNumElementos(entrada)>64)
+                                ||(tipoCol.getSelectedIndex()==Tipo.ENUM && obtenerNumElementos(entrada)>65535)){             
+                            throw new Exception();                 
+                        } 
+                    }else{
                         System.err.println("Regexp NO encontrada");
                         throw new Exception();
                     }
@@ -408,7 +418,7 @@ public class PanelColumna extends javax.swing.JPanel {
                         if(tam<0||tam>255){
                             throw new Exception();
                         }else{
-                            info.setTam(tam);
+                            info.setParametros(entrada);
                         }
                     }
                 }catch(Exception e){
@@ -426,7 +436,7 @@ public class PanelColumna extends javax.swing.JPanel {
                     if(tam<0||tam>65535){
                         throw new Exception();
                     }else{
-                        info.setTam(tam);
+                        info.setParametros(entrada);
                     }
                 }catch(Exception e){
                     mostrarMsgError(
@@ -447,6 +457,16 @@ public class PanelColumna extends javax.swing.JPanel {
             "No se puede aceptar el valor", 
             JOptionPane.ERROR_MESSAGE
         );
+    }
+    
+    private int obtenerNumElementos(String parametros){
+        int numElementos = 0;
+        Matcher mat = coma.matcher(parametros);
+        while(mat.find()){
+            numElementos++;
+        }
+        System.out.println("numero de elementos: "+(numElementos+1));
+        return numElementos+1;
     }
     
     private void parametrosKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_parametrosKeyReleased
