@@ -22,13 +22,16 @@ public class PanelColumna extends javax.swing.JPanel {
     Pattern pat;
     String expEnumSet;
     Pattern patronEnumSet;
+    JDialog ventana;
     
     /**
      * Creates new form PanelColumna
      * @param col
+     * @param ventana
      */
-    public PanelColumna(InfoColumna col,ConfigTipos ventana) {
+    public PanelColumna(InfoColumna col, ConfigTipos ventana) {
         initComponents();
+        this.ventana = ventana;
         info = col;
         //this.posicion = posicion;
         //info = columnas.get(posicion);
@@ -438,7 +441,7 @@ public class PanelColumna extends javax.swing.JPanel {
 
     private void mostrarMsgError(String mensaje){
         JOptionPane.showMessageDialog(
-            null, 
+            ventana, 
             "El valor dado contiene errores."
             + mensaje,
             "No se puede aceptar el valor", 
