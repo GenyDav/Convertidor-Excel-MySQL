@@ -28,7 +28,11 @@ public class InfoColumna{
     
     public InfoColumna(String nombre,int tipo){
         this.nombre = nombre;
-        parametros = "45";
+        if(tipo==3){
+            parametros = "";
+        }else{
+            parametros = "45";
+        }
         primaryKey = false;
         notNull = false;
         unique = false;
