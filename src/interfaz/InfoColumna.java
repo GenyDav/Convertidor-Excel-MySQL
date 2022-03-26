@@ -12,17 +12,29 @@ package interfaz;
 public class InfoColumna{
     private String nombre;
     private int tipo;
-    private int tam;
+    private String parametros;
     private boolean primaryKey, notNull, unique, unsigned, autoIncrement;
     
     public InfoColumna(String nombre){
         this.nombre = nombre;
-        tam = 0;
+        parametros = "45";
         primaryKey = false;
         notNull = false;
         unique = false;
         unsigned = false;
         autoIncrement = false;
+        tipo = 9;
+    }
+    
+    public InfoColumna(String nombre,int tipo){
+        this.nombre = nombre;
+        parametros = "45";
+        primaryKey = false;
+        notNull = false;
+        unique = false;
+        unsigned = false;
+        autoIncrement = false;
+        this.tipo = tipo;
     }
 
     public String getNombre() {
@@ -33,8 +45,8 @@ public class InfoColumna{
         return tipo;
     }
 
-    public int getTam() {
-        return tam;
+    public String getParametros() {
+        return parametros;
     }
 
     public boolean getPK() {
@@ -65,8 +77,8 @@ public class InfoColumna{
         this.tipo = tipo;
     }
     
-    public void setTam(int tam) {
-        this.tam = tam;
+    public void setParametros(String tam) {
+        this.parametros = tam;
     }
     
     public void setPK(boolean pk) {
