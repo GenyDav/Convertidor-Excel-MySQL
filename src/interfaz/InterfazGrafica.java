@@ -971,6 +971,7 @@ public class InterfazGrafica extends javax.swing.JFrame {
 
     private void btnSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalirActionPerformed
         conn.terminarConexion();
+        btnConectar.setEnabled(true);
         limpiarCamposInicio();
         setTitle("Iniciar conexión");
         cardLayout.show(jPanel1, "card2");
@@ -983,6 +984,7 @@ public class InterfazGrafica extends javax.swing.JFrame {
     private void btnConectarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConectarActionPerformed
         mensaje = "Estableciendo conexión con el servidor...";
         msj.setText(mensaje);
+        btnConectar.setEnabled(false);
         servidor = txtServidor.getText();
         usuario = txtUsuario.getText();
         clave = txtClave.getText();
@@ -1005,6 +1007,7 @@ public class InterfazGrafica extends javax.swing.JFrame {
                         + "\nNo se pudo encontar la librería mysql-conector-java";
                 }finally{
                     msj.setText(mensaje);
+                    btnConectar.setEnabled(true);
                 }
             }
         }.start();
