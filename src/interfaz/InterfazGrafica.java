@@ -16,6 +16,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
@@ -55,6 +57,11 @@ public class InterfazGrafica extends javax.swing.JFrame {
  
     private ArrayList<TablaLista> listaHojas;
     private DefaultListModel modeloListaExcel;
+    
+    // Atributos para crear la base de datos
+    String expNombre = "(_+|[a-zA-Z]+|(\\d*[a-zA-Z]+))(\\w*)"; // verificar que se introduce un nombre válido para la BD
+    Pattern patron = Pattern.compile(expNombre);
+    Matcher mat;
     
     public InterfazGrafica() {
         UIManager.put("ProgressBar.selectionBackground", Color.black);
@@ -100,6 +107,7 @@ public class InterfazGrafica extends javax.swing.JFrame {
         listaHojas = new ArrayList<>();
         modeloListaExcel = new DefaultListModel();
         seleccionHojasExcel.setModel(modeloListaExcel);
+        
     }
     
     /**
@@ -1198,7 +1206,40 @@ public class InterfazGrafica extends javax.swing.JFrame {
     }//GEN-LAST:event_tablasCompletasExcelActionPerformed
 
     private void btnImportarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnImportarActionPerformed
-        // TODO add your handling code here:
+        try{
+            String nombreBase = (String)JOptionPane.showInputDialog(
+                this,
+                "Escribe el nombre de la nueva base de datos:\n",
+                "Crear base de datos",
+                JOptionPane.PLAIN_MESSAGE,
+                null,           // ícono
+                null,           // opciones del combo box
+                "Nombre nuevo"  // texto dentro del campo
+            );
+            System.out.println("Nombre de la base de datos: "+nombreBase);
+            if(nombreBase.length()>0){ // comprobar que el usuario escriba algo
+                mat = patron.matcher(nombreBase);
+                if(mat.matches()){
+                    System.out.println("Regexp encontrada");
+                    // crear la base de datos
+                }else{
+                    System.err.println("Regexp no encontrada");
+                    throw new Exception();
+                }
+            }else{
+                throw new Exception();
+            }
+        }catch(NullPointerException e){}
+        catch(Exception e){
+            JOptionPane.showMessageDialog(
+                this, 
+                "No se encontró un nombre válido. El nombre sólo "
+                + "\npuede estar formado por letras, números y "
+                + "\ncaracteres de subrayado(_).",
+                "No se puede crear la base de datos", 
+                JOptionPane.WARNING_MESSAGE
+            );
+        }
     }//GEN-LAST:event_btnImportarActionPerformed
 
     private void btnAgregarHojaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarHojaActionPerformed
