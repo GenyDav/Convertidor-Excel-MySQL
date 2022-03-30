@@ -18,6 +18,7 @@ import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JRadioButton;
 import javax.swing.JTable;
 import javax.swing.SwingWorker;
 import org.apache.poi.ss.usermodel.Cell;
@@ -39,16 +40,21 @@ public class LectorExcel extends SwingWorker<Void,Void>{
     private JLabel etiqueta;
     private JButton botonAbrir;
     private JButton btnTipos;
+    private JButton btnImportar;
+    private JRadioButton opc1,opc2;
     private JFrame ventana;
     private ArrayList<TablaLista> hojas;
     
-    public LectorExcel(JFrame ventana,JComboBox combo,JTable tabla,JLabel label,JButton btn,String ruta,JButton btnTipos,ArrayList<TablaLista>hojas){
+    public LectorExcel(JFrame ventana,JComboBox combo,JTable tabla,JLabel label,JButton btn,String ruta,JButton btnTipos,ArrayList<TablaLista>hojas,JButton btnImport,JRadioButton opc1,JRadioButton opc2){
         this.ruta = ruta;
         comboHojas = combo;
         this.ventana = ventana;
         this.tabla = tabla;
         etiqueta = label;
         botonAbrir = btn;
+        btnImportar = btnImport;
+        this.opc1 = opc1;
+        this.opc2 = opc2;
         this.btnTipos = btnTipos;
         this.hojas = hojas;
     }
@@ -155,6 +161,16 @@ public class LectorExcel extends SwingWorker<Void,Void>{
         comboHojas.setEnabled(true);
         botonAbrir.setEnabled(true);
         btnTipos.setEnabled(true);
+        opc1.setEnabled(true);
+        opc1.setSelected(true);
+        opc2.setEnabled(true);
+        btnImportar.setEnabled(true);
+        /*if(seleccion.isSelected()){
+            btnImportar.setEnabled(true);
+        }else{
+            btnImportar.setEnabled(false);
+        }*/
+        
         /*TablaLista tabla;
         System.out.println("Información");
         for(int i=0;i<hojas.size();i++){
