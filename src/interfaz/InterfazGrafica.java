@@ -469,6 +469,7 @@ public class InterfazGrafica extends javax.swing.JFrame {
         tablasSelExcel.setBackground(new java.awt.Color(255, 255, 255));
         buttonGroup2.add(tablasSelExcel);
         tablasSelExcel.setText("Importar solo las hojas seleccionadas");
+        tablasSelExcel.setEnabled(false);
         tablasSelExcel.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 tablasSelExcelActionPerformed(evt);
@@ -479,6 +480,7 @@ public class InterfazGrafica extends javax.swing.JFrame {
         buttonGroup2.add(tablasCompletasExcel);
         tablasCompletasExcel.setSelected(true);
         tablasCompletasExcel.setText("Importar todas las hojas del archivo");
+        tablasCompletasExcel.setEnabled(false);
         tablasCompletasExcel.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 tablasCompletasExcelActionPerformed(evt);
@@ -519,6 +521,7 @@ public class InterfazGrafica extends javax.swing.JFrame {
         );
 
         btnImportar.setText("Crear base de datos");
+        btnImportar.setEnabled(false);
         btnImportar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnImportarActionPerformed(evt);
@@ -981,6 +984,7 @@ public class InterfazGrafica extends javax.swing.JFrame {
         conn.terminarConexion();
         btnConectar.setEnabled(true);
         limpiarCamposInicio();
+        btnImportar.setEnabled(false);
         setTitle("Iniciar conexión");
         cardLayout.show(jPanel1, "card2");
     }//GEN-LAST:event_btnSalirActionPerformed
@@ -1178,20 +1182,21 @@ public class InterfazGrafica extends javax.swing.JFrame {
     }//GEN-LAST:event_btnBorrarExcelActionPerformed
 
     private void tablasSelExcelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tablasSelExcelActionPerformed
-        if(!labelArchivo.getText().equals("")){
-            seleccionHojasExcel.setEnabled(true); // lista con los elementos
-            jScrollPaneSel1.getVerticalScrollBar().setEnabled(true);
-            if(listaHojas.get(comboHojas.getSelectedIndex()).getSeleccionado()){
-                btnTipos.setEnabled(true);
-                btnAgregarHoja.setEnabled(false);
-            }else{
-                btnTipos.setEnabled(false);
-                btnAgregarHoja.setEnabled(true);
-            }
+        seleccionHojasExcel.setEnabled(true); // lista con los elementos
+        jScrollPaneSel1.getVerticalScrollBar().setEnabled(true);
+        if(listaHojas.get(comboHojas.getSelectedIndex()).getSeleccionado()){
+            btnTipos.setEnabled(true);
+            btnAgregarHoja.setEnabled(false);
+        }else{
+            btnTipos.setEnabled(false);
+            btnAgregarHoja.setEnabled(true);
         }
         if(!modeloListaExcel.isEmpty()){
             btnQuitarExcel.setEnabled(true);
             btnBorrarExcel.setEnabled(true);
+            btnImportar.setEnabled(true);
+        }else{
+            btnImportar.setEnabled(false);
         }
     }//GEN-LAST:event_tablasSelExcelActionPerformed
 
@@ -1200,9 +1205,9 @@ public class InterfazGrafica extends javax.swing.JFrame {
         btnBorrarExcel.setEnabled(false);
         btnAgregarHoja.setEnabled(false);
         seleccionHojasExcel.setEnabled(false);
+        jScrollPaneSel1.getVerticalScrollBar().setEnabled(false);
         btnTipos.setEnabled(true);
         btnImportar.setEnabled(true);
-        jScrollPaneSel1.getVerticalScrollBar().setEnabled(false);
     }//GEN-LAST:event_tablasCompletasExcelActionPerformed
 
     private void btnImportarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnImportarActionPerformed
@@ -1291,11 +1296,14 @@ public class InterfazGrafica extends javax.swing.JFrame {
                     btnAbrir.setEnabled(false);
                     btnTipos.setEnabled(false);
                     btnAgregarHoja.setEnabled(false);
+                    btnImportar.setEnabled(false);
+                    tablasCompletasExcel.setEnabled(false);
+                    tablasSelExcel.setEnabled(false);
                     if(lector!=null && lector.getLibro()!=null){
                         lector.cerrarArchivo();
                     }
                     listaHojas.clear();
-                    lector = new LectorExcel(this,comboHojas,tablaExcel,labelRegExcel,btnAbrir,rutaArch,btnTipos,listaHojas);
+                    lector = new LectorExcel(this,comboHojas,tablaExcel,labelRegExcel,btnAbrir,rutaArch,btnTipos,listaHojas,btnImportar,tablasCompletasExcel,tablasSelExcel);
                     lector.execute();
 
                     new Thread(){ // esperar a que se cargue el archivo para obtener el número de hojas
@@ -1304,7 +1312,8 @@ public class InterfazGrafica extends javax.swing.JFrame {
                             System.out.println("Ejecutando hilo");
                             while(lector.getLibro()==null){
                                 //System.out.println("Esperando libro");
-                            }                       
+                            }
+                            System.out.println("Libro cargado");
                         }
                     }.start();
                     labelArchivo.setText("  " + nomArch );  
