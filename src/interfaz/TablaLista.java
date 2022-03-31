@@ -27,6 +27,20 @@ public class TablaLista extends ElementoLista{
         columnas.set(indice, aux);
     }
     
+    public ArrayList<InfoColumna> obtenerColumnas(){
+        return columnas;
+    }
+    
+    public InfoColumna obtenerColumna(int posicion){
+        return columnas.get(posicion);
+    }
+    
+    public void mostrarColumnas(){
+        for(int i=0;i<columnas.size();i++){
+            System.out.print("["+columnas.get(i).getNombre()+": "+columnas.get(i).getPK()+","+Tipo.TIPO[columnas.get(i).getTipo()]+"]");
+        }
+    }
+    
     @Override
     public String toString(){
         return super.getNombre()+columnas.toString();
