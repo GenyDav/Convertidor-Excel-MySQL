@@ -13,6 +13,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -63,6 +65,10 @@ public class Conexion {
         rs = s.executeQuery("Select count(*) from " + base + "." + tabla + ";");
         rs.first();
         return Integer.valueOf(rs.getString(1));
+    }
+    
+    public void crearBase(String nombre) throws SQLException{
+        int i = s.executeUpdate("create database "+nombre+";");    
     }
     
     public void terminarConexion(){
