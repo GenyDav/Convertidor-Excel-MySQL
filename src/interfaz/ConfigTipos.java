@@ -48,7 +48,7 @@ public class ConfigTipos extends javax.swing.JDialog {
         jPanel2.add(new PanelColumna("columna11"));
         */
         for(int i=0;i<listaColumnas.size();i++){
-            jPanel2.add(new PanelColumna(listaColumnas.get(i),this));
+            jPanel2.add(new PanelColumna(listaColumnas.get(i),this,grupoUnique));
         }
         
         jPanel1.setPreferredSize(new Dimension(550,300));
@@ -65,6 +65,7 @@ public class ConfigTipos extends javax.swing.JDialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        grupoUnique = new javax.swing.ButtonGroup();
         jPanel1 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jPanel2 = new javax.swing.JPanel();
@@ -145,6 +146,7 @@ public class ConfigTipos extends javax.swing.JDialog {
     }*/
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.ButtonGroup grupoUnique;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
