@@ -1211,8 +1211,9 @@ public class InterfazGrafica extends javax.swing.JFrame {
     }//GEN-LAST:event_tablasCompletasExcelActionPerformed
 
     private void btnImportarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnImportarActionPerformed
+        String nombreBase = "";
         try{
-            String nombreBase = (String)JOptionPane.showInputDialog(
+            nombreBase = (String)JOptionPane.showInputDialog(
                 this,
                 "Escribe el nombre de la nueva base de datos:\n",
                 "Crear base de datos",
@@ -1227,6 +1228,7 @@ public class InterfazGrafica extends javax.swing.JFrame {
                 if(mat.matches()){
                     System.out.println("Regexp encontrada");
                     // crear la base de datos
+                    crearBase(nombreBase);
                 }else{
                     System.err.println("Regexp no encontrada");
                     throw new Exception();
@@ -1234,8 +1236,10 @@ public class InterfazGrafica extends javax.swing.JFrame {
             }else{
                 throw new Exception();
             }
-        }catch(NullPointerException e){}
+        }catch(NullPointerException e){
+        }
         catch(Exception e){
+            e.printStackTrace();
             JOptionPane.showMessageDialog(
                 this, 
                 "No se encontró un nombre válido. El nombre sólo "
@@ -1354,6 +1358,61 @@ public class InterfazGrafica extends javax.swing.JFrame {
             label.setText(msjAdvertencia);
         }
     }*/
+    
+    public void crearBase(String nombre){
+        List<TablaLista> lista;
+        String script;
+        if(tablasCompletasExcel.isSelected()){
+               lista = listaHojas; 
+        }else{
+            lista = listaHojas.stream()
+                .filter(elemento->elemento.getSeleccionado())
+                .collect(Collectors.toList());
+        }
+        try{
+            conn.crearBase(nombre);
+            crearScript(nombre,lista);
+        }catch(SQLException ex){
+            ex.printStackTrace();
+            System.out.println(ex.getErrorCode());
+            if(ex.getErrorCode()==1007){ // ya existe una base de datos con ese nombre
+                JOptionPane.showMessageDialog(
+                    this, 
+                    "Ya existe una base de datos con el nombre '" + nombre + "'.  ",
+                    "No se puede crear la base de datos", 
+                    JOptionPane.ERROR_MESSAGE
+                );
+            }
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+    }
+    
+    public void crearScript(String nombreBase, List<TablaLista> lista){
+        String script;
+        for(int i=0;i<lista.size();i++){
+            TablaLista tabla = lista.get(i);
+            script = "create table " + nombreBase + "." + tabla.getNombre() + "(\n";
+            for(int j=0;j<lista.get(i).obtenerColumnas().size();j++){
+                InfoColumna col = lista.get(i).obtenerColumna(j);
+                script += col.getNombre()+" "+Tipo.TIPO[col.getTipo()];
+                if(!col.getParametros().equals("")){
+                    script+="("+col.getParametros()+")";
+                }
+                if(col.getNN()){
+                    script+=" NOT NULL";
+                }
+                if(col.getUQ()){
+                    script+=" UNIQUE";
+                }
+                script+=",\n";
+            }
+            System.out.println("=========================================");
+            script += ");";
+            System.out.println(script);
+            script = "";
+        }
+    }
     
     public <T extends ElementoLista> void borrarElemento(JList seleccion,DefaultListModel modeloLista,ArrayList<T> lista,JLabel label,JButton btnQuitar,JButton btnBorrar,JButton btnOperacion,String msj,String msjPlural){
         int []elemBorrados = seleccion.getSelectedIndices(); // posiciones de los elementos a eliminar
