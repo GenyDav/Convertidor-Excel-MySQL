@@ -8,6 +8,7 @@ package interfaz;
 import java.awt.event.KeyEvent;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import javax.swing.ButtonGroup;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 
@@ -29,8 +30,9 @@ public class PanelColumna extends javax.swing.JPanel {
      * Creates new form PanelColumna
      * @param col
      * @param ventana
+     * @param grupo
      */
-    public PanelColumna(InfoColumna col, ConfigTipos ventana) {
+    public PanelColumna(InfoColumna col, ConfigTipos ventana, ButtonGroup grupo) {
         initComponents();
         this.ventana = ventana;
         info = col;
@@ -42,6 +44,7 @@ public class PanelColumna extends javax.swing.JPanel {
         expEnumSet = "('(\\w+)'\\s*,\\s*)*'(\\w*)'";
         patronEnumSet = Pattern.compile(expEnumSet);
         coma = Pattern.compile(",");
+        grupo.add(checkAI);
         
         cargarDatos();
     }
@@ -213,12 +216,14 @@ public class PanelColumna extends javax.swing.JPanel {
 
     private void cargarDatos(){
         nombreCol.setText(info.getNombre());
+        tipoCol.setSelectedIndex(info.getTipo());
+        //System.err.println(info.getTipo());
+        parametros.setText(info.getParametros());
         checkPK.setSelected(info.getPK());
         checkNN.setSelected(info.getNN());
         checkUQ.setSelected(info.getUQ());
         checkUN.setSelected(info.getUN());
         checkAI.setSelected(info.getAI());
-        tipoCol.setSelectedIndex(info.getTipo());
     }
     
     private void checkPKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkPKActionPerformed
@@ -306,6 +311,7 @@ public class PanelColumna extends javax.swing.JPanel {
                             throw new Exception();
                         }else{
                             info.setParametros(entrada);
+                            System.out.println("PARAMETROS: "+info.getParametros());
                         }
                     }   
                 }catch(Exception e){
@@ -406,6 +412,8 @@ public class PanelColumna extends javax.swing.JPanel {
                     mostrarMsgError(
                         "\nDebe incluir valores alfanuméricos entre comillas  "
                         + "\nsimples ('') y separarlos con coma ( , ). "
+                        + "\nPara el tipo SET se admiten como máximo 64 valores distintos.  "
+                        + "\nPara el tipo ENUM se admiten como máximo 65,535 valores distintos.  "
                     );
                     parametros.setText("''");
                 }
