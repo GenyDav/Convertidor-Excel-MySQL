@@ -1390,25 +1390,39 @@ public class InterfazGrafica extends javax.swing.JFrame {
     
     public void crearScript(String nombreBase, List<TablaLista> lista){
         String script;
+        ArrayList<String> llavePrimaria = new ArrayList<>();
         for(int i=0;i<lista.size();i++){
-            TablaLista tabla = lista.get(i);
-            script = "create table " + nombreBase + "." + tabla.getNombre() + "(\n";
+            TablaLista tablaActual = lista.get(i);
+            script = "CREATE TABLE " + nombreBase + "." + tablaActual.getNombre() + "(\n";
             for(int j=0;j<lista.get(i).obtenerColumnas().size();j++){
                 InfoColumna col = lista.get(i).obtenerColumna(j);
                 script += col.getNombre()+" "+Tipo.TIPO[col.getTipo()];
-                if(!col.getParametros().equals("")){
+                if(!col.getParametros().equals(""))
                     script+="("+col.getParametros()+")";
-                }
+                if(col.getPK())
+                    llavePrimaria.add(col.getNombre());
                 if(col.getNN()){
                     script+=" NOT NULL";
+                }else{
+                    script+=" NULL";
                 }
-                if(col.getUQ()){
+                if(col.getUQ())
                     script+=" UNIQUE";
-                }
+                if(col.getUN())
+                    script+=" UNSIGNED";
+                if(col.getAI())
+                    script+=" AUTO_INCREMENT";
                 script+=",\n";
             }
+            script += "PRIMARY KEY (";
+            for(int k=0;k<llavePrimaria.size();k++){
+                script += llavePrimaria.get(k);
+                if(k!=llavePrimaria.size()-1){
+                    script += ", ";
+                }
+            }           
+            script += "));";
             System.out.println("=========================================");
-            script += ");";
             System.out.println(script);
             script = "";
         }
