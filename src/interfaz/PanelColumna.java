@@ -37,8 +37,7 @@ public class PanelColumna extends javax.swing.JPanel {
         this.ventana = ventana;
         info = col;
         //this.posicion = posicion;
-        //info = columnas.get(posicion);
-        
+        //info = columnas.get(posicion)
         expDecimal = "(\\d+)\\s*,\\s*(\\d+)";
         pat = Pattern.compile(expDecimal);
         expEnumSet = "('(\\w+)'\\s*,\\s*)*'(\\w*)'";
@@ -148,9 +147,9 @@ public class PanelColumna extends javax.swing.JPanel {
         checkAI.setForeground(new java.awt.Color(255, 255, 255));
         checkAI.setText("AI");
         checkAI.setToolTipText("Auto Incremento");
-        checkAI.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                checkAIActionPerformed(evt);
+        checkAI.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                checkAutoIncStateChanged(evt);
             }
         });
 
@@ -248,36 +247,43 @@ public class PanelColumna extends javax.swing.JPanel {
         info.setUN(checkUN.isSelected());
     }//GEN-LAST:event_checkUNActionPerformed
 
-    private void checkAIActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkAIActionPerformed
-        info.setAI(checkAI.isSelected());
-    }//GEN-LAST:event_checkAIActionPerformed
-
     private void comboTipoStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_comboTipoStateChanged
         info.setTipo(tipoCol.getSelectedIndex());
+        configCampoParametros();
+        configModificadores();
+    }//GEN-LAST:event_comboTipoStateChanged
+
+    private void configValoresCampo(String texto,boolean enabled,String toolTip){
+        parametros.setText(texto);
+        parametros.setEnabled(enabled);
+        parametros.setToolTipText(toolTip);
+    }
+    
+    private void configCampoParametros(){
         switch(tipoCol.getSelectedIndex()){
             case Tipo.TINYINT:
             case Tipo.SMALLINT:
             case Tipo.MEDIUMINT:
             case Tipo.INT:
             case Tipo.BIGINT:
-                configCampoParametros("",true,"Ancho de visualización");
+                configValoresCampo("",true,"Ancho de visualización");
                 break;              
             case Tipo.FLOAT:
             case Tipo.CHAR:
             case Tipo.BINARY:
             case Tipo.TEXT:
-                configCampoParametros("",true,"Tamaño");
+                configValoresCampo("",true,"Tamaño");
                 break;
             case Tipo.VARCHAR:
             case Tipo.VARBINARY:
-                configCampoParametros("45",true,"Tamaño");
+                configValoresCampo("45",true,"Tamaño");
                 break;
             case Tipo.DECIMAL:
-                configCampoParametros("",true,"Número total de dígitos, número de dígitos decimales");
+                configValoresCampo("",true,"Número total de dígitos, número de dígitos decimales");
                 break;
             case Tipo.SET:
             case Tipo.ENUM:
-                configCampoParametros("''",true,"Lista de elementos");
+                configValoresCampo("''",true,"Lista de elementos");
                 break;
             case Tipo.DOUBLE: 
             case Tipo.DATE: 
@@ -285,15 +291,28 @@ public class PanelColumna extends javax.swing.JPanel {
             case Tipo.TIME:
             case Tipo.TIMESTAMP:
             case Tipo.YEAR:   
-                configCampoParametros("",false,"");
+                configValoresCampo("",false,"");
                 break;
         }
-    }//GEN-LAST:event_comboTipoStateChanged
-
-    private void configCampoParametros(String texto,boolean enabled,String toolTip){
-        parametros.setText(texto);
-        parametros.setEnabled(enabled);
-        parametros.setToolTipText(toolTip);
+    }
+    
+    /* Deshabilitar la opción UNSIGNED si el tipo de dato seleccionado no es numérico*/
+    private void configModificadores(){
+        switch(tipoCol.getSelectedIndex()){
+            case Tipo.TINYINT:
+            case Tipo.SMALLINT:
+            case Tipo.MEDIUMINT:
+            case Tipo.INT:
+            case Tipo.BIGINT:
+            case Tipo.FLOAT:
+            case Tipo.DECIMAL:
+            case Tipo.DOUBLE:
+                checkUN.setEnabled(true);
+                break;              
+            default:
+                checkUN.setEnabled(false);
+                break;
+        }
     }
     
     private void parametrosFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_parametrosFocusLost
@@ -482,6 +501,10 @@ public class PanelColumna extends javax.swing.JPanel {
             parametros.transferFocus();
         }
     }//GEN-LAST:event_parametrosKeyReleased
+
+    private void checkAutoIncStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_checkAutoIncStateChanged
+         info.setAI(checkAI.isSelected());
+    }//GEN-LAST:event_checkAutoIncStateChanged
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JCheckBox checkAI;
