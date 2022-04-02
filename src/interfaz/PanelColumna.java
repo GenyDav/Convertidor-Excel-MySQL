@@ -25,6 +25,8 @@ public class PanelColumna extends javax.swing.JPanel {
     Pattern patronEnumSet;
     Pattern coma;
     JDialog ventana;
+    ButtonGroup grupo;
+    boolean estadoAnterior;
     
     /**
      * Creates new form PanelColumna
@@ -43,7 +45,8 @@ public class PanelColumna extends javax.swing.JPanel {
         expEnumSet = "('(\\w+)'\\s*,\\s*)*'(\\w*)'";
         patronEnumSet = Pattern.compile(expEnumSet);
         coma = Pattern.compile(",");
-        grupo.add(checkAI);
+        this.grupo = grupo;
+        this.grupo.add(checkAI);
         
         cargarDatos();
     }
@@ -152,6 +155,11 @@ public class PanelColumna extends javax.swing.JPanel {
                 checkAutoIncStateChanged(evt);
             }
         });
+        checkAI.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                checkAutoIncActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -223,6 +231,7 @@ public class PanelColumna extends javax.swing.JPanel {
         checkUQ.setSelected(info.getUQ());
         checkUN.setSelected(info.getUN());
         checkAI.setSelected(info.getAI());
+        estadoAnterior = false;
     }
     
     private void checkPKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkPKActionPerformed
@@ -230,8 +239,21 @@ public class PanelColumna extends javax.swing.JPanel {
             info.setPK(true);
             info.setNN(true);
             checkNN.setSelected(true);
+            switch(tipoCol.getSelectedIndex()){
+                case Tipo.TINYINT:
+                case Tipo.SMALLINT:
+                case Tipo.MEDIUMINT:
+                case Tipo.INT:
+                case Tipo.BIGINT:
+                    checkAI.setEnabled(true);
+                    break;
+            }
         }else{
             info.setPK(false);
+            info.setAI(false);
+            checkAI.setEnabled(false);
+            grupo.clearSelection();
+            estadoAnterior = false;
         }
     }//GEN-LAST:event_checkPKActionPerformed
 
@@ -304,13 +326,23 @@ public class PanelColumna extends javax.swing.JPanel {
             case Tipo.MEDIUMINT:
             case Tipo.INT:
             case Tipo.BIGINT:
+                System.out.println("Cambiando modificadores...");
+                checkUN.setEnabled(true);
+                if(info.getPK()){
+                    checkAI.setEnabled(true);
+                }else{
+                    checkAI.setEnabled(false);
+                }
+                break;
             case Tipo.FLOAT:
             case Tipo.DECIMAL:
             case Tipo.DOUBLE:
                 checkUN.setEnabled(true);
+                checkAI.setEnabled(false);
                 break;              
             default:
                 checkUN.setEnabled(false);
+                checkAI.setEnabled(false);
                 break;
         }
     }
@@ -503,8 +535,25 @@ public class PanelColumna extends javax.swing.JPanel {
     }//GEN-LAST:event_parametrosKeyReleased
 
     private void checkAutoIncStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_checkAutoIncStateChanged
-         info.setAI(checkAI.isSelected());
+        info.setAI(checkAI.isSelected());
+        System.out.println("info.setAI: "+info.getAI());
     }//GEN-LAST:event_checkAutoIncStateChanged
+
+    private void checkAutoIncActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkAutoIncActionPerformed
+        /*
+        System.out.println("estadoAnterior: "+estadoAnterior);
+        System.out.println("checkAI: "+checkAI.isSelected());*/
+        /*Hacer que el checkbox se actualice correctamente*/
+        if(estadoAnterior == checkAI.isSelected()){
+            if(checkAI.isSelected()){
+                grupo.clearSelection();
+                estadoAnterior = false;
+            }else
+                checkAI.setSelected(true);
+        }else{
+            estadoAnterior = checkAI.isSelected();
+        }
+    }//GEN-LAST:event_checkAutoIncActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JCheckBox checkAI;
