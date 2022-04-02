@@ -1425,6 +1425,7 @@ public class InterfazGrafica extends javax.swing.JFrame {
             System.out.println("=========================================");
             System.out.println(script);
             script = "";
+            llavePrimaria.clear();
         }
     }
     
