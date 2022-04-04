@@ -5,6 +5,7 @@
  */
 package interfaz;
 
+import java.awt.event.ItemEvent;
 import java.awt.event.KeyEvent;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -26,7 +27,8 @@ public class PanelColumna extends javax.swing.JPanel {
     Pattern coma;
     JDialog ventana;
     ButtonGroup grupo;
-    boolean estadoAnterior;
+    boolean estadoCheckBox;
+    boolean clic;
     
     /**
      * Creates new form PanelColumna
@@ -222,18 +224,22 @@ public class PanelColumna extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void cargarDatos(){
+        System.out.println("cargarDatos():");
         nombreCol.setText(info.getNombre());
-        tipoCol.setSelectedIndex(info.getTipo());
         //System.err.println(info.getTipo());
-        parametros.setText(info.getParametros());
         checkPK.setSelected(info.getPK());
         checkNN.setSelected(info.getNN());
         checkUQ.setSelected(info.getUQ());
         checkUN.setSelected(info.getUN());
         checkAI.setSelected(info.getAI());
-        estadoAnterior = false;
+        estadoCheckBox = info.getAI();
+        clic = false;
+        //System.out.println("Auto Incremento: " + info.getAI());
+        tipoCol.setSelectedIndex(info.getTipo());
+        parametros.setText(info.getParametros());
     }
     
+    /* Checkbox de llave primaria */
     private void checkPKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkPKActionPerformed
         if(checkPK.isSelected()){
             info.setPK(true);
@@ -250,10 +256,12 @@ public class PanelColumna extends javax.swing.JPanel {
             }
         }else{
             info.setPK(false);
-            info.setAI(false);
             checkAI.setEnabled(false);
-            grupo.clearSelection();
-            estadoAnterior = false;
+            if(checkAI.isSelected()){
+                //info.setAI(false);
+                grupo.clearSelection();
+            }
+            //estadoCheckBox = false;
         }
     }//GEN-LAST:event_checkPKActionPerformed
 
@@ -270,9 +278,11 @@ public class PanelColumna extends javax.swing.JPanel {
     }//GEN-LAST:event_checkUNActionPerformed
 
     private void comboTipoStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_comboTipoStateChanged
-        info.setTipo(tipoCol.getSelectedIndex());
-        configCampoParametros();
-        configModificadores();
+        if(evt.getStateChange()==ItemEvent.SELECTED){
+            info.setTipo(tipoCol.getSelectedIndex());
+            configCampoParametros();
+            configModificadores();
+        }
     }//GEN-LAST:event_comboTipoStateChanged
 
     private void configValoresCampo(String texto,boolean enabled,String toolTip){
@@ -318,20 +328,26 @@ public class PanelColumna extends javax.swing.JPanel {
         }
     }
     
-    /* Deshabilitar la opción UNSIGNED si el tipo de dato seleccionado no es numérico*/
+    /*  
+    Deshabilitar la opción UNSIGNED si el tipo de dato seleccionado no es numérico
+    Deshabilitar la opción AUTO_INCREMENT si el tipo de dato seleccionado es distinto de algún INTEGER y el campo no es llave primaria
+    */  
     private void configModificadores(){
+        System.out.println("Cambiando modificadores...");
         switch(tipoCol.getSelectedIndex()){
             case Tipo.TINYINT:
             case Tipo.SMALLINT:
             case Tipo.MEDIUMINT:
             case Tipo.INT:
             case Tipo.BIGINT:
-                System.out.println("Cambiando modificadores...");
                 checkUN.setEnabled(true);
                 if(info.getPK()){
                     checkAI.setEnabled(true);
                 }else{
                     checkAI.setEnabled(false);
+                    //grupo.clearSelection();
+                    //estadoCheckBox = false;
+                    //info.setAI(false);
                 }
                 break;
             case Tipo.FLOAT:
@@ -339,10 +355,22 @@ public class PanelColumna extends javax.swing.JPanel {
             case Tipo.DOUBLE:
                 checkUN.setEnabled(true);
                 checkAI.setEnabled(false);
+                if(checkAI.isSelected()){
+                    grupo.clearSelection();
+                }
+                //info.setAI(false);
+                //System.out.println("Cambiando a false 1");
                 break;              
             default:
                 checkUN.setEnabled(false);
                 checkAI.setEnabled(false);
+                if(checkAI.isSelected()){
+                    grupo.clearSelection();
+                }
+                //estadoCheckBox = false;
+                //info.setAI(false);
+                //System.out.println("Indice: "+tipoCol.getSelectedIndex());
+                //System.out.println("Cambiando a false 2");
                 break;
         }
     }
@@ -362,7 +390,7 @@ public class PanelColumna extends javax.swing.JPanel {
                             throw new Exception();
                         }else{
                             info.setParametros(entrada);
-                            System.out.println("PARAMETROS: "+info.getParametros());
+                            //System.out.println("PARAMETROS: "+info.getParametros());
                         }
                     }   
                 }catch(Exception e){
@@ -382,7 +410,7 @@ public class PanelColumna extends javax.swing.JPanel {
                         Matcher mat = pat.matcher(entrada);
                         int n1,n2;
                         if (mat.matches()) {
-                            System.out.println("Regexp encontrada");
+                            //System.out.println("Regexp encontrada");
                             n1 = Integer.parseInt(mat.group(1));
                             n2 = Integer.parseInt(mat.group(2));
                             //System.out.println("Sujeto:"+mat.group(1));
@@ -393,7 +421,7 @@ public class PanelColumna extends javax.swing.JPanel {
                                 info.setParametros(entrada);
                             }
                         } else {
-                            System.err.println("Regexp NO encontrada");
+                            //System.err.println("Regexp NO encontrada");
                             throw new Exception(); 
                         }
                     }
@@ -448,7 +476,7 @@ public class PanelColumna extends javax.swing.JPanel {
                 Matcher mat = patronEnumSet.matcher(entrada);
                 try{
                     if(mat.matches()){
-                        System.out.println("Regexp encontrada"); 
+                        //System.out.println("Regexp encontrada"); 
                         info.setParametros(entrada);
                         // Verificar el número de elementos en la lista
                         if((tipoCol.getSelectedIndex()==Tipo.SET && obtenerNumElementos(entrada)>64)
@@ -456,7 +484,7 @@ public class PanelColumna extends javax.swing.JPanel {
                             throw new Exception();                 
                         } 
                     }else{
-                        System.err.println("Regexp NO encontrada");
+                        //System.err.println("Regexp NO encontrada");
                         throw new Exception();
                     }
                 }catch(Exception e){
@@ -524,7 +552,7 @@ public class PanelColumna extends javax.swing.JPanel {
         while(mat.find()){
             numElementos++;
         }
-        System.out.println("numero de elementos: "+(numElementos+1));
+        //System.out.println("numero de elementos: "+(numElementos+1));
         return numElementos+1;
     }
     
@@ -535,26 +563,44 @@ public class PanelColumna extends javax.swing.JPanel {
     }//GEN-LAST:event_parametrosKeyReleased
 
     private void checkAutoIncStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_checkAutoIncStateChanged
-        info.setAI(checkAI.isSelected());
-        System.out.println("info.setAI: "+info.getAI());
+        /*info.setAI(checkAI.isSelected());
+        System.out.println("info.setAI: "+info.getAI());*/
+        System.out.println("AI cambió su estado en la columna "+ info.getNombre());
+        if(!checkAI.isSelected()&&!clic){
+            System.out.println("Sin hacer clic");
+            estadoCheckBox = false;
+            info.setAI(false);
+        }
+        //info.setAI(estadoCheckBox);
+        //System.out.println("info.getAI: "+info.getAI());
     }//GEN-LAST:event_checkAutoIncStateChanged
 
     private void checkAutoIncActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkAutoIncActionPerformed
-        /*
-        System.out.println("estadoAnterior: "+estadoAnterior);
-        System.out.println("checkAI: "+checkAI.isSelected());*/
-        /*Hacer que el checkbox se actualice correctamente*/
-        if(estadoAnterior == checkAI.isSelected()){
+        clic = true;
+        System.out.println("Clic en AutoIncrement");
+        System.out.println(checkAI.isSelected());
+        if(!estadoCheckBox){
+            //estadoAnterior = true;
+        }else{  
+            grupo.clearSelection();
+            //estadoAnterior = false;
+        }
+        estadoCheckBox = !estadoCheckBox;
+        info.setAI(estadoCheckBox);
+        System.out.println("estado: " + estadoCheckBox);
+        clic = false;
+        /*if(estadoAnterior == checkAI.isSelected()){ // isSelected siempre es true
             if(checkAI.isSelected()){
                 grupo.clearSelection();
                 estadoAnterior = false;
-            }else
-                checkAI.setSelected(true);
+            }else{checkAI.setSelected(true);} 
         }else{
-            estadoAnterior = checkAI.isSelected();
-        }
+            //estadoAnterior = checkAI.isSelected();
+            estadoAnterior = true;
+        }*/
+        System.out.println("--------------------");
     }//GEN-LAST:event_checkAutoIncActionPerformed
-
+    // Revisar si el script esta bien
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JCheckBox checkAI;
     private javax.swing.JCheckBox checkNN;
