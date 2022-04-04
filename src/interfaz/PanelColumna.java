@@ -289,6 +289,7 @@ public class PanelColumna extends javax.swing.JPanel {
         parametros.setText(texto);
         parametros.setEnabled(enabled);
         parametros.setToolTipText(toolTip);
+        info.setParametros(texto);   
     }
     
     private void configCampoParametros(){
@@ -563,8 +564,6 @@ public class PanelColumna extends javax.swing.JPanel {
     }//GEN-LAST:event_parametrosKeyReleased
 
     private void checkAutoIncStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_checkAutoIncStateChanged
-        /*info.setAI(checkAI.isSelected());
-        System.out.println("info.setAI: "+info.getAI());*/
         System.out.println("AI cambió su estado en la columna "+ info.getNombre());
         if(!checkAI.isSelected()&&!clic){
             System.out.println("Sin hacer clic");
@@ -589,18 +588,9 @@ public class PanelColumna extends javax.swing.JPanel {
         info.setAI(estadoCheckBox);
         System.out.println("estado: " + estadoCheckBox);
         clic = false;
-        /*if(estadoAnterior == checkAI.isSelected()){ // isSelected siempre es true
-            if(checkAI.isSelected()){
-                grupo.clearSelection();
-                estadoAnterior = false;
-            }else{checkAI.setSelected(true);} 
-        }else{
-            //estadoAnterior = checkAI.isSelected();
-            estadoAnterior = true;
-        }*/
         System.out.println("--------------------");
     }//GEN-LAST:event_checkAutoIncActionPerformed
-    // Revisar si el script esta bien
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JCheckBox checkAI;
     private javax.swing.JCheckBox checkNN;
