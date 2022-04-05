@@ -89,6 +89,11 @@ public class PanelColumna extends javax.swing.JPanel {
                 comboTipoStateChanged(evt);
             }
         });
+        tipoCol.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                tipoColFocusLost(evt);
+            }
+        });
 
         parametros.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         parametros.setText("0");
@@ -224,9 +229,8 @@ public class PanelColumna extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void cargarDatos(){
-        System.out.println("cargarDatos():");
+        //System.out.println(info.getNombre()+": "+Tipo.TIPO[info.getTipo()]+"("+info.getParametros()+")");
         nombreCol.setText(info.getNombre());
-        //System.err.println(info.getTipo());
         checkPK.setSelected(info.getPK());
         checkNN.setSelected(info.getNN());
         checkUQ.setSelected(info.getUQ());
@@ -234,9 +238,9 @@ public class PanelColumna extends javax.swing.JPanel {
         checkAI.setSelected(info.getAI());
         estadoCheckBox = info.getAI();
         clic = false;
-        //System.out.println("Auto Incremento: " + info.getAI());
         tipoCol.setSelectedIndex(info.getTipo());
         parametros.setText(info.getParametros());
+        
     }
     
     /* Checkbox de llave primaria */
@@ -258,10 +262,8 @@ public class PanelColumna extends javax.swing.JPanel {
             info.setPK(false);
             checkAI.setEnabled(false);
             if(checkAI.isSelected()){
-                //info.setAI(false);
                 grupo.clearSelection();
             }
-            //estadoCheckBox = false;
         }
     }//GEN-LAST:event_checkPKActionPerformed
 
@@ -289,7 +291,6 @@ public class PanelColumna extends javax.swing.JPanel {
         parametros.setText(texto);
         parametros.setEnabled(enabled);
         parametros.setToolTipText(toolTip);
-        info.setParametros(texto);   
     }
     
     private void configCampoParametros(){
@@ -334,7 +335,7 @@ public class PanelColumna extends javax.swing.JPanel {
     Deshabilitar la opción AUTO_INCREMENT si el tipo de dato seleccionado es distinto de algún INTEGER y el campo no es llave primaria
     */  
     private void configModificadores(){
-        System.out.println("Cambiando modificadores...");
+        //System.out.println("Cambiando modificadores...");
         switch(tipoCol.getSelectedIndex()){
             case Tipo.TINYINT:
             case Tipo.SMALLINT:
@@ -344,11 +345,8 @@ public class PanelColumna extends javax.swing.JPanel {
                 checkUN.setEnabled(true);
                 if(info.getPK()){
                     checkAI.setEnabled(true);
-                }else{
+                }else{ //?
                     checkAI.setEnabled(false);
-                    //grupo.clearSelection();
-                    //estadoCheckBox = false;
-                    //info.setAI(false);
                 }
                 break;
             case Tipo.FLOAT:
@@ -359,8 +357,6 @@ public class PanelColumna extends javax.swing.JPanel {
                 if(checkAI.isSelected()){
                     grupo.clearSelection();
                 }
-                //info.setAI(false);
-                //System.out.println("Cambiando a false 1");
                 break;              
             default:
                 checkUN.setEnabled(false);
@@ -368,10 +364,6 @@ public class PanelColumna extends javax.swing.JPanel {
                 if(checkAI.isSelected()){
                     grupo.clearSelection();
                 }
-                //estadoCheckBox = false;
-                //info.setAI(false);
-                //System.out.println("Indice: "+tipoCol.getSelectedIndex());
-                //System.out.println("Cambiando a false 2");
                 break;
         }
     }
@@ -391,21 +383,20 @@ public class PanelColumna extends javax.swing.JPanel {
                             throw new Exception();
                         }else{
                             info.setParametros(entrada);
-                            //System.out.println("PARAMETROS: "+info.getParametros());
                         }
-                    }   
+                    }else{
+                        info.setParametros("");
+                    }
                 }catch(Exception e){
                     mostrarMsgError(
                         "\nPuede dejar el campo vacío o incluir"
                         + "\nun valor numérico ubicado entre 1 y 255.  "
                     );
-                    parametros.setText("");
+                    parametros.setText(info.getParametros());
+                    //info.setParametros("");
                 }
                 break;
             case Tipo.DECIMAL:               
-                //String expDecimal = "(\\d+)\\s*,\\s*(\\d+)";
-                //Pattern pat = Pattern.compile(expDecimal);
-                //String input = parametros.getText();
                 try{
                     if(!entrada.equals("")){
                         Matcher mat = pat.matcher(entrada);
@@ -425,6 +416,8 @@ public class PanelColumna extends javax.swing.JPanel {
                             //System.err.println("Regexp NO encontrada");
                             throw new Exception(); 
                         }
+                    }else{
+                        info.setParametros("");
                     }
                 }catch(Exception e){
                     mostrarMsgError(
@@ -433,7 +426,8 @@ public class PanelColumna extends javax.swing.JPanel {
                         + "\nEl valor máximo aceptado para M es 65, el valor máximo aceptado para D es 30. "
                         + "\nM debe ser mayor o igual a D."
                     );
-                    parametros.setText("");
+                    parametros.setText(info.getParametros());
+                    //info.setParametros("");
                 }
                 break;
             case Tipo.FLOAT:
@@ -445,13 +439,16 @@ public class PanelColumna extends javax.swing.JPanel {
                         }else{
                             info.setParametros(entrada);
                         }
-                    }
+                    }else{
+                        info.setParametros("");
+                    } 
                 }catch(Exception e){
                     mostrarMsgError(
                         "\nPuede dejar el campo vacío o incluir"
                         + "\nun valor numérico ubicado entre 0 y 53.  "
                     );
-                    parametros.setText("");
+                    parametros.setText(info.getParametros());
+                    //info.setParametros("");
                 }
                 break;
             case Tipo.TEXT:
@@ -463,13 +460,16 @@ public class PanelColumna extends javax.swing.JPanel {
                         }else{
                             info.setParametros(entrada);
                         }
-                    }
+                    }else{
+                        info.setParametros("");
+                    } 
                 }catch(Exception e){
                     mostrarMsgError(
                         "\nPuede dejar el campo vacío o incluir"
                         + "\nun valor numérico igual o mayor a cero.  "
                     );
-                    parametros.setText("");
+                    parametros.setText(info.getParametros());
+                    //info.setParametros("");
                 }
                 break;
             case Tipo.ENUM:
@@ -495,7 +495,8 @@ public class PanelColumna extends javax.swing.JPanel {
                         + "\nPara el tipo SET se admiten como máximo 64 valores distintos.  "
                         + "\nPara el tipo ENUM se admiten como máximo 65,535 valores distintos.  "
                     );
-                    parametros.setText("''");
+                    //parametros.setText("''");
+                    parametros.setText(info.getParametros());
                 }
                 break;
             case Tipo.CHAR:
@@ -508,13 +509,16 @@ public class PanelColumna extends javax.swing.JPanel {
                         }else{
                             info.setParametros(entrada);
                         }
-                    }
+                    }else{
+                        info.setParametros("");
+                    } 
                 }catch(Exception e){
                     mostrarMsgError(
                         "\nPuede dejar el campo vacío o incluir"
                         + "\nun valor numérico ubicado entre 0 y 255.  "
                     );
-                    parametros.setText("");
+                    parametros.setText(info.getParametros());
+                    //info.setParametros("");
                 }
                 break;
             case Tipo.VARCHAR:
@@ -530,11 +534,12 @@ public class PanelColumna extends javax.swing.JPanel {
                     mostrarMsgError(
                         "\nPuede incluir un valor numérico ubicado entre  "
                         + "\n0 y 65,535."
-                );
-                    parametros.setText("45");
+                    );
+                    parametros.setText(info.getParametros());
+                    //info.setParametros("45");
                 }
                 break;
-        }
+        } 
     }//GEN-LAST:event_parametrosFocusLost
 
     private void mostrarMsgError(String mensaje){
@@ -564,9 +569,9 @@ public class PanelColumna extends javax.swing.JPanel {
     }//GEN-LAST:event_parametrosKeyReleased
 
     private void checkAutoIncStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_checkAutoIncStateChanged
-        System.out.println("AI cambió su estado en la columna "+ info.getNombre());
+        //System.out.println("AI cambió su estado en la columna "+ info.getNombre());
         if(!checkAI.isSelected()&&!clic){
-            System.out.println("Sin hacer clic");
+            //System.out.println("Sin hacer clic");
             estadoCheckBox = false;
             info.setAI(false);
         }
@@ -576,8 +581,8 @@ public class PanelColumna extends javax.swing.JPanel {
 
     private void checkAutoIncActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkAutoIncActionPerformed
         clic = true;
-        System.out.println("Clic en AutoIncrement");
-        System.out.println(checkAI.isSelected());
+        //System.out.println("Clic en AutoIncrement");
+        //System.out.println(checkAI.isSelected());
         if(!estadoCheckBox){
             //estadoAnterior = true;
         }else{  
@@ -586,10 +591,14 @@ public class PanelColumna extends javax.swing.JPanel {
         }
         estadoCheckBox = !estadoCheckBox;
         info.setAI(estadoCheckBox);
-        System.out.println("estado: " + estadoCheckBox);
+        //System.out.println("estado: " + estadoCheckBox);
         clic = false;
-        System.out.println("--------------------");
+        //System.out.println("--------------------");
     }//GEN-LAST:event_checkAutoIncActionPerformed
+
+    private void tipoColFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tipoColFocusLost
+        info.setParametros(parametros.getText());  
+    }//GEN-LAST:event_tipoColFocusLost
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JCheckBox checkAI;
