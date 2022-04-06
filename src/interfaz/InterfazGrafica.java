@@ -1222,15 +1222,15 @@ public class InterfazGrafica extends javax.swing.JFrame {
                 null,           // opciones del combo box
                 "Nombre nuevo"  // texto dentro del campo
             );
-            System.out.println("Nombre de la base de datos: "+nombreBase);
+            //System.out.println("Nombre de la base de datos: "+nombreBase);
             if(nombreBase.length()>0){ // comprobar que el usuario escriba algo
                 mat = patron.matcher(nombreBase);
                 if(mat.matches()){
-                    System.out.println("Regexp encontrada");
+                    //System.out.println("Regexp encontrada");
                     // crear la base de datos
-                    crearBase(nombreBase);
+                    importarArchivo(nombreBase);
                 }else{
-                    System.err.println("Regexp no encontrada");
+                    //System.err.println("Regexp no encontrada");
                     throw new Exception();
                 }
             }else{
@@ -1256,9 +1256,9 @@ public class InterfazGrafica extends javax.swing.JFrame {
             modeloListaExcel.addElement(new ElementoLista(comboHojas.getSelectedItem().toString(),comboHojas.getSelectedIndex()));
             seleccionHojasExcel.setSelectedIndex(modeloListaExcel.getSize()-1);
             listaHojas.get(comboHojas.getSelectedIndex()).setSeleccionado(true);
-            for(int i=0;i<listaHojas.size();i++){
+            /*for(int i=0;i<listaHojas.size();i++){
                 System.out.print("["+listaHojas.get(i).getSeleccionado()+"]");
-            }System.out.println();
+            }System.out.println();*/
             labelSelTablaExcel.setText("Tabla agregada a la lista de importación");
             btnQuitarExcel.setEnabled(true);
             btnBorrarExcel.setEnabled(true);
@@ -1285,7 +1285,7 @@ public class InterfazGrafica extends javax.swing.JFrame {
                 nomArch = sa.getSelectedFile().getName();
                 rutaArch = sa.getSelectedFile().getPath();
                 File archivo = new File(rutaArch);
-                System.out.println("Tamaño del archivo: " + archivo.length());
+                //System.out.println("Tamaño del archivo: " + archivo.length());
                 if(archivo.length()==0){
                     tabla.setModel(new DefaultTableModel());
                     JOptionPane.showMessageDialog(
@@ -1313,11 +1313,11 @@ public class InterfazGrafica extends javax.swing.JFrame {
                     new Thread(){ // esperar a que se cargue el archivo para obtener el número de hojas
                         @Override
                         public void run(){
-                            System.out.println("Ejecutando hilo");
+                            //System.out.println("Ejecutando hilo");
                             while(lector.getLibro()==null){
                                 //System.out.println("Esperando libro");
                             }
-                            System.out.println("Libro cargado");
+                            //System.out.println("Libro cargado");
                         }
                     }.start();
                     labelArchivo.setText("  " + nomArch );  
@@ -1330,40 +1330,22 @@ public class InterfazGrafica extends javax.swing.JFrame {
 
     private void btnTiposActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTiposActionPerformed
         TablaLista tabla;
-        System.out.println("Información - número de hojas: " +listaHojas.size());
+        /*System.out.println("Información - número de hojas: " +listaHojas.size());
         for(int i=0;i<listaHojas.size();i++){
             tabla = listaHojas.get(i);
             tabla.mostrarColumnas();
             System.out.println();
-        }
+        }*/
         String nomTabla = listaHojas.get(comboHojas.getSelectedIndex()).getNombre();
         ArrayList<InfoColumna> columnas = listaHojas.get(comboHojas.getSelectedIndex()).obtenerColumnas();
         new ConfigTipos(this,true,nomTabla,columnas).setVisible(true);
     }//GEN-LAST:event_btnTiposActionPerformed
-    
-    // agregar un elemento a la lista de exportacion/importacion
-    /*public void agregarElementoLista(DefaultListModel modeloLista,ArrayList<TablaLista> lista,JList seleccion,JComboBox combo,JLabel label,JButton btnQuitar,JButton btnBorrar,String msj,String msjAdvertencia){
-        if(!lista.get(combo.getSelectedIndex()).getSeleccionado()){            
-            //System.out.println("No seleccionado..." + combo.getSelectedIndex());
-            modeloLista.addElement(new ElementoLista(combo.getSelectedItem().toString(),combo.getSelectedIndex()));
-            seleccion.setSelectedIndex(modeloLista.getSize()-1);
-            lista.get(combo.getSelectedIndex()).setSeleccionado(true);
-            for(int i=0;i<lista.size();i++){
-                System.out.print("["+lista.get(i).getSeleccionado()+"]");
-            }System.out.println();
-            label.setText(msj);
-            btnQuitar.setEnabled(true);
-            btnBorrar.setEnabled(true);
-        }else{
-            label.setText(msjAdvertencia);
-        }
-    }*/
-    
-    public void crearBase(String nombre){
+        
+    public void importarArchivo(String nombre){
         List<TablaLista> lista;
         String script;
         if(tablasCompletasExcel.isSelected()){
-               lista = listaHojas; 
+            lista = listaHojas; 
         }else{
             lista = listaHojas.stream()
                 .filter(elemento->elemento.getSeleccionado())
@@ -1371,7 +1353,13 @@ public class InterfazGrafica extends javax.swing.JFrame {
         }
         try{
             conn.crearBase(nombre);
-            crearScript(nombre,lista);
+            for(int i=0;i<lista.size();i++){
+                script = crearScript(nombre,lista.get(i));
+                System.out.println(script);
+                conn.crearTabla(script);
+                
+                System.out.println("=========================================");
+            }
         }catch(SQLException ex){
             ex.printStackTrace();
             System.out.println(ex.getErrorCode());
@@ -1388,45 +1376,45 @@ public class InterfazGrafica extends javax.swing.JFrame {
         }
     }
     
-    public void crearScript(String nombreBase, List<TablaLista> lista){
+    public String crearScript(String nombreBase,TablaLista hoja){
+        System.out.println("Indice de la hoja: "+hoja.getPosicion());
         String script;
         ArrayList<String> llavePrimaria = new ArrayList<>();
-        for(int i=0;i<lista.size();i++){
-            TablaLista tablaActual = lista.get(i);
-            script = "CREATE TABLE " + nombreBase + "." + tablaActual.getNombre() + "(\n";
-            for(int j=0;j<lista.get(i).obtenerColumnas().size();j++){
-                InfoColumna col = lista.get(i).obtenerColumna(j);
-                script += col.getNombre()+" "+Tipo.TIPO[col.getTipo()];
-                if(!col.getParametros().equals(""))
-                    script+="("+col.getParametros()+")";
-                if(col.getPK())
-                    llavePrimaria.add(col.getNombre());
-                if(col.getNN()){
-                    script+=" NOT NULL";
-                }else{
-                    script+=" NULL";
-                }
-                if(col.getUQ())
-                    script+=" UNIQUE";
-                if(col.getUN())
-                    script+=" UNSIGNED";
-                if(col.getAI())
-                    script+=" AUTO_INCREMENT";
-                script+=",\n";
+        int numCol = hoja.obtenerColumnas().size();
+        script = "CREATE TABLE " + nombreBase + "." + hoja.getNombre() + "(\n";
+        for(int j=0;j<numCol;j++){
+            InfoColumna col = hoja.obtenerColumna(j);
+            script += col.getNombre()+" "+Tipo.TIPO[col.getTipo()];
+            if(!col.getParametros().equals(""))
+                script+="("+col.getParametros()+")";
+            if(col.getPK())
+                llavePrimaria.add(col.getNombre());
+            if(col.getUN())
+                script+=" UNSIGNED";
+            if(col.getNN()){
+                script+=" NOT NULL";
+            }else{
+                script+=" NULL";
             }
-            script += "PRIMARY KEY (";
+            if(col.getUQ())
+                script+=" UNIQUE";
+            if(col.getAI())
+                script+=" AUTO_INCREMENT"; 
+            if(j<numCol-1)
+                script += ",\n";
+        }
+        if(!llavePrimaria.isEmpty()){
+            script += ",\nPRIMARY KEY (";
             for(int k=0;k<llavePrimaria.size();k++){
                 script += llavePrimaria.get(k);
                 if(k!=llavePrimaria.size()-1){
                     script += ", ";
                 }
             }           
-            script += "));";
-            System.out.println("=========================================");
-            System.out.println(script);
-            script = "";
-            llavePrimaria.clear();
-        }
+            script += ")";
+        }    
+        script += ");";
+        return script;
     }
     
     public <T extends ElementoLista> void borrarElemento(JList seleccion,DefaultListModel modeloLista,ArrayList<T> lista,JLabel label,JButton btnQuitar,JButton btnBorrar,JButton btnOperacion,String msj,String msjPlural){
