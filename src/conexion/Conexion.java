@@ -71,6 +71,10 @@ public class Conexion {
         int i = s.executeUpdate("create database "+nombre+";");    
     }
     
+    public void crearTabla(String script) throws SQLException{
+        int i = s.executeUpdate(script);
+    }
+    
     public void terminarConexion(){
         if(rs!=null){
             try{
