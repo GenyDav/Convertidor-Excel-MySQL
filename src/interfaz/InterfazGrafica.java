@@ -14,8 +14,11 @@ import java.awt.event.ItemEvent;
 import java.io.File;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -29,6 +32,8 @@ import javax.swing.JTable;
 import javax.swing.UIManager;
 import javax.swing.filechooser.FileSystemView;
 import javax.swing.table.DefaultTableModel;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
 
 /**
  *
@@ -1354,11 +1359,17 @@ public class InterfazGrafica extends javax.swing.JFrame {
         try{
             conn.crearBase(nombre);
             for(int i=0;i<lista.size();i++){
-                script = crearScript(nombre,lista.get(i));
-                System.out.println(script);
-                conn.crearTabla(script);
-                
-                System.out.println("=========================================");
+                try{
+                    script = crearScriptTabla(nombre,lista.get(i));
+                    System.out.println(script);
+                    conn.modificarBase(script);
+                    script = crearScriptRegistros(nombre,lista.get(i));
+                    conn.modificarBase(script);
+                    System.out.println("=========================================");
+                }catch(SQLException ex){
+                    System.err.println(ex.getErrorCode());
+                    ex.printStackTrace();
+                }
             }
         }catch(SQLException ex){
             ex.printStackTrace();
@@ -1376,7 +1387,7 @@ public class InterfazGrafica extends javax.swing.JFrame {
         }
     }
     
-    public String crearScript(String nombreBase,TablaLista hoja){
+    public String crearScriptTabla(String nombreBase,TablaLista hoja){
         System.out.println("Indice de la hoja: "+hoja.getPosicion());
         String script;
         ArrayList<String> llavePrimaria = new ArrayList<>();
@@ -1415,6 +1426,54 @@ public class InterfazGrafica extends javax.swing.JFrame {
         }    
         script += ");";
         return script;
+    }
+    
+    public String crearScriptRegistros(String nomBase,TablaLista hoja){
+        Sheet hojaActual = lector.getLibro().getSheetAt(hoja.getPosicion());
+        Row encabezado = hojaActual.getRow(hojaActual.getFirstRowNum());
+        int numColumnas = encabezado.getPhysicalNumberOfCells();
+        int numRenglones = hojaActual.getPhysicalNumberOfRows();
+        int indiceColInicio = encabezado.getFirstCellNum();
+        
+        /*int []TiposDatosHoja = new int[numColumnas];
+        for(int i=0;i<numColumnas;i++){
+            TiposDatosHoja[i] = hoja.obtenerColumnas().get(i).getTipo();
+            System.out.println(Tipo.TIPO[TiposDatosHoja[i]]);
+        }*/
+        
+        System.out.println("Número de registros: "+hojaActual.getPhysicalNumberOfRows()); // contando el encabezado
+        String scriptInsertar = "";
+        
+        if(numRenglones>1){
+            Row renglonArch;
+            Object []renglon = new Object[numColumnas];
+            Iterator<Row> iteradorRenglon = hojaActual.rowIterator();
+            
+            scriptInsertar = "INSERT INTO "+nomBase+"."+hoja.getNombre()+" VALUES \n";
+            
+            renglonArch = iteradorRenglon.next(); // saltar el encabezado
+            while(iteradorRenglon.hasNext()){
+                renglonArch = iteradorRenglon.next();
+                scriptInsertar += "(";
+                for(int i=0;i<numColumnas;i++){
+                    //System.out.println("Columna: "+(i+indiceColInicio));
+                    renglon[i] = renglonArch.getCell(i+indiceColInicio);
+                    scriptInsertar += "'"+renglon[i]+"'";
+                    if(i!=numColumnas-1){
+                        scriptInsertar += ",";
+                    }
+                    //System.out.print("["+renglon[i]+"]");
+                }  
+                scriptInsertar += ")";
+                if(iteradorRenglon.hasNext()){
+                    scriptInsertar += ",\n";
+                }else{
+                    scriptInsertar += ";";
+                }   
+            }
+            System.out.println(scriptInsertar);
+        }  
+        return scriptInsertar;
     }
     
     public <T extends ElementoLista> void borrarElemento(JList seleccion,DefaultListModel modeloLista,ArrayList<T> lista,JLabel label,JButton btnQuitar,JButton btnBorrar,JButton btnOperacion,String msj,String msjPlural){
