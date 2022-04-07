@@ -71,7 +71,7 @@ public class Conexion {
         int i = s.executeUpdate("create database "+nombre+";");    
     }
     
-    public void crearTabla(String script) throws SQLException{
+    public void modificarBase(String script) throws SQLException{
         int i = s.executeUpdate(script);
     }
     
