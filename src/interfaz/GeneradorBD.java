@@ -28,14 +28,19 @@ public class GeneradorBD extends SwingWorker<Void,Integer>{
     private LectorExcel lector;
     private List<TablaLista> listaHojas;
     
+    private JLabel etiqueta;
+    private JProgressBar barra;
+    
     public GeneradorBD(Conexion conn,LectorExcel lector,String nomBase,List<TablaLista> listaHojas,JLabel etiqueta,JProgressBar barra){
         this.conn = conn;
         nombreBase = nomBase;
         this.lector = lector;
         this.listaHojas = listaHojas;
+        this.etiqueta = etiqueta;
+        this.barra = barra;
     }
     
-    private String crearScriptTabla(String nombreBase,TablaLista hoja){
+    private String crearScriptTabla(String nombreBase,TablaLista hoja) throws SQLException{
         System.out.println("Indice de la hoja: "+hoja.getPosicion());
         String script;
         ArrayList<String> llavePrimaria = new ArrayList<>();
@@ -76,33 +81,10 @@ public class GeneradorBD extends SwingWorker<Void,Integer>{
         return script;
     }
     
-    private void insertarRegistros(String nomBase,TablaLista hoja){
-        Sheet hojaActual = lector.getLibro().getSheetAt(hoja.getPosicion());
-        Row encabezado = hojaActual.getRow(hojaActual.getFirstRowNum());
-        int numColumnas = encabezado.getPhysicalNumberOfCells();
-        int numRenglones = hojaActual.getPhysicalNumberOfRows();
-        int indiceColInicio = encabezado.getFirstCellNum();
-        
-        System.out.println("Número de registros: "+hojaActual.getPhysicalNumberOfRows()); // contando el encabezado
-        String scriptInsertar = "";
-        
-        if(numRenglones>1){
-            Row renglonArch;
-            Iterator<Row> iteradorRenglon = hojaActual.rowIterator();
-            
-            renglonArch = iteradorRenglon.next(); // saltar el encabezado
-            while(iteradorRenglon.hasNext()){
-                renglonArch = iteradorRenglon.next();
-                scriptInsertar = crearScriptRegistro(nomBase,hoja.getNombre(),renglonArch,numColumnas,indiceColInicio);
-                System.out.println(scriptInsertar);
-                try {
-                    conn.modificarBase(scriptInsertar);
-                } catch (SQLException ex) {
-                    ex.printStackTrace();
-                    //Error 1406
-                }
-            }
-        }
+    private void crearTabla(String nombreBase,TablaLista hoja) throws SQLException{
+        String scriptTabla = crearScriptTabla(nombreBase,hoja); 
+        conn.modificarBase(scriptTabla); // crear la tabla
+        System.out.println(scriptTabla);
     }
     
     private String crearScriptRegistro(String nomBase,String nomHoja,Row renglonAct,int numColumnas, int indiceColInicio){
@@ -120,16 +102,63 @@ public class GeneradorBD extends SwingWorker<Void,Integer>{
         return scriptInsertar;
     }
     
+    private void insertarRegistros(String nomBase,TablaLista hoja){
+        Sheet hojaActual = lector.getLibro().getSheetAt(hoja.getPosicion());
+        Row encabezado = hojaActual.getRow(hojaActual.getFirstRowNum());
+        int numColumnas = encabezado.getPhysicalNumberOfCells();
+        int numRenglones = hojaActual.getPhysicalNumberOfRows();
+        int indiceColInicio = encabezado.getFirstCellNum();
+        
+        float incremento;
+        float progreso = 0F;
+        int renglon = 1;
+        
+        incremento = 100F/(hojaActual.getPhysicalNumberOfRows()-1);
+        System.out.println("Incremento: "+incremento);
+        System.out.println("Número de registros: "+hojaActual.getPhysicalNumberOfRows()); // contando el encabezado
+        String scriptInsertar = "";
+        
+        if(numRenglones>1){
+            Row renglonArch;
+            Iterator<Row> iteradorRenglon = hojaActual.rowIterator();
+            
+            renglonArch = iteradorRenglon.next(); // saltar el encabezado
+            while(iteradorRenglon.hasNext()){
+                renglonArch = iteradorRenglon.next();
+                scriptInsertar = crearScriptRegistro(nomBase,hoja.getNombre(),renglonArch,numColumnas,indiceColInicio);
+                System.out.println(scriptInsertar);
+                try{
+                    conn.modificarBase(scriptInsertar);
+                }catch(SQLException ex){
+                    ex.printStackTrace();
+                    //Error 1406
+                }finally{
+                    progreso = renglon*incremento;
+                    renglon++;
+                    System.out.println(progreso+"%");
+                    try{
+                        Thread.sleep(1);
+                        publish(Math.round(progreso));
+                    }catch(Exception e){}
+                }
+            }         
+        }
+    }
+    
     @Override
     protected Void doInBackground(){
-        String scriptTabla;
+        String nomTabla;
+        int numTablas = listaHojas.size();
         try{
+            etiqueta.setText("Iniciando la creación de la base de datos...");
             conn.crearBase(nombreBase);
             for(int i=0;i<listaHojas.size();i++){
                 try{
-                    scriptTabla = crearScriptTabla(nombreBase,listaHojas.get(i)); 
-                    conn.modificarBase(scriptTabla); // crear la tabla
-                    System.out.println(scriptTabla);
+                    nomTabla = listaHojas.get(i).getNombre();
+                    etiqueta.setText("Creando la base '"+nombreBase+"': Definiendo la estructura de la tabla '"+nomTabla+"'");              
+                    crearTabla(nombreBase,listaHojas.get(i));
+                    
+                    etiqueta.setText("Creando la base '"+nombreBase+"': Insertando datos en la tabla '"+nomTabla+"' (Tabla "+i+1+" de "+numTablas+")");
                     insertarRegistros(nombreBase,listaHojas.get(i));
                     System.out.println("=========================================");
                 }catch(SQLException ex){
@@ -139,6 +168,7 @@ public class GeneradorBD extends SwingWorker<Void,Integer>{
                     ex.printStackTrace();
                 }
             }
+            etiqueta.setText("Creación de la base de datos terminada.");
         }catch(SQLException ex){
             ex.printStackTrace();
             System.out.println(ex.getErrorCode());
@@ -152,5 +182,10 @@ public class GeneradorBD extends SwingWorker<Void,Integer>{
             }
         }
         return null;
+    }
+    
+    @Override
+    protected void process(List<Integer> chunks){
+        barra.setValue(chunks.get(0));
     }
 }
