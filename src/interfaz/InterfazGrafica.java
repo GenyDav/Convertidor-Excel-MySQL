@@ -28,6 +28,7 @@ import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
+import javax.swing.JProgressBar;
 import javax.swing.JTable;
 import javax.swing.UIManager;
 import javax.swing.filechooser.FileSystemView;
@@ -174,6 +175,7 @@ public class InterfazGrafica extends javax.swing.JFrame {
         btnAbrir = new javax.swing.JButton();
         btnTipos = new javax.swing.JButton();
         labelArchivo = new javax.swing.JLabel();
+        jButton1 = new javax.swing.JButton();
         panelExport = new javax.swing.JPanel();
         comboBases = new javax.swing.JComboBox();
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -607,6 +609,8 @@ public class InterfazGrafica extends javax.swing.JFrame {
         labelArchivo.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         labelArchivo.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(204, 204, 204)));
 
+        jButton1.setText("R");
+
         javax.swing.GroupLayout panelImportLayout = new javax.swing.GroupLayout(panelImport);
         panelImport.setLayout(panelImportLayout);
         panelImportLayout.setHorizontalGroup(
@@ -640,10 +644,13 @@ public class InterfazGrafica extends javax.swing.JFrame {
                             .addComponent(btnImportar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(jPanel12, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                     .addComponent(jSeparator2, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(barraProgreso1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(panelImportLayout.createSequentialGroup()
                         .addGap(2, 2, 2)
-                        .addComponent(info1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addComponent(info1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelImportLayout.createSequentialGroup()
+                        .addComponent(barraProgreso1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButton1)))
                 .addContainerGap(36, Short.MAX_VALUE))
         );
         panelImportLayout.setVerticalGroup(
@@ -684,7 +691,9 @@ public class InterfazGrafica extends javax.swing.JFrame {
                 .addGap(0, 0, 0)
                 .addComponent(info1, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, 0)
-                .addComponent(barraProgreso1, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(panelImportLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(barraProgreso1, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButton1))
                 .addGap(50, 50, 50))
         );
 
@@ -1347,99 +1356,34 @@ public class InterfazGrafica extends javax.swing.JFrame {
     }//GEN-LAST:event_btnTiposActionPerformed
         
     public void importarArchivo(String nombre){
-        List<TablaLista> lista;
-        String script;
+        List<TablaLista> listaHojasImportar;
         if(tablasCompletasExcel.isSelected()){
-            lista = listaHojas; 
+            listaHojasImportar = listaHojas; 
         }else{
-            lista = listaHojas.stream()
+            listaHojasImportar = listaHojas.stream()
                 .filter(elemento->elemento.getSeleccionado())
                 .collect(Collectors.toList());
         }
         try{
-            conn.crearBase(nombre);
-            for(int i=0;i<lista.size();i++){
-                try{
-                    script = crearScriptTabla(nombre,lista.get(i));
-                    System.out.println(script);
-                    conn.modificarBase(script);
-                    script = crearScriptRegistros(nombre,lista.get(i));
-                    conn.modificarBase(script);
-                    System.out.println("=========================================");
-                }catch(SQLException ex){
-                    System.err.println(ex.getErrorCode());
-                    ex.printStackTrace();
-                }
-            }
-        }catch(SQLException ex){
-            ex.printStackTrace();
-            System.out.println(ex.getErrorCode());
-            if(ex.getErrorCode()==1007){ // ya existe una base de datos con ese nombre
-                JOptionPane.showMessageDialog(
-                    this, 
-                    "Ya existe una base de datos con el nombre '" + nombre + "'.  ",
-                    "No se puede crear la base de datos", 
-                    JOptionPane.ERROR_MESSAGE
-                );
-            }
+            GeneradorBD genBD =  new GeneradorBD(conn,lector,nombre,listaHojasImportar,info1,barraProgreso1);
+            genBD.execute();
         }catch(Exception e){
             e.printStackTrace();
         }
-    }
-    
-    public String crearScriptTabla(String nombreBase,TablaLista hoja){
-        System.out.println("Indice de la hoja: "+hoja.getPosicion());
-        String script;
-        ArrayList<String> llavePrimaria = new ArrayList<>();
-        int numCol = hoja.obtenerColumnas().size();
-        script = "CREATE TABLE " + nombreBase + "." + hoja.getNombre() + "(\n";
-        for(int j=0;j<numCol;j++){
-            InfoColumna col = hoja.obtenerColumna(j);
-            script += col.getNombre()+" "+Tipo.TIPO[col.getTipo()];
-            if(!col.getParametros().equals(""))
-                script+="("+col.getParametros()+")";
-            if(col.getPK())
-                llavePrimaria.add(col.getNombre());
-            if(col.getUN())
-                script+=" UNSIGNED";
-            if(col.getNN()){
-                script+=" NOT NULL";
-            }else{
-                script+=" NULL";
-            }
-            if(col.getUQ())
-                script+=" UNIQUE";
-            if(col.getAI())
-                script+=" AUTO_INCREMENT"; 
-            if(j<numCol-1)
-                script += ",\n";
-        }
-        if(!llavePrimaria.isEmpty()){
-            script += ",\nPRIMARY KEY (";
-            for(int k=0;k<llavePrimaria.size();k++){
-                script += llavePrimaria.get(k);
-                if(k!=llavePrimaria.size()-1){
-                    script += ", ";
-                }
-            }           
-            script += ")";
-        }    
-        script += ");";
-        return script;
-    }
-    
-    public String crearScriptRegistros(String nomBase,TablaLista hoja){
+    }  
+      
+    /*public String crearScriptRegistros(String nomBase,TablaLista hoja){
         Sheet hojaActual = lector.getLibro().getSheetAt(hoja.getPosicion());
         Row encabezado = hojaActual.getRow(hojaActual.getFirstRowNum());
         int numColumnas = encabezado.getPhysicalNumberOfCells();
         int numRenglones = hojaActual.getPhysicalNumberOfRows();
         int indiceColInicio = encabezado.getFirstCellNum();
         
-        /*int []TiposDatosHoja = new int[numColumnas];
-        for(int i=0;i<numColumnas;i++){
-            TiposDatosHoja[i] = hoja.obtenerColumnas().get(i).getTipo();
-            System.out.println(Tipo.TIPO[TiposDatosHoja[i]]);
-        }*/
+        //int []TiposDatosHoja = new int[numColumnas];
+        //for(int i=0;i<numColumnas;i++){
+        //    TiposDatosHoja[i] = hoja.obtenerColumnas().get(i).getTipo();
+        //    System.out.println(Tipo.TIPO[TiposDatosHoja[i]]);
+        //}
         
         System.out.println("Número de registros: "+hojaActual.getPhysicalNumberOfRows()); // contando el encabezado
         String scriptInsertar = "";
@@ -1474,7 +1418,7 @@ public class InterfazGrafica extends javax.swing.JFrame {
             System.out.println(scriptInsertar);
         }  
         return scriptInsertar;
-    }
+    }*/
     
     public <T extends ElementoLista> void borrarElemento(JList seleccion,DefaultListModel modeloLista,ArrayList<T> lista,JLabel label,JButton btnQuitar,JButton btnBorrar,JButton btnOperacion,String msj,String msjPlural){
         int []elemBorrados = seleccion.getSelectedIndices(); // posiciones de los elementos a eliminar
@@ -1661,6 +1605,7 @@ public class InterfazGrafica extends javax.swing.JFrame {
     private javax.swing.JButton guardar_excel;
     private javax.swing.JLabel info;
     private javax.swing.JLabel info1;
+    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
