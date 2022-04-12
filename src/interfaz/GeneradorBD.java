@@ -89,16 +89,21 @@ public class GeneradorBD extends SwingWorker<Void,Integer>{
     
     private String crearScriptRegistro(String nomBase,String nomHoja,Row renglonAct,int numColumnas, int indiceColInicio){
         String scriptInsertar = "INSERT INTO " + nomBase + "." + nomHoja + " VALUES (";
-        Object []renglon = new Object[numColumnas];
-    
-        for(int i=0;i<numColumnas;i++){
-            renglon[i] = renglonAct.getCell(i+indiceColInicio);
-            scriptInsertar += "'"+renglon[i]+"'";
+        Object []celdas = new Object[numColumnas];
+        for(int i=0;i<numColumnas;i++){   
+            celdas[i] = renglonAct.getCell(i+indiceColInicio);
+            System.out.println(celdas[i]);
+            if(celdas[i]==null){              
+                scriptInsertar += "null";
+            }else{
+                scriptInsertar += "'"+celdas[i]+"'";
+            }
             if(i!=numColumnas-1){
                 scriptInsertar += ",";
             }
         }  
         scriptInsertar += ");";
+        System.out.println(scriptInsertar);
         return scriptInsertar;
     }
     
@@ -118,6 +123,13 @@ public class GeneradorBD extends SwingWorker<Void,Integer>{
         System.out.println("Número de registros: "+hojaActual.getPhysicalNumberOfRows()); // contando el encabezado
         String scriptInsertar = "";
         
+        // guardar en un array cada columna de la hoja indicando si su valor puede ser nulo o no
+        /*boolean []esNulo = new boolean[hoja.obtenerColumnas().size()];
+        for(int j=0;j<hoja.obtenerColumnas().size();j++){
+            esNulo[j] = hoja.obtenerColumnas().get(j).getNN();
+            System.out.println(esNulo[j]);
+        }*/
+        
         if(numRenglones>1){
             Row renglonArch;
             Iterator<Row> iteradorRenglon = hojaActual.rowIterator();
@@ -126,16 +138,17 @@ public class GeneradorBD extends SwingWorker<Void,Integer>{
             while(iteradorRenglon.hasNext()){
                 renglonArch = iteradorRenglon.next();
                 scriptInsertar = crearScriptRegistro(nomBase,hoja.getNombre(),renglonArch,numColumnas,indiceColInicio);
-                System.out.println(scriptInsertar);
                 try{
                     conn.modificarBase(scriptInsertar);
-                }catch(SQLException ex){
+                }catch(SQLException ex){ // errores al insertar registros
+                    System.out.println("Error en el renglón "+(renglon+1)+ ", error: "+ex.getErrorCode());
+                    System.out.println(scriptInsertar);
                     ex.printStackTrace();
                     //Error 1406
                 }finally{
                     progreso = renglon*incremento;
                     renglon++;
-                    System.out.println(progreso+"%");
+                    //System.out.println(progreso+"%");
                     try{
                         Thread.sleep(1);
                         publish(Math.round(progreso));
@@ -158,12 +171,12 @@ public class GeneradorBD extends SwingWorker<Void,Integer>{
                     etiqueta.setText("Creando la base '"+nombreBase+"': Definiendo la estructura de la tabla '"+nomTabla+"'");              
                     crearTabla(nombreBase,listaHojas.get(i));
                     
-                    etiqueta.setText("Creando la base '"+nombreBase+"': Insertando datos en la tabla '"+nomTabla+"' (Tabla "+i+1+" de "+numTablas+")");
+                    etiqueta.setText("Creando la base '"+nombreBase+"': Insertando datos en la tabla '"+nomTabla+"' (Tabla "+(i+1)+" de "+numTablas+")");
                     insertarRegistros(nombreBase,listaHojas.get(i));
                     System.out.println("=========================================");
                 }catch(SQLException ex){
                     //Errores al crear tablas
-                    System.err.println(ex.getErrorCode());
+                    System.out.println("Error al crear la tabla "+listaHojas.get(i).getNombre()+" "+ex.getErrorCode());
                     System.out.println(listaHojas.get(i).getNombre());
                     ex.printStackTrace();
                 }
