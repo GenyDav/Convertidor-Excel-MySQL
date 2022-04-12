@@ -170,9 +170,10 @@ public class GeneradorExcel extends SwingWorker<Void,Integer>{
         while(resultados.next()){
             Row reg = hoja.createRow(renglon);
             for(int i=0;i<numColumnas;i++){
-                Cell celda = reg.createCell(i);
+                //Cell celda = reg.createCell(i);
                 Object res = resultados.getObject(i+1);
-                if(res!=null){
+                if(res!=null && !res.toString().equals("")){
+                    Cell celda = reg.createCell(i);
                     if(res.getClass().getSuperclass().getSimpleName().equals("Number")){
                         Number n = (Number)res;
                         celda.setCellValue(n.doubleValue());
