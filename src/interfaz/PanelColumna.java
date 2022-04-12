@@ -69,14 +69,14 @@ public class PanelColumna extends javax.swing.JPanel {
         checkPK = new javax.swing.JCheckBox();
         checkNN = new javax.swing.JCheckBox();
         checkUQ = new javax.swing.JCheckBox();
-        jSeparator1 = new javax.swing.JSeparator();
         checkUN = new javax.swing.JCheckBox();
-        jSeparator4 = new javax.swing.JSeparator();
         checkAI = new javax.swing.JCheckBox();
 
-        jPanel2.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(102, 102, 102), 1, true));
+        jPanel2.setBackground(new java.awt.Color(102, 102, 102));
+        jPanel2.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(51, 51, 51), 2, true));
 
         nombreCol.setBackground(new java.awt.Color(255, 255, 255));
+        nombreCol.setForeground(new java.awt.Color(255, 255, 255));
         nombreCol.setText("Columna1");
         nombreCol.setToolTipText("Nombre de la columna");
 
@@ -109,54 +109,60 @@ public class PanelColumna extends javax.swing.JPanel {
             }
         });
 
-        checkPK.setBackground(new java.awt.Color(102, 102, 102));
-        checkPK.setForeground(new java.awt.Color(255, 255, 255));
+        checkPK.setBackground(new java.awt.Color(51, 51, 51));
+        checkPK.setForeground(new java.awt.Color(255, 204, 0));
         checkPK.setText("PK");
         checkPK.setToolTipText("Llave primaria");
+        checkPK.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/unchecked_PK2.png"))); // NOI18N
+        checkPK.setSelectedIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/checked_PK.png"))); // NOI18N
         checkPK.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 checkPKActionPerformed(evt);
             }
         });
 
-        checkNN.setBackground(new java.awt.Color(153, 153, 153));
+        checkNN.setBackground(new java.awt.Color(102, 102, 102));
         checkNN.setForeground(new java.awt.Color(255, 255, 255));
         checkNN.setText("NN");
         checkNN.setToolTipText("No nulo");
+        checkNN.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/unchecked.png"))); // NOI18N
+        checkNN.setSelectedIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/checked.png"))); // NOI18N
         checkNN.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 checkNNActionPerformed(evt);
             }
         });
 
-        checkUQ.setBackground(new java.awt.Color(153, 153, 153));
+        checkUQ.setBackground(new java.awt.Color(102, 102, 102));
         checkUQ.setForeground(new java.awt.Color(255, 255, 255));
         checkUQ.setText("UQ");
         checkUQ.setToolTipText("Índice único");
+        checkUQ.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/unchecked.png"))); // NOI18N
+        checkUQ.setSelectedIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/checked.png"))); // NOI18N
         checkUQ.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 checkUQActionPerformed(evt);
             }
         });
 
-        jSeparator1.setOrientation(javax.swing.SwingConstants.VERTICAL);
-
-        checkUN.setBackground(new java.awt.Color(153, 153, 153));
+        checkUN.setBackground(new java.awt.Color(102, 102, 102));
         checkUN.setForeground(new java.awt.Color(255, 255, 255));
         checkUN.setText("UN");
         checkUN.setToolTipText("Sin signo");
+        checkUN.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/unchecked.png"))); // NOI18N
+        checkUN.setSelectedIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/checked.png"))); // NOI18N
         checkUN.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 checkUNActionPerformed(evt);
             }
         });
 
-        jSeparator4.setOrientation(javax.swing.SwingConstants.VERTICAL);
-
-        checkAI.setBackground(new java.awt.Color(153, 153, 153));
+        checkAI.setBackground(new java.awt.Color(102, 102, 102));
         checkAI.setForeground(new java.awt.Color(255, 255, 255));
         checkAI.setText("AI");
         checkAI.setToolTipText("Auto Incremento");
+        checkAI.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/unchecked.png"))); // NOI18N
+        checkAI.setSelectedIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/checked.png"))); // NOI18N
         checkAI.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 checkAutoIncStateChanged(evt);
@@ -173,58 +179,54 @@ public class PanelColumna extends javax.swing.JPanel {
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap()
+                .addGap(12, 12, 12)
                 .addComponent(nombreCol, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jSeparator4, javax.swing.GroupLayout.PREFERRED_SIZE, 3, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(25, 25, 25)
                 .addComponent(tipoCol, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(parametros, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(5, 5, 5)
-                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 9, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, 0)
+                .addGap(15, 15, 15)
                 .addComponent(checkPK)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGap(2, 2, 2)
                 .addComponent(checkNN)
-                .addGap(4, 4, 4)
+                .addGap(2, 2, 2)
                 .addComponent(checkUQ)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGap(2, 2, 2)
                 .addComponent(checkUN)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGap(2, 2, 2)
                 .addComponent(checkAI)
-                .addContainerGap())
+                .addGap(6, 6, 6))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+            .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGap(3, 3, 3)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jSeparator1)
-                    .addComponent(jSeparator4, javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(nombreCol, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(tipoCol, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(parametros)
-                        .addComponent(checkPK)
-                        .addComponent(checkNN)
-                        .addComponent(checkUQ)
-                        .addComponent(checkUN)
-                        .addComponent(checkAI)))
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(nombreCol, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(parametros)
+                    .addComponent(checkPK)
+                    .addComponent(checkNN)
+                    .addComponent(checkUQ)
+                    .addComponent(checkUN)
+                    .addComponent(checkAI))
                 .addGap(3, 3, 3))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                .addGap(2, 2, 2)
+                .addComponent(tipoCol, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(5, 5, 5))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, 0))
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -607,8 +609,6 @@ public class PanelColumna extends javax.swing.JPanel {
     private javax.swing.JCheckBox checkUN;
     private javax.swing.JCheckBox checkUQ;
     private javax.swing.JPanel jPanel2;
-    private javax.swing.JSeparator jSeparator1;
-    private javax.swing.JSeparator jSeparator4;
     private javax.swing.JLabel nombreCol;
     private javax.swing.JTextField parametros;
     private javax.swing.JComboBox tipoCol;
