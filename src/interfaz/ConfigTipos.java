@@ -8,7 +8,6 @@ package interfaz;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.util.ArrayList;
-import javax.swing.UIManager;
 
 /**
  *
@@ -25,35 +24,33 @@ public class ConfigTipos extends javax.swing.JDialog {
      * @param hoja
      */
     public ConfigTipos(java.awt.Frame parent, boolean modal, String hoja,ArrayList<InfoColumna> col) {
-        super(parent, modal);
+        super(parent, modal); 
         initComponents();
-        setTitle("Configurar tipos de la columna " + hoja);
-        setPreferredSize(new Dimension(565,338));
-        pack();
-        setLocationRelativeTo(parent);
-        //setResizable(false);       
+        setTitle("Configurar tipos de la columna " + hoja);     
         listaColumnas = col;
-        
         jPanel2.setLayout(new FlowLayout(FlowLayout.CENTER));
-        /*jPanel2.add(new PanelColumna("columna1"));
-        jPanel2.add(new PanelColumna("columna2"));
-        jPanel2.add(new PanelColumna("columna3"));
-        jPanel2.add(new PanelColumna("columna4"));
-        jPanel2.add(new PanelColumna("columna5"));
-        jPanel2.add(new PanelColumna("columna6"));
-        jPanel2.add(new PanelColumna("columna7"));
-        jPanel2.add(new PanelColumna("columna8"));
-        jPanel2.add(new PanelColumna("columna9"));
-        jPanel2.add(new PanelColumna("columna10"));
-        jPanel2.add(new PanelColumna("columna11"));
-        */
+        
         for(int i=0;i<listaColumnas.size();i++){
             jPanel2.add(new PanelColumna(listaColumnas.get(i),this,grupoUnique));
         }
         
-        jPanel1.setPreferredSize(new Dimension(550,300));
-        jPanel2.setPreferredSize(new Dimension(520,((32+4)*listaColumnas.size())+5));
-        jScrollPane1.setPreferredSize(new Dimension(530, 300));
+        if(listaColumnas.size()<8){
+            jScrollPane1.getVerticalScrollBar().setEnabled(false);
+            jPanel1.setPreferredSize(new Dimension(580,0));
+            jScrollPane1.setPreferredSize(new Dimension(0, ((34+4)*listaColumnas.size())+7));
+            jPanel2.setPreferredSize(new Dimension(0,((34+4)*listaColumnas.size())+5));
+            // ajustar el tamaño de la ventana al número de elementos cuando son menos de 8
+            setPreferredSize(new Dimension(586,((34+4)*(listaColumnas.size()+1))-2));
+        }else{
+            jPanel1.setPreferredSize(new Dimension(596,0));// ancho del panel en donde está el jScrollPane
+            jScrollPane1.setPreferredSize(new Dimension(0, 300)); // altura del jScrollpane
+            jPanel2.setPreferredSize(new Dimension(0,((34+4)*listaColumnas.size())+5)); // altura del panel dentro del scroll
+            // (34+4): alto del panel + separación entre cada panel
+            setPreferredSize(new Dimension(602,329));
+        } 
+        setLocationRelativeTo(parent);
+        pack();
+        setResizable(false);    
     }
 
     /**
@@ -71,14 +68,14 @@ public class ConfigTipos extends javax.swing.JDialog {
         jPanel2 = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setBackground(new java.awt.Color(0, 102, 102));
         setPreferredSize(new java.awt.Dimension(530, 300));
 
-        jPanel1.setBackground(new java.awt.Color(204, 204, 204));
+        jPanel1.setBackground(new java.awt.Color(255, 0, 102));
 
         jScrollPane1.setToolTipText("");
-        jScrollPane1.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 
-        jPanel2.setBackground(new java.awt.Color(51, 51, 51));
+        jPanel2.setBackground(new java.awt.Color(255, 255, 255));
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -114,7 +111,7 @@ public class ConfigTipos extends javax.swing.JDialog {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
         pack();
