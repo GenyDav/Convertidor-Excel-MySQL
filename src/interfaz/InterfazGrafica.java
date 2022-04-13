@@ -64,13 +64,16 @@ public class InterfazGrafica extends javax.swing.JFrame {
     Pattern patron = Pattern.compile(expNombre);
     Matcher mat;
     
+    Reporte rep;
+    
     public InterfazGrafica() {
         UIManager.put("ProgressBar.selectionBackground", Color.black);
         UIManager.put("ProgressBar.selectionForeground", Color.white);
         UIManager.put("ProgressBar.foreground", new Color(255,148,0));
+        
         initComponents();
         setResizable(false);
-        setTitle("Iniciar conexión");
+        setTitle("Convertidor MySQL/Excel");
         setSize(1000,600);
         setLocationRelativeTo(null);
         
@@ -109,6 +112,7 @@ public class InterfazGrafica extends javax.swing.JFrame {
         modeloListaExcel = new DefaultListModel();
         seleccionHojasExcel.setModel(modeloListaExcel);
         
+        rep = new Reporte(this,true); 
     }
     
     /**
@@ -340,11 +344,13 @@ public class InterfazGrafica extends javax.swing.JFrame {
         jPanel5.setForeground(new java.awt.Color(255, 255, 255));
 
         guardar_excel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/bd_excel_1.png"))); // NOI18N
+        guardar_excel.setBorder(null);
         guardar_excel.setBorderPainted(false);
         guardar_excel.setContentAreaFilled(false);
         guardar_excel.setDefaultCapable(false);
+        guardar_excel.setFocusPainted(false);
         guardar_excel.setPressedIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/bd_excel_3.png"))); // NOI18N
-        guardar_excel.setRolloverIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/bd_excel_2.png"))); // NOI18N
+        guardar_excel.setRolloverIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/bd_excel_3_nuevo.png"))); // NOI18N
         guardar_excel.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 guardar_excelActionPerformed(evt);
@@ -352,11 +358,13 @@ public class InterfazGrafica extends javax.swing.JFrame {
         });
 
         guardar_bd.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/excel_bd_1.png"))); // NOI18N
+        guardar_bd.setBorder(null);
         guardar_bd.setBorderPainted(false);
         guardar_bd.setContentAreaFilled(false);
         guardar_bd.setDefaultCapable(false);
-        guardar_bd.setPressedIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/excel_bd_3.png"))); // NOI18N
-        guardar_bd.setRolloverIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/excel_bd_2.png"))); // NOI18N
+        guardar_bd.setFocusPainted(false);
+        guardar_bd.setPressedIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/bd_excel_3_nuevo.png"))); // NOI18N
+        guardar_bd.setRolloverIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/bd_excel_3_nuevo.png"))); // NOI18N
         guardar_bd.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 guardar_bdActionPerformed(evt);
@@ -379,18 +387,19 @@ public class InterfazGrafica extends javax.swing.JFrame {
         jPanel5.setLayout(jPanel5Layout);
         jPanel5Layout.setHorizontalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(guardar_bd, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-            .addGroup(jPanel5Layout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(guardar_excel, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE))
             .addComponent(btnSalir, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
+                .addGap(0, 6, Short.MAX_VALUE)
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(guardar_bd, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(guardar_excel, javax.swing.GroupLayout.PREFERRED_SIZE, 66, javax.swing.GroupLayout.PREFERRED_SIZE)))
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel5Layout.createSequentialGroup()
                 .addGap(6, 6, 6)
                 .addComponent(guardar_excel)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(0, 0, 0)
                 .addComponent(guardar_bd)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(btnSalir)
@@ -605,6 +614,11 @@ public class InterfazGrafica extends javax.swing.JFrame {
         labelArchivo.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(204, 204, 204)));
 
         jButton1.setText("R");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout panelImportLayout = new javax.swing.GroupLayout(panelImport);
         panelImport.setLayout(panelImportLayout);
@@ -964,7 +978,7 @@ public class InterfazGrafica extends javax.swing.JFrame {
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jPanel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel4Layout.setVerticalGroup(
@@ -994,7 +1008,7 @@ public class InterfazGrafica extends javax.swing.JFrame {
         btnConectar.setEnabled(true);
         limpiarCamposInicio();
         btnImportar.setEnabled(false);
-        setTitle("Iniciar conexión");
+        //setTitle("Iniciar conexión");
         cardLayout.show(jPanel1, "card2");
     }//GEN-LAST:event_btnSalirActionPerformed
     
@@ -1015,7 +1029,7 @@ public class InterfazGrafica extends javax.swing.JFrame {
                 try{
                     conn = new Conexion(servidor,usuario,clave);                   
                     cargarListaDeBases();
-                    setTitle("Exportar tablas");
+                    //("Exportar tablas");
                     cardLayout.show(jPanel1, "card3");
                 }catch(SQLException sqle){
                     mensaje += "\nFalló el intento de conexión "
@@ -1349,6 +1363,11 @@ public class InterfazGrafica extends javax.swing.JFrame {
         ArrayList<InfoColumna> columnas = listaHojas.get(comboHojas.getSelectedIndex()).obtenerColumnas();
         new ConfigTipos(this,true,nomTabla,columnas).setVisible(true);
     }//GEN-LAST:event_btnTiposActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        rep.getTextArea().setText("");
+        rep.setVisible(true);
+    }//GEN-LAST:event_jButton1ActionPerformed
         
     public void importarArchivo(String nombre){
         List<TablaLista> listaHojasImportar;
@@ -1360,7 +1379,7 @@ public class InterfazGrafica extends javax.swing.JFrame {
                 .collect(Collectors.toList());
         }
         try{
-            GeneradorBD genBD =  new GeneradorBD(conn,lector,nombre,listaHojasImportar,info1,barraProgreso1);
+            GeneradorBD genBD =  new GeneradorBD(conn,lector,nombre,listaHojasImportar,info1,barraProgreso1,rep.getTextArea());
             genBD.execute();
         }catch(Exception e){
             e.printStackTrace();
