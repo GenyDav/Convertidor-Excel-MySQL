@@ -161,8 +161,8 @@ public class InterfazGrafica extends javax.swing.JFrame {
         tablasSelExcel = new javax.swing.JRadioButton();
         tablasCompletasExcel = new javax.swing.JRadioButton();
         btnImportar = new javax.swing.JButton();
-        barraProgreso1 = new javax.swing.JProgressBar();
-        info1 = new javax.swing.JLabel();
+        barraProgresoImport = new javax.swing.JProgressBar();
+        infoImport = new javax.swing.JLabel();
         jLabel11 = new javax.swing.JLabel();
         jPanel9 = new javax.swing.JPanel();
         btnAgregarHoja = new javax.swing.JButton();
@@ -174,7 +174,7 @@ public class InterfazGrafica extends javax.swing.JFrame {
         btnAbrir = new javax.swing.JButton();
         btnTipos = new javax.swing.JButton();
         labelArchivo = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
+        btnReporte = new javax.swing.JButton();
         panelExport = new javax.swing.JPanel();
         comboBases = new javax.swing.JComboBox();
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -306,6 +306,7 @@ public class InterfazGrafica extends javax.swing.JFrame {
 
         msj.setEditable(false);
         msj.setColumns(20);
+        msj.setLineWrap(true);
         msj.setRows(5);
         msj.setFocusable(false);
         msj.setRequestFocusEnabled(false);
@@ -539,12 +540,12 @@ public class InterfazGrafica extends javax.swing.JFrame {
             }
         });
 
-        barraProgreso1.setToolTipText("");
-        barraProgreso1.setFocusable(false);
-        barraProgreso1.setStringPainted(true);
+        barraProgresoImport.setToolTipText("");
+        barraProgresoImport.setFocusable(false);
+        barraProgresoImport.setStringPainted(true);
 
-        info1.setBackground(new java.awt.Color(255, 255, 255));
-        info1.setText("Progreso de importación");
+        infoImport.setBackground(new java.awt.Color(255, 255, 255));
+        infoImport.setText("Progreso de importación");
 
         jLabel11.setFont(new java.awt.Font("Arial", 1, 18)); // NOI18N
         jLabel11.setText("Crear base de datos a partir de archivo Excel");
@@ -613,10 +614,11 @@ public class InterfazGrafica extends javax.swing.JFrame {
         labelArchivo.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         labelArchivo.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(204, 204, 204)));
 
-        jButton1.setText("R");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        btnReporte.setText("R");
+        btnReporte.setEnabled(false);
+        btnReporte.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                btnReporteActionPerformed(evt);
             }
         });
 
@@ -655,11 +657,11 @@ public class InterfazGrafica extends javax.swing.JFrame {
                     .addComponent(jSeparator2, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(panelImportLayout.createSequentialGroup()
                         .addGap(2, 2, 2)
-                        .addComponent(info1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(infoImport, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelImportLayout.createSequentialGroup()
-                        .addComponent(barraProgreso1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(barraProgresoImport, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton1)))
+                        .addComponent(btnReporte)))
                 .addContainerGap(36, Short.MAX_VALUE))
         );
         panelImportLayout.setVerticalGroup(
@@ -698,11 +700,11 @@ public class InterfazGrafica extends javax.swing.JFrame {
                 .addGap(24, 24, 24)
                 .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 4, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, 0)
-                .addComponent(info1, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(infoImport, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, 0)
                 .addGroup(panelImportLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(barraProgreso1, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton1))
+                    .addComponent(barraProgresoImport, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnReporte))
                 .addGap(50, 50, 50))
         );
 
@@ -1008,6 +1010,7 @@ public class InterfazGrafica extends javax.swing.JFrame {
         reiniciarCamposInicio();
         cardLayout.show(jPanel1, "card2");     
         reiniciarElementosExportacion();
+        reiniciarElementosImportacion();
     }//GEN-LAST:event_btnSalirActionPerformed
     
     private void reiniciarElementosExportacion(){
@@ -1015,16 +1018,44 @@ public class InterfazGrafica extends javax.swing.JFrame {
         comboTablas.removeAllItems();
         tablasCompletas.setSelected(true);
         modeloLista.clear();
-        tabla.setModel(null);
-        listaElementos.clear();
+        tabla.setModel(new DefaultTableModel());
         btnBorrar.setEnabled(false);
         btnQuitar.setEnabled(false);
         btnAgregarTabla.setEnabled(false);
         labelSelTabla.setText("");
         info.setText("Progreso de exportación");
         barraProgreso.setValue(0);
-        indiceTablaAct = 0;
+        
+        listaElementos.clear();
         cambioCancelado = false;
+        indiceTablaAct = 0;
+    }
+    
+    private void reiniciarElementosImportacion(){
+        labelArchivo.setText("");
+        comboHojas.removeAllItems();
+        comboHojas.setEnabled(false);
+        btnTipos.setEnabled(false);
+        tablasCompletasExcel.setSelected(true);
+        tablasCompletasExcel.setEnabled(false);
+        tablasSelExcel.setEnabled(false);
+        modeloListaExcel.clear();
+        tablaExcel.setModel(new DefaultTableModel());
+        btnAgregarHoja.setEnabled(false);
+        labelSelTablaExcel.setText("");
+        labelRegExcel.setText("Seleccione un archivo");
+        btnBorrarExcel.setEnabled(false);
+        btnQuitarExcel.setEnabled(false);
+        btnImportar.setEnabled(false);
+        infoImport.setText("Progreso de importación");
+        barraProgresoImport.setValue(0);
+        btnReporte.setEnabled(false);
+        
+        nomArch = "";
+        rutaArch = "";
+        listaHojas.clear();
+        lector.cerrarArchivo();
+        lector = null;
     }
     
     /**
@@ -1044,7 +1075,6 @@ public class InterfazGrafica extends javax.swing.JFrame {
                 try{
                     conn = new Conexion(servidor,usuario,clave);                   
                     cargarListaDeBases();
-                    //("Exportar tablas");
                     cardLayout.show(jPanel1, "card3");
                 }catch(SQLException sqle){
                     mensaje += "\nFalló el intento de conexión "
@@ -1379,12 +1409,13 @@ public class InterfazGrafica extends javax.swing.JFrame {
         new ConfigTipos(this,true,nomTabla,columnas).setVisible(true);
     }//GEN-LAST:event_btnTiposActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void btnReporteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReporteActionPerformed
         rep.setVisible(true);
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_btnReporteActionPerformed
         
     public void importarArchivo(String nombre){
         List<TablaLista> listaHojasImportar;
+        btnReporte.setEnabled(true);
         if(tablasCompletasExcel.isSelected()){
             listaHojasImportar = listaHojas; 
         }else{
@@ -1393,7 +1424,7 @@ public class InterfazGrafica extends javax.swing.JFrame {
                 .collect(Collectors.toList());
         }
         try{
-            GeneradorBD genBD =  new GeneradorBD(conn,lector,nombre,listaHojasImportar,info1,barraProgreso1,rep.getTextArea());
+            GeneradorBD genBD =  new GeneradorBD(conn,lector,nombre,listaHojasImportar,infoImport,barraProgresoImport,rep.getTextArea());
             genBD.execute();
         }catch(Exception e){
             e.printStackTrace();
@@ -1564,7 +1595,7 @@ public class InterfazGrafica extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JProgressBar barraProgreso;
-    private javax.swing.JProgressBar barraProgreso1;
+    private javax.swing.JProgressBar barraProgresoImport;
     private javax.swing.JButton btnAbrir;
     private javax.swing.JButton btnAgregarHoja;
     private javax.swing.JButton btnAgregarTabla;
@@ -1575,6 +1606,7 @@ public class InterfazGrafica extends javax.swing.JFrame {
     private javax.swing.JButton btnImportar;
     private javax.swing.JButton btnQuitar;
     private javax.swing.JButton btnQuitarExcel;
+    private javax.swing.JButton btnReporte;
     private javax.swing.JButton btnSalir;
     private javax.swing.JButton btnTipos;
     private javax.swing.ButtonGroup buttonGroup1;
@@ -1585,8 +1617,7 @@ public class InterfazGrafica extends javax.swing.JFrame {
     private javax.swing.JButton guardar_bd;
     private javax.swing.JButton guardar_excel;
     private javax.swing.JLabel info;
-    private javax.swing.JLabel info1;
-    private javax.swing.JButton jButton1;
+    private javax.swing.JLabel infoImport;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
