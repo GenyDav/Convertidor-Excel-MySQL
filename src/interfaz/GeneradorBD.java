@@ -144,9 +144,9 @@ public class GeneradorBD extends SwingWorker<Void,Integer>{
                 }catch(SQLException ex){ // errores al insertar registros
                     //System.out.println("Error en el renglón "+(renglon+1)+ ", error: "+ex.getErrorCode());
                     tiempo = temp.obtenerTiempo();
-                    reporte += "[" +tiempo + "] No se pudo insertar la línea " + (renglon+1) + " (Error code " + ex.getErrorCode() +": "+ ex.getMessage()+ ")\n";
-                    //reporte += "\tNo se pudo insertar la línea " + (renglon+1) + ", error MySQL " + ex.getErrorCode() + "\n";
-                    // Error al insertar la linea 100, código 1336: descrpcioj
+                    reporte += "[" +tiempo + "] Error en la línea " + (renglon+1) + ", código " + ex.getErrorCode() 
+                            +" \n\t("+ ex.getMessage()+ ")\n";
+                    
                     System.out.println(reporte);
                     areaRep.setText(reporte);
                     //ex.printStackTrace();
@@ -176,7 +176,7 @@ public class GeneradorBD extends SwingWorker<Void,Integer>{
             etiqueta.setText("Iniciando la creación de la base de datos...");
             conn.crearBase(nombreBase);
             tiempo = temp.obtenerTiempo();
-            reporte = "["+tiempo+"] Esquema creado '"+nombreBase+"'.\n";
+            reporte = "["+tiempo+"] Esquema '"+nombreBase+"' creado.\n";
             
             for(int i=0;i<listaHojas.size();i++){
                 try{
@@ -195,15 +195,19 @@ public class GeneradorBD extends SwingWorker<Void,Integer>{
                     System.out.println("=========================================");
                 }catch(SQLException ex){
                     //Errores al crear tablas
-                    System.out.println("Error al crear la tabla "+listaHojas.get(i).getNombre()+" "+ex.getErrorCode());
-                    System.out.println(listaHojas.get(i).getNombre());
+                    tiempo = temp.obtenerTiempo();
+                    reporte += "[" +tiempo + "] Error al crear la tabla '" + listaHojas.get(i).getNombre() + "', código " + ex.getErrorCode() 
+                        +" \n\t("+ ex.getMessage()+ ")\n";                  
+                    System.out.println(reporte);
+                    areaRep.setText(reporte);
                     ex.printStackTrace();
                 }
             }
             etiqueta.setText("Creación de la base de datos terminada.");
             tiempo = temp.obtenerTiempo();
-            reporte += "[" +tiempo +"] Creación de la base de datos terminada.\n";
+            reporte += "[" +tiempo +"] Importación de datos terminada.\n";
             System.out.println(reporte);
+            areaRep.setText(reporte);
             publish(100);
         }catch(SQLException ex){
             ex.printStackTrace();
@@ -212,6 +216,14 @@ public class GeneradorBD extends SwingWorker<Void,Integer>{
                 JOptionPane.showMessageDialog(
                     null, 
                     "Ya existe una base de datos con el nombre '" + nombreBase + "'.  ",
+                    "No se puede crear la base de datos", 
+                    JOptionPane.ERROR_MESSAGE
+                );
+            }
+            if(ex.getErrorCode()==0){
+                JOptionPane.showMessageDialog(
+                    null, 
+                    "La conexión con el servidor se perdió.",
                     "No se puede crear la base de datos", 
                     JOptionPane.ERROR_MESSAGE
                 );
