@@ -1005,12 +1005,27 @@ public class InterfazGrafica extends javax.swing.JFrame {
 
     private void btnSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalirActionPerformed
         conn.terminarConexion();
-        btnConectar.setEnabled(true);
-        limpiarCamposInicio();
-        btnImportar.setEnabled(false);
-        //setTitle("Iniciar conexión");
-        cardLayout.show(jPanel1, "card2");
+        reiniciarCamposInicio();
+        cardLayout.show(jPanel1, "card2");     
+        reiniciarElementosExportacion();
     }//GEN-LAST:event_btnSalirActionPerformed
+    
+    private void reiniciarElementosExportacion(){
+        comboBases.removeAllItems();
+        comboTablas.removeAllItems();
+        tablasCompletas.setSelected(true);
+        modeloLista.clear();
+        tabla.setModel(null);
+        listaElementos.clear();
+        btnBorrar.setEnabled(false);
+        btnQuitar.setEnabled(false);
+        btnAgregarTabla.setEnabled(false);
+        labelSelTabla.setText("");
+        info.setText("Progreso de exportación");
+        barraProgreso.setValue(0);
+        indiceTablaAct = 0;
+        cambioCancelado = false;
+    }
     
     /**
      * 
@@ -1302,7 +1317,7 @@ public class InterfazGrafica extends javax.swing.JFrame {
             listaHojas,btnQuitarExcel,btnBorrarExcel,labelSelTablaExcel)==0){
             opc = sa.showOpenDialog(jPanel1);
         }
-  
+        
         if(opc == JFileChooser.APPROVE_OPTION){
             try{
                 nomArch = sa.getSelectedFile().getName();
@@ -1365,7 +1380,6 @@ public class InterfazGrafica extends javax.swing.JFrame {
     }//GEN-LAST:event_btnTiposActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        rep.getTextArea().setText("");
         rep.setVisible(true);
     }//GEN-LAST:event_jButton1ActionPerformed
         
@@ -1472,12 +1486,13 @@ public class InterfazGrafica extends javax.swing.JFrame {
         return resp;
     }
     
-    public void limpiarCamposInicio(){
+    public void reiniciarCamposInicio(){
         txtServidor.setText("");
         txtUsuario.setText("");
         txtClave.setText("");
-        mensaje = "Conexión terminada...";
+        mensaje = "Conexión terminada.";
         msj.setText(mensaje);
+        btnConectar.setEnabled(true);
     }
     
     public void cargarListaDeBases(){
