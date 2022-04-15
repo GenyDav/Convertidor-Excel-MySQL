@@ -1354,13 +1354,12 @@ public class InterfazGrafica extends javax.swing.JFrame {
                 rutaArch = sa.getSelectedFile().getPath();
                 File archivo = new File(rutaArch);
                 //System.out.println("Tamaño del archivo: " + archivo.length());
-                if(archivo.length()==0){
-                    tabla.setModel(new DefaultTableModel());
+                if(archivo.length()==0){                   
+                    reiniciarElementosImportacion();
                     JOptionPane.showMessageDialog(
                         this, nomArch+"\nEl archivo no tiene información.  ", 
                         "No se puede leer el archivo", JOptionPane.WARNING_MESSAGE
                     );
-                    labelArchivo.setText(""); 
                 }else{
                     tablaExcel.setModel(new DefaultTableModel());
                     comboHojas.removeAllItems();
