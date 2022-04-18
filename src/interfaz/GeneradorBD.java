@@ -34,7 +34,6 @@ public class GeneradorBD extends SwingWorker<Void,Integer>{
     private JTextArea areaRep;
     
     String reporte;    
-    String tiempo;
     Tiempo temp;
     
     public GeneradorBD(Conexion conn,LectorExcel lector,String nomBase,List<TablaLista> listaHojas,JLabel etiqueta,JProgressBar barra,JTextArea areaTexto){
@@ -142,13 +141,10 @@ public class GeneradorBD extends SwingWorker<Void,Integer>{
                 try{
                     conn.modificarBase(scriptInsertar);
                 }catch(SQLException ex){ // errores al insertar registros
-                    //System.out.println("Error en el renglón "+(renglon+1)+ ", error: "+ex.getErrorCode());
-                    tiempo = temp.obtenerTiempo();
-                    reporte += "[" +tiempo + "] Error en la línea " + (renglon+1) + ", código " + ex.getErrorCode() 
-                            +" \n\t("+ ex.getMessage()+ ")\n";
-                    
+                    reporte = "[" + temp.obtenerTiempo() + "] Error en la línea " + (renglon+1) + ", código " + ex.getErrorCode() 
+                        +" \n\t("+ ex.getMessage()+ ")\n";
                     System.out.println(reporte);
-                    areaRep.setText(reporte);
+                    areaRep.append(reporte);
                     //ex.printStackTrace();
                     //Error 1406
                 }finally{
@@ -161,10 +157,9 @@ public class GeneradorBD extends SwingWorker<Void,Integer>{
                     }catch(Exception e){}
                 }
             }      
-            tiempo = temp.obtenerTiempo();
-            reporte += "[" +tiempo + "] Inserción de registros terminada.\n";
+            reporte = "[" + temp.obtenerTiempo() + "] Inserción de registros terminada.\n";
             System.out.println(reporte);
-            areaRep.setText(reporte);
+            areaRep.append(reporte);
         }
     }
     
@@ -175,39 +170,37 @@ public class GeneradorBD extends SwingWorker<Void,Integer>{
         try{
             etiqueta.setText("Iniciando la creación de la base de datos...");
             conn.crearBase(nombreBase);
-            tiempo = temp.obtenerTiempo();
-            reporte = "["+tiempo+"] Esquema '"+nombreBase+"' creado.\n";
+            reporte = "["+temp.obtenerTiempo()+"] Esquema '"+nombreBase+"' creado.\n";
+            areaRep.append(reporte);
             
             for(int i=0;i<listaHojas.size();i++){
                 try{
                     nomTabla = listaHojas.get(i).getNombre();
                     etiqueta.setText("Creando la base '"+nombreBase+"': Definiendo la estructura de la tabla '"+nomTabla+"'");              
                     crearTabla(nombreBase,listaHojas.get(i));
-                    tiempo = temp.obtenerTiempo();
-                    reporte += "[" +tiempo +"] Estructura de la tabla '"+nomTabla+"' creada.\n";
+                    reporte = "[" +temp.obtenerTiempo()+"] Estructura de la tabla '"+nomTabla+"' creada.\n";
+                    areaRep.append(reporte);
                     
                     etiqueta.setText("Creando la base '"+nombreBase+"': Insertando datos en la tabla '"+nomTabla+"' (Tabla "+(i+1)+" de "+numTablas+")");
-                    tiempo = temp.obtenerTiempo();
-                    reporte += "[" +tiempo +"] Iniciando la inserción de registros en la tabla '"+nomTabla+"'.\n";
+                    reporte = "[" +temp.obtenerTiempo()+"] Iniciando la inserción de registros en la tabla '"+nomTabla+"'.\n";
                     System.out.println(reporte);
+                    areaRep.append(reporte);
                     
                     insertarRegistros(nombreBase,listaHojas.get(i));
                     System.out.println("=========================================");
                 }catch(SQLException ex){
                     //Errores al crear tablas
-                    tiempo = temp.obtenerTiempo();
-                    reporte += "[" +tiempo + "] Error al crear la tabla '" + listaHojas.get(i).getNombre() + "', código " + ex.getErrorCode() 
+                    reporte = "[" +temp.obtenerTiempo()+ "] Error al crear la tabla '" + listaHojas.get(i).getNombre() + "', código " + ex.getErrorCode() 
                         +" \n\t("+ ex.getMessage()+ ")\n";                  
                     System.out.println(reporte);
-                    areaRep.setText(reporte);
+                    areaRep.append(reporte);
                     ex.printStackTrace();
                 }
             }
             etiqueta.setText("Creación de la base de datos terminada.");
-            tiempo = temp.obtenerTiempo();
-            reporte += "[" +tiempo +"] Importación de datos terminada.\n";
+            reporte = "[" +temp.obtenerTiempo()+"] Importación de datos terminada.\n";
             System.out.println(reporte);
-            areaRep.setText(reporte);
+            areaRep.append(reporte);
             publish(100);
         }catch(SQLException ex){
             ex.printStackTrace();
