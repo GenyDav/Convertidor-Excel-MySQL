@@ -20,6 +20,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import javax.swing.DefaultListModel;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
@@ -67,11 +68,11 @@ public class InterfazGrafica extends javax.swing.JFrame {
     Reporte rep;
     
     public InterfazGrafica() {
-        UIManager.put("ProgressBar.selectionBackground", Color.black);
         UIManager.put("ProgressBar.selectionForeground", Color.white);
-        UIManager.put("ProgressBar.foreground", new Color(255,148,0));
+        UIManager.put("ProgressBar.foreground", new Color(2,97,140));//255,148,0
         
         initComponents();
+        setIconImage(new ImageIcon(getClass().getResource("/imagenes/icono_frame.png")).getImage());
         setResizable(false);
         setTitle("Convertidor MySQL/Excel");
         setSize(1000,600);
@@ -137,9 +138,9 @@ public class InterfazGrafica extends javax.swing.JFrame {
         txtClave = new javax.swing.JPasswordField();
         btnConectar = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
-        jPanel6 = new javax.swing.JPanel();
         jScrollPane3 = new javax.swing.JScrollPane();
         msj = new javax.swing.JTextArea();
+        jLabel13 = new javax.swing.JLabel();
         jPanel4 = new javax.swing.JPanel();
         jPanel5 = new javax.swing.JPanel();
         guardar_excel = new javax.swing.JButton();
@@ -283,25 +284,13 @@ public class InterfazGrafica extends javax.swing.JFrame {
                 .addComponent(jLabel8)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(txtClave, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 305, Short.MAX_VALUE)
                 .addComponent(btnConectar, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(21, 21, 21))
         );
 
-        jPanel6.setBackground(new java.awt.Color(255, 255, 255));
-        jPanel6.setPreferredSize(new java.awt.Dimension(600, 600));
-
-        javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
-        jPanel6.setLayout(jPanel6Layout);
-        jPanel6Layout.setHorizontalGroup(
-            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 523, Short.MAX_VALUE)
-        );
-        jPanel6Layout.setVerticalGroup(
-            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 345, Short.MAX_VALUE)
-        );
-
+        jScrollPane3.setBackground(new java.awt.Color(255, 255, 255));
+        jScrollPane3.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Información de la conexión", javax.swing.border.TitledBorder.RIGHT, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Dialog", 1, 12), new java.awt.Color(76, 78, 105))); // NOI18N
         jScrollPane3.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
 
         msj.setEditable(false);
@@ -312,28 +301,32 @@ public class InterfazGrafica extends javax.swing.JFrame {
         msj.setRequestFocusEnabled(false);
         jScrollPane3.setViewportView(msj);
 
+        jLabel13.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/panel.png"))); // NOI18N
+
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, 0)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, 523, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addGap(12, 12, 12)
-                        .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 732, Short.MAX_VALUE)))
-                .addContainerGap())
+                        .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 732, Short.MAX_VALUE)
+                        .addContainerGap())
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addGap(37, 37, 37)
+                        .addComponent(jLabel13)
+                        .addGap(0, 0, 0))))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                .addGap(0, 166, Short.MAX_VALUE)
-                .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, 345, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabel13)
+                .addGap(47, 47, 47)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(13, 13, 13))
         );
 
@@ -372,12 +365,14 @@ public class InterfazGrafica extends javax.swing.JFrame {
             }
         });
 
-        btnSalir.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/salir_mini_1.png"))); // NOI18N
+        btnSalir.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/salir1.png"))); // NOI18N
+        btnSalir.setToolTipText("Cerrar la conexión");
         btnSalir.setBorderPainted(false);
         btnSalir.setContentAreaFilled(false);
         btnSalir.setDefaultCapable(false);
-        btnSalir.setPressedIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/salir_mini_3.png"))); // NOI18N
-        btnSalir.setRolloverIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/salir_mini_2.png"))); // NOI18N
+        btnSalir.setFocusPainted(false);
+        btnSalir.setPressedIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/salir3.png"))); // NOI18N
+        btnSalir.setRolloverIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/salir2.png"))); // NOI18N
         btnSalir.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnSalirActionPerformed(evt);
@@ -388,12 +383,12 @@ public class InterfazGrafica extends javax.swing.JFrame {
         jPanel5.setLayout(jPanel5Layout);
         jPanel5Layout.setHorizontalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(btnSalir, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
                 .addGap(0, 6, Short.MAX_VALUE)
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(guardar_bd, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(guardar_excel, javax.swing.GroupLayout.PREFERRED_SIZE, 66, javax.swing.GroupLayout.PREFERRED_SIZE)))
+            .addComponent(btnSalir, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -402,9 +397,9 @@ public class InterfazGrafica extends javax.swing.JFrame {
                 .addComponent(guardar_excel)
                 .addGap(0, 0, 0)
                 .addComponent(guardar_bd)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 406, Short.MAX_VALUE)
                 .addComponent(btnSalir)
-                .addGap(6, 6, 6))
+                .addGap(5, 5, 5))
         );
 
         jPanel7.setBackground(new java.awt.Color(255, 255, 255));
@@ -446,6 +441,9 @@ public class InterfazGrafica extends javax.swing.JFrame {
 
         seleccionHojasExcel.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
         seleccionHojasExcel.setEnabled(false);
+        seleccionHojasExcel.setName(""); // NOI18N
+        seleccionHojasExcel.setSelectionBackground(new java.awt.Color(2, 97, 140));
+        seleccionHojasExcel.setSelectionForeground(new java.awt.Color(255, 255, 255));
         jScrollPaneSel1.setViewportView(seleccionHojasExcel);
 
         javax.swing.GroupLayout jPanel13Layout = new javax.swing.GroupLayout(jPanel13);
@@ -532,6 +530,7 @@ public class InterfazGrafica extends javax.swing.JFrame {
                 .addGap(0, 0, 0))
         );
 
+        btnImportar.setFont(new java.awt.Font("Dialog", 1, 13)); // NOI18N
         btnImportar.setText("Crear base de datos");
         btnImportar.setEnabled(false);
         btnImportar.addActionListener(new java.awt.event.ActionListener() {
@@ -614,7 +613,8 @@ public class InterfazGrafica extends javax.swing.JFrame {
         labelArchivo.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         labelArchivo.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(204, 204, 204)));
 
-        btnReporte.setText("R");
+        btnReporte.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/reporte.png"))); // NOI18N
+        btnReporte.setToolTipText("Reporte de importación");
         btnReporte.setEnabled(false);
         btnReporte.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -661,7 +661,7 @@ public class InterfazGrafica extends javax.swing.JFrame {
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelImportLayout.createSequentialGroup()
                         .addComponent(barraProgresoImport, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnReporte)))
+                        .addComponent(btnReporte, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(36, Short.MAX_VALUE))
         );
         panelImportLayout.setVerticalGroup(
@@ -755,6 +755,8 @@ public class InterfazGrafica extends javax.swing.JFrame {
 
         seleccionTablas.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
         seleccionTablas.setEnabled(false);
+        seleccionTablas.setSelectionBackground(new java.awt.Color(2, 97, 140));
+        seleccionTablas.setSelectionForeground(new java.awt.Color(255, 255, 255));
         jScrollPaneSel.setViewportView(seleccionTablas);
 
         javax.swing.GroupLayout jPanel11Layout = new javax.swing.GroupLayout(jPanel11);
@@ -839,6 +841,7 @@ public class InterfazGrafica extends javax.swing.JFrame {
                 .addGap(0, 0, 0))
         );
 
+        btnExportar.setFont(new java.awt.Font("Dialog", 1, 13)); // NOI18N
         btnExportar.setText("Exportar");
         btnExportar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -1055,44 +1058,11 @@ public class InterfazGrafica extends javax.swing.JFrame {
         rutaArch = "";
         listaHojas.clear();
         lector.cerrarArchivo();
-        lector = null;
+        if(lector!=null){
+            lector = null;
+        }
     }
     
-    /**
-     * 
-     * param evt Evento generado al presionar el botón 'Conectar' 
-     */
-    private void btnConectarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConectarActionPerformed
-        mensaje = "Estableciendo conexión con el servidor...";
-        msj.setText(mensaje);
-        btnConectar.setEnabled(false);
-        servidor = txtServidor.getText();
-        usuario = txtUsuario.getText();
-        clave = txtClave.getText();
-        new Thread(){
-            @Override
-            public void run(){
-                try{
-                    conn = new Conexion(servidor,usuario,clave);                   
-                    cargarListaDeBases();
-                    cardLayout.show(jPanel1, "card3");
-                }catch(SQLException sqle){
-                    mensaje += "\nFalló el intento de conexión "
-                        + "\nError MySQL "
-                        + sqle.getErrorCode()+": "+sqle.getMessage()+"."
-                        + "\nDatos de conexión incorrectos, verifique e intente de nuevo.";
-                }catch(ClassNotFoundException cnf){
-                    cnf.printStackTrace(); 
-                    mensaje += "\nFalló el intento de conexión."
-                        + "\nNo se pudo encontar la librería mysql-conector-java";
-                }finally{
-                    msj.setText(mensaje);
-                    btnConectar.setEnabled(true);
-                }
-            }
-        }.start();
-    }//GEN-LAST:event_btnConectarActionPerformed
-
     private void tablasCompletasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tablasCompletasActionPerformed
         btnQuitar.setEnabled(false);
         btnBorrar.setEnabled(false);
@@ -1411,6 +1381,42 @@ public class InterfazGrafica extends javax.swing.JFrame {
     private void btnReporteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReporteActionPerformed
         rep.setVisible(true);
     }//GEN-LAST:event_btnReporteActionPerformed
+
+    /**
+     * 
+     * param evt Evento generado al presionar el botón 'Conectar' 
+     */
+    private void btnConectarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConectarActionPerformed
+        mensaje = "Estableciendo conexión con el servidor...";
+        msj.setText(mensaje);
+        btnConectar.setEnabled(false);
+        servidor = txtServidor.getText();
+        usuario = txtUsuario.getText();
+        clave = txtClave.getText();
+        new Thread(){
+            @Override
+            public void run(){
+                try{
+                    conn = new Conexion(servidor,usuario,clave);
+                    cargarListaDeBases();
+                    cardLayout.show(jPanel1, "card3");
+                }catch(SQLException sqle){
+                    mensaje += "\nFalló el intento de conexión "
+                    + "\nError MySQL " + sqle.getErrorCode()+": "+sqle.getMessage()+"."
+                    + "\nDatos de conexión incorrectos, verifique e intente de nuevo.";
+                }catch(ClassNotFoundException cnf){
+                    cnf.printStackTrace();
+                    mensaje += "\nFalló el intento de conexión."
+                    + "\nNo se pudo encontar la librería mysql-conector-java";
+                }finally{
+                    msj.setText(mensaje);
+                    
+                    System.out.println(msj.getLineCount());
+                    btnConectar.setEnabled(true);
+                }
+            }
+        }.start();
+    }//GEN-LAST:event_btnConectarActionPerformed
         
     public void importarArchivo(String nombre){
         List<TablaLista> listaHojasImportar;
@@ -1621,6 +1627,7 @@ public class InterfazGrafica extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
+    private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -1640,7 +1647,6 @@ public class InterfazGrafica extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
-    private javax.swing.JPanel jPanel6;
     private javax.swing.JPanel jPanel7;
     private javax.swing.JPanel jPanel8;
     private javax.swing.JPanel jPanel9;
