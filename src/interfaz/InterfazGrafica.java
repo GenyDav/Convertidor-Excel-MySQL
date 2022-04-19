@@ -1073,7 +1073,11 @@ public class InterfazGrafica extends javax.swing.JFrame {
     }//GEN-LAST:event_tablasCompletasActionPerformed
 
     private void tablasSelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tablasSelActionPerformed
-        btnAgregarTabla.setEnabled(true);
+        if(listaElementos.get(comboTablas.getSelectedIndex()).getSeleccionado()){
+            btnAgregarTabla.setEnabled(false);
+        }else{
+            btnAgregarTabla.setEnabled(true);
+        }
         seleccionTablas.setEnabled(true);
         jScrollPaneSel.getVerticalScrollBar().setEnabled(true);
         if(modeloLista.isEmpty()){
@@ -1105,6 +1109,8 @@ public class InterfazGrafica extends javax.swing.JFrame {
 
     private void comboBasesItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_comboBasesItemStateChanged
         if(modeloLista.isEmpty()){
+            tablasCompletas.setSelected(true);
+            btnAgregarTabla.setEnabled(false);
             if(evt.getStateChange()==ItemEvent.SELECTED){
                 cargarListaDeTablas(comboBases.getSelectedItem().toString());
                 indiceTablaAct = comboBases.getSelectedIndex();
@@ -1119,6 +1125,7 @@ public class InterfazGrafica extends javax.swing.JFrame {
                     if(limpiarSeleccion("tablas",modeloLista,
                         listaElementos,btnQuitar,btnBorrar,labelSelTabla)==0){
                         comboTablas.removeAllItems();
+                        tablasCompletas.setSelected(true);
                         cargarListaDeTablas(comboBases.getSelectedItem().toString());
                         labelSelTabla.setText("");
                     }else{
@@ -1128,6 +1135,7 @@ public class InterfazGrafica extends javax.swing.JFrame {
                 }
             }
         }
+        
     }//GEN-LAST:event_comboBasesItemStateChanged
 
     private void btnAgregarTablaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarTablaActionPerformed
