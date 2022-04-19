@@ -1338,6 +1338,7 @@ public class InterfazGrafica extends javax.swing.JFrame {
                     btnTipos.setEnabled(false);
                     btnAgregarHoja.setEnabled(false);
                     btnImportar.setEnabled(false);
+                    tablasCompletasExcel.setSelected(true);
                     tablasCompletasExcel.setEnabled(false);
                     tablasSelExcel.setEnabled(false);
                     if(lector!=null && lector.getLibro()!=null){
@@ -1350,7 +1351,6 @@ public class InterfazGrafica extends javax.swing.JFrame {
                     new Thread(){ // esperar a que se cargue el archivo para obtener el número de hojas
                         @Override
                         public void run(){
-                            //System.out.println("Ejecutando hilo");
                             while(lector.getLibro()==null){
                                 //System.out.println("Esperando libro");
                             }
