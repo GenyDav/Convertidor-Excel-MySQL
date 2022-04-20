@@ -1034,33 +1034,35 @@ public class InterfazGrafica extends javax.swing.JFrame {
         indiceTablaAct = 0;
     }
     
-    private void reiniciarElementosImportacion(){
+    private void reiniciarElementosImportacion(){                                                   
         labelArchivo.setText("");
-        comboHojas.removeAllItems();
-        comboHojas.setEnabled(false);
-        btnTipos.setEnabled(false);
-        tablasCompletasExcel.setSelected(true);
-        tablasCompletasExcel.setEnabled(false);
-        tablasSelExcel.setEnabled(false);
+        comboHojas.removeAllItems(); // comboHojas.removeAllItems();
+        comboHojas.setEnabled(false);// comboHojas.setEnabled(false);
+        btnTipos.setEnabled(false);//btnTipos.setEnabled(false);
+        tablasCompletasExcel.setSelected(true);//tablasCompletasExcel.setSelected(true);
+        tablasCompletasExcel.setEnabled(false);//tablasCompletasExcel.setEnabled(false);
+        tablasSelExcel.setEnabled(false);//tablasSelExcel.setEnabled(false);
         modeloListaExcel.clear();
-        tablaExcel.setModel(new DefaultTableModel());
-        btnAgregarHoja.setEnabled(false);
+        tablaExcel.setModel(new DefaultTableModel());//tablaExcel.setModel(new DefaultTableModel());   
+        btnAgregarHoja.setEnabled(false);//btnAgregarHoja.setEnabled(false);
         labelSelTablaExcel.setText("");
         labelRegExcel.setText("Seleccione un archivo");
         btnBorrarExcel.setEnabled(false);
         btnQuitarExcel.setEnabled(false);
-        btnImportar.setEnabled(false);
+        btnImportar.setEnabled(false);//btnImportar.setEnabled(false);
         infoImport.setText("Progreso de importación");
         barraProgresoImport.setValue(0);
         btnReporte.setEnabled(false);
         
         nomArch = "";
         rutaArch = "";
-        listaHojas.clear();
+        listaHojas.clear();//listaHojas.clear();
         lector.cerrarArchivo();
-        if(lector!=null){
+        
+        if(lector!=null && lector.getLibro()!=null){
+            lector.cerrarArchivo();
             lector = null;
-        }
+        }  
     }
     
     private void tablasCompletasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tablasCompletasActionPerformed
@@ -1339,7 +1341,7 @@ public class InterfazGrafica extends javax.swing.JFrame {
                         "No se puede leer el archivo", JOptionPane.WARNING_MESSAGE
                     );
                 }else{
-                    tablaExcel.setModel(new DefaultTableModel());
+                    /*tablaExcel.setModel(new DefaultTableModel());
                     comboHojas.removeAllItems();
                     comboHojas.setEnabled(false);
                     btnAbrir.setEnabled(false);
@@ -1352,8 +1354,9 @@ public class InterfazGrafica extends javax.swing.JFrame {
                     if(lector!=null && lector.getLibro()!=null){
                         lector.cerrarArchivo();
                     }
-                    listaHojas.clear();
-                    lector = new LectorExcel(this,comboHojas,tablaExcel,labelRegExcel,btnAbrir,rutaArch,btnTipos,listaHojas,btnImportar,tablasCompletasExcel,tablasSelExcel);
+                    listaHojas.clear();*/
+                    limpiarPantallaImportacion();
+                    lector = new LectorExcel(this,comboHojas,tablaExcel,labelRegExcel,labelArchivo,btnAbrir,rutaArch,nomArch,btnTipos,listaHojas,btnImportar,tablasCompletasExcel,tablasSelExcel);
                     lector.execute();
 
                     new Thread(){ // esperar a que se cargue el archivo para obtener el número de hojas
@@ -1365,7 +1368,7 @@ public class InterfazGrafica extends javax.swing.JFrame {
                             //System.out.println("Libro cargado");
                         }
                     }.start();
-                    labelArchivo.setText("  " + nomArch );  
+                    //labelArchivo.setText("  " + nomArch );  
                 }
             }catch(Exception e3){
                 e3.printStackTrace();
@@ -1373,6 +1376,28 @@ public class InterfazGrafica extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btnAbrirActionPerformed
 
+    private void limpiarPantallaImportacion(){
+        labelArchivo.setText("");
+        tablaExcel.setModel(new DefaultTableModel());
+        comboHojas.removeAllItems();
+        comboHojas.setEnabled(false);
+        btnAbrir.setEnabled(false);
+        btnTipos.setEnabled(false);
+        btnAgregarHoja.setEnabled(false);
+        btnImportar.setEnabled(false);
+        tablasCompletasExcel.setSelected(true);
+        tablasCompletasExcel.setEnabled(false);
+        tablasSelExcel.setEnabled(false);
+        infoImport.setText("Progreso de importación");
+        barraProgresoImport.setValue(0);
+        btnReporte.setEnabled(false);    
+        listaHojas.clear();
+        if(lector!=null && lector.getLibro()!=null){
+            lector.cerrarArchivo();
+        }                  
+        labelSelTablaExcel.setText("");
+    }
+    
     private void btnTiposActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTiposActionPerformed
         TablaLista tabla;
         /*System.out.println("Información - número de hojas: " +listaHojas.size());
