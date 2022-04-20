@@ -1186,7 +1186,7 @@ public class InterfazGrafica extends javax.swing.JFrame {
 
     private void comboBasesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_comboBasesMouseClicked
         cambioCancelado = false; // reiniciar el valor de la variable cuando el usuario
-                                // quiere cambiar de tabla pero canceló otro cambio antes
+                                 // quiere cambiar de tabla pero canceló otro cambio antes
     }//GEN-LAST:event_comboBasesMouseClicked
 
     private void btnExportarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExportarActionPerformed
@@ -1551,10 +1551,17 @@ public class InterfazGrafica extends javax.swing.JFrame {
                     .filter(elemento->elemento.getSeleccionado())
                     .collect(Collectors.toList());
             }
-            generadorArch = new GeneradorExcel(con2, bd, lista, info, barraProgreso, this);
+            generadorArch = new GeneradorExcel(con2, bd, lista, info, barraProgreso, this, btnExportar);
             String directorio = FileSystemView.getFileSystemView().getDefaultDirectory().getPath();
             SelectorGuarda sg = new SelectorGuarda(new File(directorio+"\\"+bd+".xlsx"),generadorArch);
-            sg.showSaveDialog(jPanel1);
+            //sg.showSaveDialog(jPanel1);
+            if(sg.showSaveDialog(jPanel1)==JFileChooser.CANCEL_OPTION){
+                System.out.println("Cancelando");
+                btnExportar.setEnabled(true);
+            }else{
+                System.out.println("Aceptando");
+            }
+            
         } catch (ClassNotFoundException ex) {
             info.setText("nNo se pudo encontar la librería mysql-conector-java...");
         } catch (SQLException ex) {
