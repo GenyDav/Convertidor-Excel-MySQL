@@ -290,13 +290,13 @@ public class InterfazGrafica extends javax.swing.JFrame {
         );
 
         jScrollPane3.setBackground(new java.awt.Color(255, 255, 255));
-        jScrollPane3.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Información de la conexión", javax.swing.border.TitledBorder.RIGHT, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Dialog", 1, 12), new java.awt.Color(76, 78, 105))); // NOI18N
-        jScrollPane3.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
+        jScrollPane3.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
         msj.setEditable(false);
         msj.setColumns(20);
         msj.setLineWrap(true);
-        msj.setRows(5);
+        msj.setRows(4);
+        msj.setWrapStyleWord(true);
         msj.setFocusable(false);
         msj.setRequestFocusEnabled(false);
         jScrollPane3.setViewportView(msj);
@@ -316,8 +316,7 @@ public class InterfazGrafica extends javax.swing.JFrame {
                         .addContainerGap())
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addGap(37, 37, 37)
-                        .addComponent(jLabel13)
-                        .addGap(0, 0, 0))))
+                        .addComponent(jLabel13))))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1057,7 +1056,6 @@ public class InterfazGrafica extends javax.swing.JFrame {
         nomArch = "";
         rutaArch = "";
         listaHojas.clear();//listaHojas.clear();
-        lector.cerrarArchivo();
         
         if(lector!=null && lector.getLibro()!=null){
             lector.cerrarArchivo();
@@ -1434,9 +1432,11 @@ public class InterfazGrafica extends javax.swing.JFrame {
                     cargarListaDeBases();
                     cardLayout.show(jPanel1, "card3");
                 }catch(SQLException sqle){
-                    mensaje += "\nFalló el intento de conexión "
-                    + "\nError MySQL " + sqle.getErrorCode()+": "+sqle.getMessage()+"."
-                    + "\nDatos de conexión incorrectos, verifique e intente de nuevo.";
+                    mensaje += "\nFalló el intento de conexión. "
+                    + "\nError MySQL " + sqle.getErrorCode()+": "+sqle.getMessage()+".";
+                    if(sqle.getErrorCode()==1045){
+                        mensaje += "\nDatos de conexión incorrectos, verifique e intente de nuevo.";
+                    }
                 }catch(ClassNotFoundException cnf){
                     cnf.printStackTrace();
                     mensaje += "\nFalló el intento de conexión."
