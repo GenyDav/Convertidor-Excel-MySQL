@@ -27,6 +27,8 @@ import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
+import javax.swing.SwingWorker;
+import javax.swing.SwingWorker.StateValue;
 import javax.swing.UIManager;
 import javax.swing.filechooser.FileSystemView;
 import javax.swing.table.DefaultTableModel;
@@ -45,8 +47,11 @@ public class InterfazGrafica extends javax.swing.JFrame {
     private String mensaje;         // mensaje de la pantalla de inicio
     private FormatoTabla formato;   // formato de la tabla en donde se muestran los datos
     private FormatoTablaExcel formatoExcel;
-    private DefaultListModel modeloLista;
     
+    private GeneradorExcel generadorArch;
+    private GeneradorBD genBD;
+    
+    private DefaultListModel modeloLista;
     private ArrayList<ElementoLista> listaElementos;
     
     private int indiceTablaAct;     // variable para el cambio de base de datos
@@ -95,6 +100,9 @@ public class InterfazGrafica extends javax.swing.JFrame {
         tablaExcel.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
         formato = null;
         formatoExcel = null;
+        
+        generadorArch = new GeneradorExcel();
+        genBD = new GeneradorBD();
         
         modeloLista = new DefaultListModel();
         seleccionTablas.setModel(modeloLista);
@@ -203,7 +211,12 @@ public class InterfazGrafica extends javax.swing.JFrame {
         labelRegistros = new javax.swing.JLabel();
         jSeparator1 = new javax.swing.JSeparator();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                cerrarVentana(evt);
+            }
+        });
 
         jPanel1.setLayout(new java.awt.CardLayout());
 
@@ -1443,13 +1456,34 @@ public class InterfazGrafica extends javax.swing.JFrame {
                     + "\nNo se pudo encontar la librería mysql-conector-java";
                 }finally{
                     msj.setText(mensaje);
-                    
-                    System.out.println(msj.getLineCount());
                     btnConectar.setEnabled(true);
                 }
             }
         }.start();
     }//GEN-LAST:event_btnConectarActionPerformed
+
+    private void cerrarVentana(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_cerrarVentana
+        System.out.println(generadorArch.estaActivo());
+        System.out.println(genBD.estaActivo());
+        
+        Object [] opciones ={"Aceptar","Cancelar"};
+        //System.out.println("generadorArch.getState(): "+generadorArch.getState());
+        //System.out.println("genBD.getState(): "+genBD.getState());
+        if((generadorArch.getState()==StateValue.STARTED)||(genBD.getState()==StateValue.STARTED)){    
+            int eleccion = JOptionPane.showOptionDialog(
+                this,
+                "Hay procesos ejecutándose, ¿desea cerrar el programa?  ",
+                "Confirmar cierre",
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.QUESTION_MESSAGE,null,opciones,"Aceptar"
+            );
+            if (eleccion == JOptionPane.YES_OPTION){
+                System.exit(0);
+            }
+        }else{
+            System.exit(0);
+        }
+    }//GEN-LAST:event_cerrarVentana
         
     public void importarArchivo(String nombre){
         List<TablaLista> listaHojasImportar;
@@ -1462,8 +1496,9 @@ public class InterfazGrafica extends javax.swing.JFrame {
                 .collect(Collectors.toList());
         }
         try{
-            GeneradorBD genBD =  new GeneradorBD(conn,lector,nombre,listaHojasImportar,infoImport,barraProgresoImport,rep.getTextArea());
+            genBD =  new GeneradorBD(conn,lector,nombre,listaHojasImportar,infoImport,barraProgresoImport,rep.getTextArea());
             genBD.execute();
+           
         }catch(Exception e){
             e.printStackTrace();
         }
@@ -1516,9 +1551,9 @@ public class InterfazGrafica extends javax.swing.JFrame {
                     .filter(elemento->elemento.getSeleccionado())
                     .collect(Collectors.toList());
             }
-            GeneradorExcel generador = new GeneradorExcel(con2, bd, lista, info, barraProgreso, this);
+            generadorArch = new GeneradorExcel(con2, bd, lista, info, barraProgreso, this);
             String directorio = FileSystemView.getFileSystemView().getDefaultDirectory().getPath();
-            SelectorGuarda sg = new SelectorGuarda(new File(directorio+"\\"+bd+".xlsx"),generador);
+            SelectorGuarda sg = new SelectorGuarda(new File(directorio+"\\"+bd+".xlsx"),generadorArch);
             sg.showSaveDialog(jPanel1);
         } catch (ClassNotFoundException ex) {
             info.setText("nNo se pudo encontar la librería mysql-conector-java...");
