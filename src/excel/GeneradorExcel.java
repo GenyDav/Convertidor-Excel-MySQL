@@ -16,6 +16,7 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -52,9 +53,27 @@ public class GeneradorExcel extends SwingWorker<Void,Integer>{
     private JLabel labelProgreso;
     private JProgressBar barra;
     private JFrame ventana;
+    private JButton boton;
     private int numRegistros;
+    private boolean generandoArchivo;
     
-    public GeneradorExcel(Conexion c, String base, List<ElementoLista>tablas, JLabel label, JProgressBar barra, JFrame ventana){
+    public GeneradorExcel(){
+        conn = null;
+        nombreBase = null;
+        libro = null;
+        indiceTablaAct = 0;
+        tablas = null;
+        numTablas = 0;
+        rutaArch = null;
+        tipoArch = null;
+        labelProgreso = null;
+        barra = null;
+        ventana = null;
+        numRegistros = 0;
+        generandoArchivo = false;
+    }
+    
+    public GeneradorExcel(Conexion c, String base, List<ElementoLista>tablas, JLabel label, JProgressBar barra, JFrame ventana, JButton btn){
         conn = c;
         nombreBase = base;
         libro = null;
@@ -66,7 +85,9 @@ public class GeneradorExcel extends SwingWorker<Void,Integer>{
         labelProgreso = label;
         this.barra = barra;
         this.ventana = ventana;
+        boton = btn;
         numRegistros = 0;
+        generandoArchivo = false;
     }
     
     public void defInfoArchivo(String rutaArch, String extension){
@@ -74,27 +95,28 @@ public class GeneradorExcel extends SwingWorker<Void,Integer>{
         tipoArch = extension;
     }
     
-    public void crearLibro(){
-        try{
-            try (OutputStream flujoSalida = new FileOutputStream(rutaArch)) {
-                labelProgreso.setText("Iniciando exportación de la base '" + nombreBase + "'...");
-                if(tipoArch.equals("xls")){
-                    libro = new HSSFWorkbook();
-                }else{
-                    libro = new XSSFWorkbook();
-                }
-
-                for(int i=0;i<numTablas;i++){
-                    indiceTablaAct = i;
-                    crearHoja(tablas.get(i).getNombre());
-                }
-                
-                libro.write(flujoSalida);
-                libro.close();
-                libro = null;
+    public void crearLibro(){    
+        try (OutputStream flujoSalida = new FileOutputStream(rutaArch)) {
+            labelProgreso.setText("Iniciando exportación de la base '" + nombreBase + "'...");
+            if(tipoArch.equals("xls")){
+                libro = new HSSFWorkbook();
+            }else{
+                libro = new XSSFWorkbook();
             }
-            conn.terminarConexion();
-            conn = null;
+
+            for(int i=0;i<numTablas;i++){
+                indiceTablaAct = i;
+                crearHoja(tablas.get(i).getNombre());
+            }
+
+            libro.write(flujoSalida);
+            libro.close();
+            libro = null;
+            flujoSalida.flush();
+            flujoSalida.close();
+            
+            //conn.terminarConexion();
+            //conn = null;
             labelProgreso.setText("Exportación de la base '" + nombreBase + "' terminada");
             publish(100);
             JOptionPane.showMessageDialog(
@@ -216,9 +238,17 @@ public class GeneradorExcel extends SwingWorker<Void,Integer>{
         return estiloCelda;
     }
 
+    public boolean estaActivo(){
+        return generandoArchivo;
+    }
+    
     @Override
     protected Void doInBackground() throws Exception {
+        boton.setEnabled(false);
+        generandoArchivo = true;
         crearLibro();
+        boton.setEnabled(true);
+        generandoArchivo = false;
         return null;
     }
     
