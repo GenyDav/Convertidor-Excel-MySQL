@@ -11,6 +11,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JProgressBar;
@@ -30,21 +31,38 @@ public class GeneradorBD extends SwingWorker<Void,Integer>{
     private List<TablaLista> listaHojas;
     
     private JLabel etiqueta;
+    private JButton btnImportar;
     private JProgressBar barra;
     private JTextArea areaRep;
     
-    String reporte;    
-    Tiempo temp;
+    private String reporte;    
+    private Tiempo temp;
     
-    public GeneradorBD(Conexion conn,LectorExcel lector,String nomBase,List<TablaLista> listaHojas,JLabel etiqueta,JProgressBar barra,JTextArea areaTexto){
+    private boolean generandoBase;
+    
+    public GeneradorBD(){
+        conn = null;
+        nombreBase = null;
+        lector = null;
+        listaHojas = null;
+        etiqueta = null;
+        barra = null;
+        temp = null;
+        areaRep = null;
+        generandoBase = false;
+    }
+    
+    public GeneradorBD(Conexion conn,LectorExcel lector,String nomBase,List<TablaLista> listaHojas,JLabel etiqueta,JButton btn,JProgressBar barra,JTextArea areaTexto){
         this.conn = conn;
         nombreBase = nomBase;
         this.lector = lector;
         this.listaHojas = listaHojas;
         this.etiqueta = etiqueta;
+        btnImportar = btn;
         this.barra = barra;
         temp = new Tiempo();
         areaRep = areaTexto;
+        generandoBase = false;
     }
     
     private String crearScriptTabla(String nombreBase,TablaLista hoja) throws SQLException{
@@ -163,8 +181,14 @@ public class GeneradorBD extends SwingWorker<Void,Integer>{
         }
     }
     
+    public boolean estaActivo(){
+        return generandoBase;
+    }
+    
     @Override
     protected Void doInBackground(){
+        btnImportar.setEnabled(false);
+        generandoBase = true;
         String nomTabla;
         int numTablas = listaHojas.size();
         try{
@@ -222,6 +246,8 @@ public class GeneradorBD extends SwingWorker<Void,Integer>{
                 );
             }
         }
+        generandoBase = false;
+        btnImportar.setEnabled(true);
         return null;
     }
     
