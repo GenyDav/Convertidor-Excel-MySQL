@@ -1496,9 +1496,8 @@ public class InterfazGrafica extends javax.swing.JFrame {
                 .collect(Collectors.toList());
         }
         try{
-            genBD =  new GeneradorBD(conn,lector,nombre,listaHojasImportar,infoImport,barraProgresoImport,rep.getTextArea());
-            genBD.execute();
-           
+            genBD =  new GeneradorBD(conn,lector,nombre,listaHojasImportar,infoImport,btnImportar,barraProgresoImport,rep.getTextArea());
+            genBD.execute();           
         }catch(Exception e){
             e.printStackTrace();
         }
