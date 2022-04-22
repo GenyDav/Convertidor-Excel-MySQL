@@ -128,11 +128,11 @@ public class GeneradorBD extends SwingWorker<Void,Integer>{
             }
         }  
         scriptInsertar += ");";
-        System.out.println(scriptInsertar);
+        //System.out.println(scriptInsertar);
         return scriptInsertar;
     }
     
-    private void insertarRegistros(String nomBase,TablaLista hoja){
+    private void insertarRegistros(String nomBase,TablaLista hoja) throws SQLException{
         Sheet hojaActual = lector.getLibro().getSheetAt(hoja.getPosicion());
         Row encabezado = hojaActual.getRow(hojaActual.getFirstRowNum());
         int numColumnas = encabezado.getPhysicalNumberOfCells();
@@ -161,10 +161,15 @@ public class GeneradorBD extends SwingWorker<Void,Integer>{
                 }catch(SQLException ex){ // errores al insertar registros
                     reporte = "[" + temp.obtenerTiempo() + "] Error en la línea " + (renglon+1) + ", código " + ex.getErrorCode() 
                         +" \n\t("+ ex.getMessage()+ ")\n";
-                    System.out.println(reporte);
+                    //System.out.println(reporte);
                     areaRep.append(reporte);
                     //ex.printStackTrace();
                     //Error 1406
+                    if(ex.getErrorCode()==1366){
+                        throw new SQLException(ex);
+                        //break;   
+                    }
+                    
                 }finally{
                     progreso = renglon*incremento;
                     renglon++;
@@ -176,7 +181,7 @@ public class GeneradorBD extends SwingWorker<Void,Integer>{
                 }
             }      
             reporte = "[" + temp.obtenerTiempo() + "] Inserción de registros terminada.\n";
-            System.out.println(reporte);
+            //System.out.println(reporte);
             areaRep.append(reporte);
         }
     }
@@ -192,6 +197,7 @@ public class GeneradorBD extends SwingWorker<Void,Integer>{
         String nomTabla;
         int numTablas = listaHojas.size();
         try{
+            areaRep.setText("");
             etiqueta.setText("Iniciando la creación de la base de datos...");
             conn.crearBase(nombreBase);
             reporte = "["+temp.obtenerTiempo()+"] Esquema '"+nombreBase+"' creado.\n";
@@ -207,7 +213,7 @@ public class GeneradorBD extends SwingWorker<Void,Integer>{
                     
                     etiqueta.setText("Creando la base '"+nombreBase+"': Insertando datos en la tabla '"+nomTabla+"' (Tabla "+(i+1)+" de "+numTablas+")");
                     reporte = "[" +temp.obtenerTiempo()+"] Iniciando la inserción de registros en la tabla '"+nomTabla+"'.\n";
-                    System.out.println(reporte);
+                    //System.out.println(reporte);
                     areaRep.append(reporte);
                     
                     insertarRegistros(nombreBase,listaHojas.get(i));
@@ -216,18 +222,24 @@ public class GeneradorBD extends SwingWorker<Void,Integer>{
                     //Errores al crear tablas
                     reporte = "[" +temp.obtenerTiempo()+ "] Error al crear la tabla '" + listaHojas.get(i).getNombre() + "', código " + ex.getErrorCode() 
                         +" \n\t("+ ex.getMessage()+ ")\n";                  
-                    System.out.println(reporte);
+                    //System.out.println(reporte);
                     areaRep.append(reporte);
                     ex.printStackTrace();
                 }
             }
-            etiqueta.setText("Creación de la base de datos terminada.");
+            etiqueta.setText("Creación de la base de datos '"+nombreBase+"' terminada.");
             reporte = "[" +temp.obtenerTiempo()+"] Importación de datos terminada.\n";
-            System.out.println(reporte);
+            //System.out.println(reporte);
             areaRep.append(reporte);
             publish(100);
         }catch(SQLException ex){
+            reporte = "[" +temp.obtenerTiempo()+"] No se pudo continuar con la creación del "
+                    + "esquema '"+nombreBase+"'.\n"
+                    + "\tError "+ex.getErrorCode() +" ("+ ex.getMessage()+ ")\n";
+            areaRep.append(reporte);
             ex.printStackTrace();
+            etiqueta.setText("No se pudo crear la base de datos '"+nombreBase+"'");
+            barra.setValue(0);
             System.out.println(ex.getErrorCode());
             if(ex.getErrorCode()==1007){ // ya existe una base de datos con ese nombre
                 JOptionPane.showMessageDialog(
