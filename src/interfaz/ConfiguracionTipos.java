@@ -15,7 +15,7 @@ import java.util.ArrayList;
  * @author Geny
  * @version 1.0
  */
-public class ConfigTipos extends javax.swing.JDialog {
+public class ConfiguracionTipos extends javax.swing.JDialog {
     // Lista que contiene en cada elemento la información de una columna de la hoja actual
     private ArrayList<InfoColumna> listaColumnas;
     
@@ -27,7 +27,7 @@ public class ConfigTipos extends javax.swing.JDialog {
      * @param hoja  Nombre de la hoja actual
      * @param col   Lista de columnas en la hoja 
      */
-    public ConfigTipos(java.awt.Frame parent, boolean modal, String hoja, ArrayList<InfoColumna> col) {
+    public ConfiguracionTipos(java.awt.Frame parent, boolean modal, String hoja, ArrayList<InfoColumna> col) {
         super(parent, modal); 
         initComponents();
         setTitle("Configurar tipos de la columna " + hoja);     
