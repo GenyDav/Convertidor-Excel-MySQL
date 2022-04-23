@@ -10,43 +10,48 @@ import java.awt.FlowLayout;
 import java.util.ArrayList;
 
 /**
- *
+ * JDialog en donde se muestran los objetos de la clase PanelColumna
+ * que contienen la información para cada columna de la hoja seleccionada.
  * @author Geny
+ * @version 1.0
  */
 public class ConfigTipos extends javax.swing.JDialog {
-    ArrayList<InfoColumna> listaColumnas;
+    // Lista que contiene en cada elemento la información de una columna de la hoja actual
+    private ArrayList<InfoColumna> listaColumnas;
     
     /**
-     * Creates new form ConfTipos
-     * @param parent
-     * @param modal
-     * @param col
-     * @param hoja
+     * Crea una nueva forma ConfTipos mostrando la información de cada columna de la
+     * hoja actual y los campos que permiten modificar los atributos de la columna
+     * @param parent Ventana padre desde la que se muestra la nueva ventana 
+     * @param modal Especifica si el diálogo bloquea otras ventanas de nivel superior cuando se muestra. 
+     * @param hoja  Nombre de la hoja actual
+     * @param col   Lista de columnas en la hoja 
      */
-    public ConfigTipos(java.awt.Frame parent, boolean modal, String hoja,ArrayList<InfoColumna> col) {
+    public ConfigTipos(java.awt.Frame parent, boolean modal, String hoja, ArrayList<InfoColumna> col) {
         super(parent, modal); 
         initComponents();
         setTitle("Configurar tipos de la columna " + hoja);     
         listaColumnas = col;
-        jPanel2.setLayout(new FlowLayout(FlowLayout.CENTER));
+        panelInterno.setLayout(new FlowLayout(FlowLayout.CENTER));
         
+        // Crear un nuevo panel con la información de cada columna y añadirlo al contenedor
         for(int i=0;i<listaColumnas.size();i++){
-            jPanel2.add(new PanelColumna(listaColumnas.get(i),this,grupoUnique));
+            panelInterno.add(new PanelColumna(listaColumnas.get(i),this,grupoUnique));
         }
         
+        // Ajustar el tamaño de la ventana al número de elementos cuando son menos de 8
         if(listaColumnas.size()<8){
             jScrollPane1.getVerticalScrollBar().setEnabled(false);
-            jPanel1.setPreferredSize(new Dimension(580,0));
+            panelExterno.setPreferredSize(new Dimension(580, 0));
             jScrollPane1.setPreferredSize(new Dimension(0, ((34+4)*listaColumnas.size())+7));
-            jPanel2.setPreferredSize(new Dimension(0,((34+4)*listaColumnas.size())+5));
-            // ajustar el tamaño de la ventana al número de elementos cuando son menos de 8
+            panelInterno.setPreferredSize(new Dimension(0, ((34+4)*listaColumnas.size())+5));  
             setPreferredSize(new Dimension(586,((34+4)*(listaColumnas.size()+1))-2));
         }else{
-            jPanel1.setPreferredSize(new Dimension(596,0));// ancho del panel en donde está el jScrollPane
+            panelExterno.setPreferredSize(new Dimension(596, 0)); // ancho del panel en donde está el jScrollPane
             jScrollPane1.setPreferredSize(new Dimension(0, 300)); // altura del jScrollpane
-            jPanel2.setPreferredSize(new Dimension(0,((34+4)*listaColumnas.size())+5)); // altura del panel dentro del scroll
-            // (34+4): alto del panel + separación entre cada panel
-            setPreferredSize(new Dimension(602,329));
+            // altura del panel dentro del scroll; (34+4): alto del panel + separación entre cada panel
+            panelInterno.setPreferredSize(new Dimension(0, ((34+4)*listaColumnas.size())+5));
+            setPreferredSize(new Dimension(602, 329));                      
         } 
         setLocationRelativeTo(parent);
         pack();
@@ -63,42 +68,42 @@ public class ConfigTipos extends javax.swing.JDialog {
     private void initComponents() {
 
         grupoUnique = new javax.swing.ButtonGroup();
-        jPanel1 = new javax.swing.JPanel();
+        panelExterno = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jPanel2 = new javax.swing.JPanel();
+        panelInterno = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setBackground(new java.awt.Color(0, 102, 102));
         setPreferredSize(new java.awt.Dimension(530, 300));
 
-        jPanel1.setBackground(new java.awt.Color(255, 0, 102));
+        panelExterno.setBackground(new java.awt.Color(255, 0, 102));
 
         jScrollPane1.setToolTipText("");
 
-        jPanel2.setBackground(new java.awt.Color(255, 255, 255));
+        panelInterno.setBackground(new java.awt.Color(255, 255, 255));
 
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        javax.swing.GroupLayout panelInternoLayout = new javax.swing.GroupLayout(panelInterno);
+        panelInterno.setLayout(panelInternoLayout);
+        panelInternoLayout.setHorizontalGroup(
+            panelInternoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 732, Short.MAX_VALUE)
         );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        panelInternoLayout.setVerticalGroup(
+            panelInternoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 282, Short.MAX_VALUE)
         );
 
-        jScrollPane1.setViewportView(jPanel2);
+        jScrollPane1.setViewportView(panelInterno);
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        javax.swing.GroupLayout panelExternoLayout = new javax.swing.GroupLayout(panelExterno);
+        panelExterno.setLayout(panelExternoLayout);
+        panelExternoLayout.setHorizontalGroup(
+            panelExternoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 585, Short.MAX_VALUE)
         );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
+        panelExternoLayout.setVerticalGroup(
+            panelExternoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelExternoLayout.createSequentialGroup()
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, 0))
         );
@@ -107,45 +112,20 @@ public class ConfigTipos extends javax.swing.JDialog {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(panelExterno, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(panelExterno, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    /**
-     * @param args the command line arguments
-     */
-    /*public static void main(String args[]) {
-        try {    
-            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-        } catch (Exception ex) {
-            System.err.println(ex);
-        }
-
-        /* Create and display the dialog */
-        /*java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                ConfigTipos dialog = new ConfigTipos(new javax.swing.JFrame(), true, "hoja");
-                dialog.addWindowListener(new java.awt.event.WindowAdapter() {
-                    @Override
-                    public void windowClosing(java.awt.event.WindowEvent e) {
-                        System.exit(0);
-                    }
-                });
-                dialog.setVisible(true);
-            }
-        });
-    }*/
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.ButtonGroup grupoUnique;
-    private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JPanel panelExterno;
+    private javax.swing.JPanel panelInterno;
     // End of variables declaration//GEN-END:variables
 }
