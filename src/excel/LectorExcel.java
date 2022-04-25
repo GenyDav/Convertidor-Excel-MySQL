@@ -13,6 +13,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
@@ -38,6 +39,8 @@ public class LectorExcel extends SwingWorker<Void,Void>{
     private JComboBox comboHojas;
     private JTable tabla;
     private JLabel etiqueta;
+    private JLabel nombreArchivo;
+    private String nombre;
     private JButton botonAbrir;
     private JButton btnTipos;
     private JButton btnImportar;
@@ -45,12 +48,14 @@ public class LectorExcel extends SwingWorker<Void,Void>{
     private JFrame ventana;
     private ArrayList<TablaLista> hojas;
     
-    public LectorExcel(JFrame ventana,JComboBox combo,JTable tabla,JLabel label,JButton btn,String ruta,JButton btnTipos,ArrayList<TablaLista>hojas,JButton btnImport,JRadioButton opc1,JRadioButton opc2){
+    public LectorExcel(JFrame ventana,JComboBox combo,JTable tabla,JLabel label,JLabel nomArch,JButton btn,String ruta,String nombre,JButton btnTipos,ArrayList<TablaLista>hojas,JButton btnImport,JRadioButton opc1,JRadioButton opc2){
         this.ruta = ruta;
         comboHojas = combo;
         this.ventana = ventana;
         this.tabla = tabla;
         etiqueta = label;
+        nombreArchivo = nomArch;
+        this.nombre = nombre;
         botonAbrir = btn;
         btnImportar = btnImport;
         this.opc1 = opc1;
@@ -74,16 +79,15 @@ public class LectorExcel extends SwingWorker<Void,Void>{
     public void leerArchivo() throws IOException{
         try{
             //flujoEntrada = new FileInputStream(new File(ruta));
-            etiqueta.setText("Leyendo archivo...");
             libro = WorkbookFactory.create(new File(ruta));
             //libro = new XSSFWorkbook(flujoEntrada);
-            System.out.println("Archivo creado...");
+            //System.out.println("Archivo creado...");
             
             Sheet hojaActual;
             Row encabezado; 
 
             for(int i=0;i<libro.getNumberOfSheets();i++){
-                System.out.println("Llenando hoja...");
+                //System.out.println("Llenando hoja...");
                 int numCol = 0;
                 hojaActual = libro.getSheetAt(i);
                 hojas.add(new TablaLista(hojaActual.getSheetName(),i));
@@ -120,12 +124,12 @@ public class LectorExcel extends SwingWorker<Void,Void>{
     }
     
     public int obtenerNumHojas(){
-        System.out.println("Obteniendo número de hojas..."+libro.getNumberOfSheets());
+        //System.out.println("Obteniendo número de hojas..."+libro.getNumberOfSheets());
         return libro.getNumberOfSheets();
     }
     
     public void obtenerNombresHojas(){
-        System.out.println("Obteniendo nombres de hojas...");
+        //System.out.println("Obteniendo nombres de hojas...");
         try{
             for(int i=0;i<libro.getNumberOfSheets();i++){
                 //System.out.println("i: "+i+ " "+libro.getSheetName(i));
@@ -155,21 +159,22 @@ public class LectorExcel extends SwingWorker<Void,Void>{
     
     @Override
     public Void doInBackground() throws IOException{
-        System.out.println("Iniciando lectura...");
+        //System.out.println("Iniciando lectura...");
+        etiqueta.setText("Leyendo archivo...");
+        etiqueta.setIcon(new ImageIcon(getClass().getResource("/imagenes/loading2.gif")));
         leerArchivo();
+        nombreArchivo.setText("  "+nombre);
         obtenerNombresHojas();
         comboHojas.setEnabled(true);
         botonAbrir.setEnabled(true);
         btnTipos.setEnabled(true);
         opc1.setEnabled(true);
-        opc1.setSelected(true);
+        //opc1.setSelected(true);
         opc2.setEnabled(true);
         btnImportar.setEnabled(true);
         /*if(seleccion.isSelected()){
             btnImportar.setEnabled(true);
-        }else{
-            btnImportar.setEnabled(false);
-        }*/
+        }
         
         /*TablaLista tabla;
         System.out.println("Información");
@@ -178,6 +183,7 @@ public class LectorExcel extends SwingWorker<Void,Void>{
             tabla.mostrarColumnas();
             System.out.println();
         }  */
+        //etiqueta.setIcon(null);
         return null;
     }
 }
