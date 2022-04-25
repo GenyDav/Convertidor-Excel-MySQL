@@ -1,20 +1,19 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package interfaz;
 
 import javax.swing.JTextArea;
 
 /**
- *
+ * Clas que crea la ventana utilizada para mostrar los eventos ocurridos durante 
+ * la creación de la base de datos desde un archivo de Excel.
  * @author Geny
+ * @version 1.0
  */
 public class Reporte extends javax.swing.JDialog {
 
     /**
-     * Creates new form Reporte
+     * Crea una nueva ventana con la información de la importación del archivo
+     * @param parent Ventana padre desde la que se muestra la nueva ventana 
+     * @param modal Especifica si el diálogo bloquea otras ventanas de nivel superior cuando se muestra
      */
     public Reporte(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
@@ -25,10 +24,15 @@ public class Reporte extends javax.swing.JDialog {
         setResizable(false); 
     }
     
+    /**
+     * Método que devuelve el espacio en donde se muestra la información del 
+     * proceso de importación
+     * @return jTextArea contenido en la ventana
+     */
     public JTextArea getTextArea(){
         return jTextArea1;
     }
-
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
