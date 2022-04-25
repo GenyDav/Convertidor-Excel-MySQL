@@ -25,7 +25,7 @@ public class FormatoTablaExcel extends SwingWorker<Void,Void>{
     private int indiceColInicio;
     
     private int indice; // indice de la hoja que se muestra en pantalla
-    private int numColumnas; // de la hoja actual
+    private int numColumnas; // columnas de la hoja actual
     
     public FormatoTablaExcel(int indiceHoja,LectorExcel lector){
         modelo = new DefaultTableModel();
@@ -39,26 +39,25 @@ public class FormatoTablaExcel extends SwingWorker<Void,Void>{
     
     public final void asignarNombresColumnas(){
         try{
-        Row encabezado;
-        ArrayList<Object> encabezadosTabla = new ArrayList<>();
+            Row encabezado;
+            ArrayList<Object> encabezadosTabla = new ArrayList<>();
+            if(hoja.getPhysicalNumberOfRows()==1){ // si solo hay un renglón en la hoja
+                encabezado = hoja.getRow(hoja.getLastRowNum());
+            }else{
+                //System.out.println("encabezado: "+hoja.getFirstRowNum());
+                encabezado = hoja.getRow(hoja.getFirstRowNum());
+            }
+            indiceColInicio = encabezado.getFirstCellNum();
+            //System.out.println("Primer columna: "+encabezado.getFirstCellNum());
 
-        if(hoja.getPhysicalNumberOfRows()==1){ // si solo hay un renglón en la hoja
-            encabezado = hoja.getRow(hoja.getLastRowNum());
-        }else{
-            //System.out.println("encabezado: "+hoja.getFirstRowNum());
-            encabezado = hoja.getRow(hoja.getFirstRowNum());
-        }
-        indiceColInicio = encabezado.getFirstCellNum();
-        //System.out.println("Primer columna: "+encabezado.getFirstCellNum());
-       
-        Iterator<Cell> iterador = encabezado.cellIterator();
-        while(iterador.hasNext()){
-            encabezadosTabla.add(iterador.next());
-        }
-        numColumnas = encabezado.getPhysicalNumberOfCells();
-        //System.out.println("Columnas: "+encabezado.getPhysicalNumberOfCells());
-        
-        modelo.setColumnIdentifiers(encabezadosTabla.toArray());
+            Iterator<Cell> iterador = encabezado.cellIterator();
+            while(iterador.hasNext()){
+                encabezadosTabla.add(iterador.next());
+            }
+            numColumnas = encabezado.getPhysicalNumberOfCells();
+            //System.out.println("Columnas: "+encabezado.getPhysicalNumberOfCells());
+
+            modelo.setColumnIdentifiers(encabezadosTabla.toArray());
         }catch(Exception e){System.out.println("Error 1");e.printStackTrace();}
     }
     
@@ -90,6 +89,7 @@ public class FormatoTablaExcel extends SwingWorker<Void,Void>{
             asignarNombresColumnas();
             escribirCeldas();
         }
+        lector.getLabel().setIcon(null);
         lector.getLabel().setText(hoja.getPhysicalNumberOfRows()-1+ " renglones cargados");
         return null;
     }
