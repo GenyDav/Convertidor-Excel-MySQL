@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package interfaz;
 
 import java.awt.event.ItemEvent;
@@ -14,21 +9,22 @@ import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 
 /**
- *
+ * Clase que crea un panel que contiene los elementos gráficos necesarios para
+ * modificar los atributos de una columna
  * @author Geny
+ * @version 1.0
  */
 public class PanelColumna extends javax.swing.JPanel {
-    //ArrayList<InfoColumna> columnas;
-    InfoColumna info;
-    String expDecimal;
-    Pattern pat;
-    String expEnumSet;
-    Pattern patronEnumSet;
-    Pattern coma;
-    JDialog ventana;
-    ButtonGroup grupo;
-    boolean estadoCheckBox;
-    boolean clic;
+    private InfoColumna info;       // objeto que contiene el tipo de dato de la columna, sus parámetros y modificadores
+    private String expDecimal;      // expresión regular para identificar números decimales separados por coma
+    private Pattern patronDecimal;  // patrón para identificar los parámetros del tipo de dato DECIMAL
+    private String expEnumSet;      // expresión regular para identificar los elementos separados por coma para los tipos de dato ENUM y SET
+    private Pattern patronEnumSet;  // patrón para identificar los parámetros del tipo de dato ENUM y SET
+    private Pattern coma;           // patrón para identificar el número de comas en una expresión 
+    private JDialog ventana;        // contenedor sobre el que se muestra el Panel
+    private ButtonGroup grupo;      // grupo al que se va a añadir el checkBox del modificador AUTO_INCREMENT
+    private boolean estadoCheckBox; // variable de control que indica si el checkBox del modificador AUTO_INCREMENT está seleccionado o no
+    private boolean clic;           // variable que indica si el usuario ha hecho clic o no cuando el estado de checkAI cambia
     
     /**
      * Creates new form PanelColumna
@@ -36,14 +32,12 @@ public class PanelColumna extends javax.swing.JPanel {
      * @param ventana
      * @param grupo
      */
-    public PanelColumna(InfoColumna col, ConfigTipos ventana, ButtonGroup grupo) {
+    public PanelColumna(InfoColumna col, ConfiguracionTipos ventana, ButtonGroup grupo) {
         initComponents();
         this.ventana = ventana;
         info = col;
-        //this.posicion = posicion;
-        //info = columnas.get(posicion)
-        expDecimal = "(\\d+)\\s*,\\s*(\\d+)";
-        pat = Pattern.compile(expDecimal);
+        expDecimal = "(\\d+)\\s*,\\s*(\\d+)";   // uno o más digitos seguido de cero o varios espacios  
+        patronDecimal = Pattern.compile(expDecimal);
         expEnumSet = "('(\\w+)'\\s*,\\s*)*'(\\w*)'";
         patronEnumSet = Pattern.compile(expEnumSet);
         coma = Pattern.compile(",");
@@ -241,8 +235,7 @@ public class PanelColumna extends javax.swing.JPanel {
         estadoCheckBox = info.getAI();
         clic = false;
         tipoCol.setSelectedIndex(info.getTipo());
-        parametros.setText(info.getParametros());
-        
+        parametros.setText(info.getParametros());     
     }
     
     /* Checkbox de llave primaria */
@@ -401,7 +394,7 @@ public class PanelColumna extends javax.swing.JPanel {
             case Tipo.DECIMAL:               
                 try{
                     if(!entrada.equals("")){
-                        Matcher mat = pat.matcher(entrada);
+                        Matcher mat = patronDecimal.matcher(entrada);
                         int n1,n2;
                         if (mat.matches()) {
                             //System.out.println("Regexp encontrada");
