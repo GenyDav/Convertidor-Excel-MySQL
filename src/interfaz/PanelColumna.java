@@ -262,14 +262,29 @@ public class PanelColumna extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_checkPKActionPerformed
 
+    /**
+     * Método que cambia el valor del modificador NOT NULL en la estructura de
+     * datos al hacer clic sobre su checkbox correspondiente.
+     * @param evt evento de selección sobre el ckeckBox para el atributo NOT NULL
+     */
     private void checkNNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkNNActionPerformed
         info.setNN(checkNN.isSelected());
     }//GEN-LAST:event_checkNNActionPerformed
-
+    
+    /**
+     * Método que cambia el valor del modificador UNIQUE en la estructura de
+     * datos al hacer clic sobre su checkbox correspondiente.
+     * @param evt evento de selección sobre el ckeckBox para el atributo UNIQUE
+     */
     private void checkUQActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkUQActionPerformed
         info.setUQ(checkUQ.isSelected());
     }//GEN-LAST:event_checkUQActionPerformed
-
+    
+    /**
+     * Método que cambia el valor del modificador USIGNED en la estructura de
+     * datos al hacer clic sobre su checkbox correspondiente.
+     * @param evt evento de selección sobre el ckeckBox para el atributo UNSIGNED
+     */
     private void checkUNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkUNActionPerformed
         info.setUN(checkUN.isSelected());
     }//GEN-LAST:event_checkUNActionPerformed
