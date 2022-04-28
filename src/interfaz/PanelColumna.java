@@ -36,9 +36,9 @@ public class PanelColumna extends javax.swing.JPanel {
         initComponents();
         this.ventana = ventana;
         info = col;
-        expDecimal = "(\\d+)\\s*,\\s*(\\d+)";           // dos números enteros separados por coma
+        expDecimal = "(\\d+)\\s*,\\s*(\\d+)";        // dos números enteros separados por coma
         patronDecimal = Pattern.compile(expDecimal);
-        expEnumSet = "('(\\w+)'\\s*,\\s*)*'(\\w*)'";    // una o más palabras (letras, números y el caracter '_') entre comillas y separadas por comas
+        expEnumSet = "('(\\w+)'\\s*,\\s*)*'(\\w*)'"; // una o más palabras (letras, números y el caracter '_') entre comillas y separadas por comas
         patronEnumSet = Pattern.compile(expEnumSet);
         coma = Pattern.compile(",");
         this.grupo = grupo;
@@ -223,8 +223,12 @@ public class PanelColumna extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    /**
+     * Método que muestra la configuración de la columna en el panel en pantalla.
+     * Muestra el nombre de la columna, su tipo de dato, los parametros y los 
+     * modificadores aplicados en esa columna.
+     */
     private void cargarDatos(){
-        //System.out.println(info.getNombre()+": "+Tipo.TIPO[info.getTipo()]+"("+info.getParametros()+")");
         nombreCol.setText(info.getNombre());
         checkPK.setSelected(info.getPK());
         checkNN.setSelected(info.getNN());
