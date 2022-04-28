@@ -27,23 +27,22 @@ public class PanelColumna extends javax.swing.JPanel {
     private boolean clic;           // variable que indica si el usuario ha hecho clic o no cuando el estado de checkAI cambia
     
     /**
-     * Creates new form PanelColumna
-     * @param col
-     * @param ventana
-     * @param grupo
+     * Crea una nueva forma PanelColumna
+     * @param col objeto que contiene la información de la columna a mostrarse en el panel
+     * @param ventana contenedor sobre el que se muestra el panel
+     * @param grupo grupo al que se añade el checkbox correspondiente al modificador AUTO_INCREMENT
      */
     public PanelColumna(InfoColumna col, ConfiguracionTipos ventana, ButtonGroup grupo) {
         initComponents();
         this.ventana = ventana;
         info = col;
-        expDecimal = "(\\d+)\\s*,\\s*(\\d+)";   // uno o más digitos seguido de cero o varios espacios  
+        expDecimal = "(\\d+)\\s*,\\s*(\\d+)";           // dos números enteros separados por coma
         patronDecimal = Pattern.compile(expDecimal);
-        expEnumSet = "('(\\w+)'\\s*,\\s*)*'(\\w*)'";
+        expEnumSet = "('(\\w+)'\\s*,\\s*)*'(\\w*)'";    // una o más palabras (letras, números y el caracter '_') entre comillas y separadas por comas
         patronEnumSet = Pattern.compile(expEnumSet);
         coma = Pattern.compile(",");
         this.grupo = grupo;
-        this.grupo.add(checkAI);
-        
+        this.grupo.add(checkAI);   
         cargarDatos();
     }
 
