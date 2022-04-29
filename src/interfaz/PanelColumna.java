@@ -241,7 +241,18 @@ public class PanelColumna extends javax.swing.JPanel {
         parametros.setText(info.getParametros());     
     }
     
-    /* Checkbox de llave primaria */
+    /**
+     * Método que cambia el valor del modificador PRIMARY KEY en la estructura de
+     * datos al hacer clic sobre su checkbox correspondiente. Cuando se selecciona
+     * el jCheckBox se selecciona tambien el check del modificador NOT NULL y se 
+     * modifica la estructura de datos con la información de la columna. 
+     * Si al seleccionar una columna como llave primaria su tipo de dato corresponde
+     * con el de algún tipo de entero (TINYINT, SMALLINT, MEDIUMINT, INT o BIGINT),
+     * se activará el checkbox del modificador AUTO_INCREMENT.
+     * Cuando se deselecciona el jCheckBox de llave primaria se deselecciona tambien 
+     * el checkbox de auto incremento y se deshabilita.
+     * @param evt evento de selección sobre el ckeckBox para el atributo PRIMARY KEY
+     */
     private void checkPKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkPKActionPerformed
         if(checkPK.isSelected()){
             info.setPK(true);
