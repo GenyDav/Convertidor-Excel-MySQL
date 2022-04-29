@@ -318,6 +318,10 @@ public class PanelColumna extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_comboTipoStateChanged
  
+    /**
+     * Define las propiedades del campo dedicado a contener los parámetros
+     * según el tipo de dato seleccionado.
+     */
     private void configCampoParametros(){
         switch(tipoCol.getSelectedIndex()){
             case Tipo.TINYINT:
@@ -355,6 +359,13 @@ public class PanelColumna extends javax.swing.JPanel {
         }
     }
     
+    /**
+     * Modifica las propiedades del campo dedicado a contener los parámetros
+     * de la columna según el tipo de dato seleccionado.
+     * @param texto texto dentro del campo
+     * @param enabled indica si el campo esta habilitado o deshabilitado
+     * @param toolTip descripción emergente del tipo de datos que se pueden escribir
+     */
     private void configValoresCampo(String texto,boolean enabled,String toolTip){
         parametros.setText(texto);
         parametros.setEnabled(enabled);
