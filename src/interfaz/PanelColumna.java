@@ -11,7 +11,7 @@ import javax.swing.JOptionPane;
 /**
  * Clase que crea un panel que contiene los elementos gráficos necesarios para
  * modificar los atributos de una columna
- * @author Geny
+ * @author Geny D.
  * @version 1.0
  */
 public class PanelColumna extends javax.swing.JPanel {
@@ -250,7 +250,8 @@ public class PanelColumna extends javax.swing.JPanel {
      * con el de algún tipo de entero (TINYINT, SMALLINT, MEDIUMINT, INT o BIGINT),
      * se activará el checkbox del modificador AUTO_INCREMENT.
      * Cuando se deselecciona el jCheckBox de llave primaria se deselecciona tambien 
-     * el checkbox de auto incremento y se deshabilita.
+     * el checkbox de auto incremento y se deshabilita. La estructura de datos 
+     * con la información de la columna se actualiza.
      * @param evt evento de selección sobre el ckeckBox para el atributo PRIMARY KEY
      */
     private void checkPKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkPKActionPerformed
@@ -271,7 +272,7 @@ public class PanelColumna extends javax.swing.JPanel {
             info.setPK(false);
             checkAI.setEnabled(false);
             if(checkAI.isSelected()){
-                grupo.clearSelection();
+                grupo.clearSelection(); // la información se actualiza de forma al cambiar el estado del jCheckBox
             }
         }
     }//GEN-LAST:event_checkPKActionPerformed
@@ -303,6 +304,12 @@ public class PanelColumna extends javax.swing.JPanel {
         info.setUN(checkUN.isSelected());
     }//GEN-LAST:event_checkUNActionPerformed
 
+    /**
+     * Establece los modificadores disponibles y los parámetros aceptados según 
+     * el tipo de dato seleccionado.
+     * @param evt evento de cambio de estado sobre el jComboBox que contiene los
+     * tipos de datos que pueden ser utilizados
+     */
     private void comboTipoStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_comboTipoStateChanged
         if(evt.getStateChange()==ItemEvent.SELECTED){
             info.setTipo(tipoCol.getSelectedIndex());
@@ -310,13 +317,7 @@ public class PanelColumna extends javax.swing.JPanel {
             configModificadores();
         }
     }//GEN-LAST:event_comboTipoStateChanged
-
-    private void configValoresCampo(String texto,boolean enabled,String toolTip){
-        parametros.setText(texto);
-        parametros.setEnabled(enabled);
-        parametros.setToolTipText(toolTip);
-    }
-    
+ 
     private void configCampoParametros(){
         switch(tipoCol.getSelectedIndex()){
             case Tipo.TINYINT:
@@ -352,6 +353,12 @@ public class PanelColumna extends javax.swing.JPanel {
                 configValoresCampo("",false,"");
                 break;
         }
+    }
+    
+    private void configValoresCampo(String texto,boolean enabled,String toolTip){
+        parametros.setText(texto);
+        parametros.setEnabled(enabled);
+        parametros.setToolTipText(toolTip);
     }
     
     /*  
