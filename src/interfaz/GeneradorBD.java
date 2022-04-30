@@ -154,6 +154,15 @@ public class GeneradorBD extends SwingWorker<Void,Integer>{
             
             renglonArch = iteradorRenglon.next(); // saltar el encabezado
             while(iteradorRenglon.hasNext()){
+                if(isCancelled()){
+                    /*etiqueta.setText("Cerrando la conexión...");
+                    barra.setValue(0);
+                    try{
+                        Thread.sleep(250);
+                    }catch(Exception e){}
+                    System.out.println("Cerrando la conexión...");*/
+                    return;
+                }
                 renglonArch = iteradorRenglon.next();
                 scriptInsertar = crearScriptRegistro(nomBase,hoja.getNombre(),renglonArch,numColumnas,indiceColInicio);
                 try{
@@ -229,6 +238,16 @@ public class GeneradorBD extends SwingWorker<Void,Integer>{
             areaRep.append(reporte);
             
             for(int i=0;i<listaHojas.size();i++){
+                if(isCancelled()){
+                    //etiqueta.setText("Cerrando la conexión...");
+                    //System.out.println("Cerrando la conexión...");
+                    /*try{
+                        Thread.sleep(100);
+                    }catch(Exception e){
+                        
+                    }*/
+                    return null;
+                }
                 try{
                     nomTabla = listaHojas.get(i).getNombre();
                     etiqueta.setText("Creando la base '"+nombreBase+"': Definiendo la estructura de la tabla '"+nomTabla+"'");              
@@ -248,35 +267,7 @@ public class GeneradorBD extends SwingWorker<Void,Integer>{
                     System.out.println("Mensaje: "+ex.getMessage());
                     System.out.println("Código: "+ex.getErrorCode());
                     System.out.println("Estado:"+ex.getSQLState());
-                    /*reporte = "[" +temp.obtenerTiempo()+ "] Error al crear la tabla '" + listaHojas.get(i).getNombre() + "', código " + ex.getErrorCode() 
-                        +" \n\t("+ ex.getMessage()+ ")\n";                  
-                    //System.out.println(reporte);
-                    areaRep.append(reporte);
-                    ex.printStackTrace();
-                    */
-                    //throw new SQLException();
-                    /*switch(ex.getErrorCode()){ //1366
-                        case 1236:
-                        case 2002:
-                        case 2003: 
-                        case 126:
-                        case 127:
-                        case 134:
-                        case 144:
-                        case 145:
-                        case 1146:
-                        case 22:
-                        case 24:
-                        case 0:
-                            throw new SQLException(ex.getMessage(),ex.getSQLState(),ex.getErrorCode());   
-                        default:
-                            reporte = "[" +temp.obtenerTiempo()+ "] Error al crear la tabla '" + listaHojas.get(i).getNombre() + "', código " + ex.getErrorCode() 
-                                +" \n\t("+ ex.getMessage()+ ")\n";                  
-                            //System.out.println(reporte);
-                            areaRep.append(reporte);
-                            ex.printStackTrace();
-                            break;
-                    }  */
+                   
                     identificarFallo(ex);
                     reporte = "[" +temp.obtenerTiempo()+ "] Error al crear la tabla '" + listaHojas.get(i).getNombre() + "', código " + ex.getErrorCode() 
                         +" \n\t("+ ex.getMessage()+ ")\n";                  
