@@ -1043,16 +1043,38 @@ public class InterfazGrafica extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalirActionPerformed
+        Object [] opciones ={"Aceptar","Cancelar"};
+        if((generadorArch.getState()==StateValue.STARTED)||(genBD.getState()==StateValue.STARTED)){    
+            int eleccion = JOptionPane.showOptionDialog(
+                this,
+                "Hay procesos ejecutándose, ¿desea cerrar la conexión?  ",
+                "Confirmar cierre",
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.QUESTION_MESSAGE,null,opciones,"Aceptar"
+            );
+            if (eleccion == JOptionPane.YES_OPTION){ 
+                generadorArch.cancel(true);
+                genBD.cancel(true);
+                terminarConexion();
+            }
+        }else{
+            terminarConexion();
+            info.setText("Cerrando la conexión...");
+        }
+    }//GEN-LAST:event_btnSalirActionPerformed
+    
+    private void terminarConexion(){
+        info.setText("Cerrando la conexión...");
         conn.terminarConexion();
         reiniciarCamposInicio();
-        cardLayout.show(jPanel1, "card2");   
         modo = 1;
-        cardLayout2.show(jPanel7, "cardExport");
         guardar_excel.setIcon(new ImageIcon(getClass().getResource("/imagenes/btn1.png")));
         guardar_bd.setIcon(new ImageIcon(getClass().getResource("/imagenes/btn2.png")));
         reiniciarElementosExportacion();
         reiniciarElementosImportacion();
-    }//GEN-LAST:event_btnSalirActionPerformed
+        cardLayout.show(jPanel1, "card2");  
+        cardLayout2.show(jPanel7, "cardExport");
+    }
     
     private void reiniciarElementosExportacion(){
         comboBases.removeAllItems();
@@ -1494,8 +1516,8 @@ public class InterfazGrafica extends javax.swing.JFrame {
     }//GEN-LAST:event_btnConectarActionPerformed
 
     private void cerrarVentana(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_cerrarVentana
-        System.out.println(generadorArch.estaActivo());
-        System.out.println(genBD.estaActivo());
+        //System.out.println(generadorArch.estaActivo());
+        //System.out.println(genBD.estaActivo());
         
         Object [] opciones ={"Aceptar","Cancelar"};
         //System.out.println("generadorArch.getState(): "+generadorArch.getState());
