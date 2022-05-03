@@ -27,6 +27,7 @@ import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
+import javax.swing.SwingWorker;
 import javax.swing.SwingWorker.StateValue;
 import javax.swing.UIManager;
 import javax.swing.filechooser.FileSystemView;
@@ -1043,28 +1044,41 @@ public class InterfazGrafica extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalirActionPerformed
-        Object [] opciones ={"Aceptar","Cancelar"};
-        if((generadorArch.getState()==StateValue.STARTED)||(genBD.getState()==StateValue.STARTED)){    
-            int eleccion = JOptionPane.showOptionDialog(
-                this,
-                "Hay procesos ejecutándose, ¿desea cerrar la conexión?  ",
-                "Confirmar cierre",
-                JOptionPane.YES_NO_OPTION,
-                JOptionPane.QUESTION_MESSAGE,null,opciones,"Aceptar"
-            );
-            if (eleccion == JOptionPane.YES_OPTION){ 
-                generadorArch.cancel(true);
-                genBD.cancel(true);
-                terminarConexion();
+        Object []opciones = {"Aceptar","Cancelar"};
+        new SwingWorker<Void,Void>(){
+            @Override
+            protected Void doInBackground() throws Exception {  
+                if((generadorArch.getState()==StateValue.STARTED)||(genBD.getState()==StateValue.STARTED)){
+                    int eleccion = JOptionPane.showOptionDialog(
+                        null,
+                        "Hay procesos ejecutándose, ¿desea cerrar la conexión?  ",
+                        "Confirmar cierre",
+                        JOptionPane.YES_NO_OPTION,
+                        JOptionPane.QUESTION_MESSAGE,null,opciones,"Aceptar"
+                    );
+                    if (eleccion == JOptionPane.YES_OPTION){ 
+                        generadorArch.cancel(true);
+                        genBD.cancel(true);
+                        terminarConexion();             
+                    }
+                }else{
+                    terminarConexion();
+                }
+                return null;
             }
-        }else{
-            terminarConexion();
-            info.setText("Cerrando la conexión...");
-        }
+            /*
+            @Override
+            protected void process(List<String> lista) {
+                for (String cad : lista) {
+                    infoImport.setText("Estado: "+cad);
+                }
+            }*/
+        }.execute();  
     }//GEN-LAST:event_btnSalirActionPerformed
     
     private void terminarConexion(){
-        info.setText("Cerrando la conexión...");
+        cardLayout.show(jPanel1, "card2");  
+        cardLayout2.show(jPanel7, "cardExport");
         conn.terminarConexion();
         reiniciarCamposInicio();
         modo = 1;
@@ -1072,8 +1086,6 @@ public class InterfazGrafica extends javax.swing.JFrame {
         guardar_bd.setIcon(new ImageIcon(getClass().getResource("/imagenes/btn2.png")));
         reiniciarElementosExportacion();
         reiniciarElementosImportacion();
-        cardLayout.show(jPanel1, "card2");  
-        cardLayout2.show(jPanel7, "cardExport");
     }
     
     private void reiniciarElementosExportacion(){
@@ -1110,7 +1122,6 @@ public class InterfazGrafica extends javax.swing.JFrame {
         btnBorrarExcel.setEnabled(false);
         btnQuitarExcel.setEnabled(false);
         btnImportar.setEnabled(false);//
-        infoImport.setText("Progreso de importación");
         barraProgresoImport.setValue(0);
         btnReporte.setEnabled(false);
         
@@ -1122,6 +1133,7 @@ public class InterfazGrafica extends javax.swing.JFrame {
             lector.cerrarArchivo();
             lector = null;
         }  
+        infoImport.setText("Progreso de importación");
     }
     
     private void tablasCompletasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tablasCompletasActionPerformed
