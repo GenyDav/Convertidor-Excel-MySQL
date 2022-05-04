@@ -466,6 +466,12 @@ public class InterfazGrafica extends javax.swing.JFrame {
             }
         ));
         tabla.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_ALL_COLUMNS);
+        tabla.setDragEnabled(true);
+        tabla.setGridColor(new java.awt.Color(204, 204, 204));
+        tabla.setSelectionBackground(new java.awt.Color(2, 97, 140));
+        tabla.setSelectionForeground(new java.awt.Color(255, 255, 255));
+        tabla.setShowVerticalLines(false);
+        tabla.getTableHeader().setReorderingAllowed(false);
         jScrollPane1.setViewportView(tabla);
 
         jLabel2.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
@@ -722,6 +728,10 @@ public class InterfazGrafica extends javax.swing.JFrame {
             }
         ));
         tablaExcel.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_ALL_COLUMNS);
+        tablaExcel.setGridColor(new java.awt.Color(204, 204, 204));
+        tablaExcel.setSelectionBackground(new java.awt.Color(2, 97, 140));
+        tablaExcel.setShowVerticalLines(false);
+        tablaExcel.getTableHeader().setReorderingAllowed(false);
         jScrollPane2.setViewportView(tablaExcel);
 
         jLabel9.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
