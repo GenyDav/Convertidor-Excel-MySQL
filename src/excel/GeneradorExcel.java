@@ -105,6 +105,10 @@ public class GeneradorExcel extends SwingWorker<Void,Integer>{
             }
 
             for(int i=0;i<numTablas;i++){
+                if(isCancelled()){
+                    labelProgreso.setText("Exportación de la base "+nombreBase+"' cancelada.");
+                    return;
+                }
                 indiceTablaAct = i;
                 crearHoja(tablas.get(i).getNombre());
             }
@@ -146,7 +150,7 @@ public class GeneradorExcel extends SwingWorker<Void,Integer>{
     private void crearHoja(String t){
         int columnas;   // número de columnas en la hoja
         Sheet hoja = libro.createSheet(t);
-        try {
+        try{
             publish(0); // reiniciar la barra de progreso
             labelProgreso.setText("Exportando la base '" + nombreBase + "': "
                 + "creando hoja '" + t + "', consultando la base de datos...");
@@ -157,7 +161,7 @@ public class GeneradorExcel extends SwingWorker<Void,Integer>{
                 + " (tabla " + (indiceTablaAct+1) + " de " + numTablas + ")");
             columnas = escribirEncabezados(hoja);
             escribirDatos(hoja, columnas);
-        } catch (SQLException ex) {
+        }catch(SQLException ex){
             labelProgreso.setText("No se pudo cargar la información del servidor "
             + "(Error MySQL " + ex.getErrorCode() + ": " + ex.getMessage() + ".");
             ex.printStackTrace();
@@ -190,6 +194,10 @@ public class GeneradorExcel extends SwingWorker<Void,Integer>{
         resultados.beforeFirst();
         
         while(resultados.next()){
+            if(isCancelled()){
+                labelProgreso.setText("Exportación de la base "+nombreBase+"' cancelada.");
+                return;
+            }
             Row reg = hoja.createRow(renglon);
             for(int i=0;i<numColumnas;i++){
                 //Cell celda = reg.createCell(i);
@@ -244,10 +252,12 @@ public class GeneradorExcel extends SwingWorker<Void,Integer>{
     
     @Override
     protected Void doInBackground() throws Exception {
-        boton.setEnabled(false);
+        //boton.setEnabled(false);
+        boton.setText("Cancelar exportación");
         generandoArchivo = true;
         crearLibro();
-        boton.setEnabled(true);
+        //boton.setEnabled(true);
+        boton.setText("Exportar");
         generandoArchivo = false;
         return null;
     }
