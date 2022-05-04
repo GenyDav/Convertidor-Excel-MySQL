@@ -155,12 +155,7 @@ public class GeneradorBD extends SwingWorker<Void,Integer>{
             renglonArch = iteradorRenglon.next(); // saltar el encabezado
             while(iteradorRenglon.hasNext()){
                 if(isCancelled()){
-                    /*etiqueta.setText("Cerrando la conexión...");
-                    barra.setValue(0);
-                    try{
-                        Thread.sleep(250);
-                    }catch(Exception e){}
-                    System.out.println("Cerrando la conexión...");*/
+                    etiqueta.setText("Exportación de la base '"+nombreBase+"' cancelada.");
                     return;
                 }
                 renglonArch = iteradorRenglon.next();
@@ -226,7 +221,8 @@ public class GeneradorBD extends SwingWorker<Void,Integer>{
     
     @Override 
     protected Void doInBackground(){
-        btnImportar.setEnabled(false);
+        //btnImportar.setEnabled(false);
+        btnImportar.setText("Cancelar importación");
         generandoBase = true;
         String nomTabla;
         int numTablas = listaHojas.size();
@@ -239,6 +235,7 @@ public class GeneradorBD extends SwingWorker<Void,Integer>{
             
             for(int i=0;i<listaHojas.size();i++){
                 if(isCancelled()){
+                    etiqueta.setText("Exportación de la base '"+nombreBase+"' cancelada.");
                     //etiqueta.setText("Cerrando la conexión...");
                     //System.out.println("Cerrando la conexión...");
                     /*try{
@@ -323,7 +320,8 @@ public class GeneradorBD extends SwingWorker<Void,Integer>{
             }*/
         }
         generandoBase = false;
-        btnImportar.setEnabled(true);
+        //btnImportar.setEnabled(true);
+        btnImportar.setText("Crear base de datos");
         return null;
     }
     
