@@ -19,7 +19,7 @@ import javax.swing.table.DefaultTableModel;
  * @author Geny
  */
 public class FormatoTabla extends SwingWorker<Void,Void>{
-    private DefaultTableModel modelo;
+    private DefaultTableModel modelo; 
     private JTable tabla;
     private Conexion conn;
     private ResultSet resultados;
@@ -30,7 +30,16 @@ public class FormatoTabla extends SwingWorker<Void,Void>{
     private JLabel reg;
     
     public FormatoTabla(JTable t,Conexion c,String nomBase,String nomTabla,JLabel reg) throws SQLException{
-        modelo = new DefaultTableModel();
+        modelo = new DefaultTableModel(){
+            @Override
+            public boolean isCellEditable (int row, int column){
+                // Aquí devolvemos true o false según queramos que una celda
+                // identificada por fila,columna (row,column), sea o no editable
+                //if (column == 3)
+                //   return true;
+                return false;
+            }
+        };
         tabla = t;
         tabla.setModel(modelo);
         conn = c;
