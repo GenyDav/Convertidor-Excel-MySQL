@@ -28,7 +28,13 @@ public class FormatoTablaExcel extends SwingWorker<Void,Void>{
     private int numColumnas; // columnas de la hoja actual
     
     public FormatoTablaExcel(int indiceHoja,LectorExcel lector){
-        modelo = new DefaultTableModel();
+        //modelo = new DefaultTableModel();
+        modelo = new DefaultTableModel(){
+            @Override
+            public boolean isCellEditable (int row, int column){
+                return false;
+            }
+        };
         lector.getTabla().setModel(modelo);
         this.lector = lector;
         this.indice = indiceHoja;
