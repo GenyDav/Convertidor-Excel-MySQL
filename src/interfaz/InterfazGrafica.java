@@ -468,9 +468,9 @@ public class InterfazGrafica extends javax.swing.JFrame {
         tabla.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_ALL_COLUMNS);
         tabla.setDragEnabled(true);
         tabla.setGridColor(new java.awt.Color(204, 204, 204));
+        tabla.setOpaque(false);
         tabla.setSelectionBackground(new java.awt.Color(2, 97, 140));
         tabla.setSelectionForeground(new java.awt.Color(255, 255, 255));
-        tabla.setShowVerticalLines(false);
         tabla.getTableHeader().setReorderingAllowed(false);
         jScrollPane1.setViewportView(tabla);
 
@@ -730,7 +730,6 @@ public class InterfazGrafica extends javax.swing.JFrame {
         tablaExcel.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_ALL_COLUMNS);
         tablaExcel.setGridColor(new java.awt.Color(204, 204, 204));
         tablaExcel.setSelectionBackground(new java.awt.Color(2, 97, 140));
-        tablaExcel.setShowVerticalLines(false);
         tablaExcel.getTableHeader().setReorderingAllowed(false);
         jScrollPane2.setViewportView(tablaExcel);
 
@@ -1260,7 +1259,11 @@ public class InterfazGrafica extends javax.swing.JFrame {
     }//GEN-LAST:event_comboBasesMouseClicked
 
     private void btnExportarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExportarActionPerformed
-        guardarArchivo();
+        if(btnExportar.getText().equals("Exportar")){
+            guardarArchivo();
+        }else{
+            generadorArch.cancel(true);
+        }
     }//GEN-LAST:event_btnExportarActionPerformed
 
     private void guardar_bdActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_guardar_bdActionPerformed
@@ -1344,43 +1347,47 @@ public class InterfazGrafica extends javax.swing.JFrame {
     }//GEN-LAST:event_tablasCompletasExcelActionPerformed
 
     private void btnImportarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnImportarActionPerformed
-        String nombreBase = "";
-        try{
-            nombreBase = (String)JOptionPane.showInputDialog(
-                this,
-                "Escribe el nombre de la nueva base de datos:\n",
-                "Crear base de datos",
-                JOptionPane.PLAIN_MESSAGE,
-                null,           // ícono
-                null,           // opciones del combo box
-                "Nombre nuevo"  // texto dentro del campo
-            );
-            //System.out.println("Nombre de la base de datos: "+nombreBase);
-            if(nombreBase.length()>0){ // comprobar que el usuario escriba algo
-                mat = patron.matcher(nombreBase);
-                if(mat.matches()){
-                    //System.out.println("Regexp encontrada");
-                    // crear la base de datos
-                    importarArchivo(nombreBase);
+        if(btnImportar.getText().equals("Cancelar importación")){
+            genBD.cancel(true);
+        }else{
+            String nombreBase = "";
+            try{
+                nombreBase = (String)JOptionPane.showInputDialog(
+                    this,
+                    "Escribe el nombre de la nueva base de datos:\n",
+                    "Crear base de datos",
+                    JOptionPane.PLAIN_MESSAGE,
+                    null,           // ícono
+                    null,           // opciones del combo box
+                    "Nombre nuevo"  // texto dentro del campo
+                );
+                //System.out.println("Nombre de la base de datos: "+nombreBase);
+                if(nombreBase.length()>0){ // comprobar que el usuario escriba algo
+                    mat = patron.matcher(nombreBase);
+                    if(mat.matches()){
+                        //System.out.println("Regexp encontrada");
+                        // crear la base de datos
+                        importarArchivo(nombreBase);
+                    }else{
+                        //System.err.println("Regexp no encontrada");
+                        throw new Exception();
+                    }
                 }else{
-                    //System.err.println("Regexp no encontrada");
                     throw new Exception();
                 }
-            }else{
-                throw new Exception();
+            }catch(NullPointerException e){
             }
-        }catch(NullPointerException e){
-        }
-        catch(Exception e){
-            //e.printStackTrace();
-            JOptionPane.showMessageDialog(
-                this, 
-                "No se encontró un nombre válido. El nombre sólo "
-                + "\npuede estar formado por letras, números y "
-                + "\ncaracteres de subrayado(_).",
-                "No se puede crear la base de datos", 
-                JOptionPane.WARNING_MESSAGE
-            );
+            catch(Exception e){
+                //e.printStackTrace();
+                JOptionPane.showMessageDialog(
+                    this, 
+                    "No se encontró un nombre válido. El nombre sólo "
+                    + "\npuede estar formado por letras, números y "
+                    + "\ncaracteres de subrayado(_).",
+                    "No se puede crear la base de datos", 
+                    JOptionPane.WARNING_MESSAGE
+                );
+            }
         }
     }//GEN-LAST:event_btnImportarActionPerformed
 
