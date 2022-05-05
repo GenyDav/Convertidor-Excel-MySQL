@@ -371,13 +371,18 @@ public class PanelColumna extends javax.swing.JPanel {
         parametros.setEnabled(enabled);
         parametros.setToolTipText(toolTip);
     }
-    
-    /*  
-    Deshabilitar la opción UNSIGNED si el tipo de dato seleccionado no es numérico
-    Deshabilitar la opción AUTO_INCREMENT si el tipo de dato seleccionado es distinto de algún INTEGER y el campo no es llave primaria
-    */  
+      
+    /**
+     * Estableces los modificadores disponibles para una columna según el tipo
+     * de dato seleccionado.
+     * Al seleccionar un tipo de dato no numérico se deshabilita el jcheckbox
+     * que corresponde al modificador UNSIGNED.
+     * Al seleccionar un tipo de dato distinto a TINYINT, SMALLINT, MEDIUMINT,
+     * INT y BIGINT se deshabilita el modificador AUTO_INCREMENT.
+     * AUTO_INCREMENT también se deshabilita si el tipo de dato seleccionado es
+     * entero pero la columna no está marcada como llave primaria.
+     */
     private void configModificadores(){
-        //System.out.println("Cambiando modificadores...");
         switch(tipoCol.getSelectedIndex()){
             case Tipo.TINYINT:
             case Tipo.SMALLINT:
@@ -385,27 +390,27 @@ public class PanelColumna extends javax.swing.JPanel {
             case Tipo.INT:
             case Tipo.BIGINT:
                 checkUN.setEnabled(true);
-                if(info.getPK()){
+                if(info.getPK())
                     checkAI.setEnabled(true);
-                }else{ //?
+                else
                     checkAI.setEnabled(false);
-                }
                 break;
             case Tipo.FLOAT:
             case Tipo.DECIMAL:
             case Tipo.DOUBLE:
                 checkUN.setEnabled(true);
                 checkAI.setEnabled(false);
-                if(checkAI.isSelected()){
-                    grupo.clearSelection();
-                }
+                // Si antes de seleccionar un tipo de sato FLOAT, DECIMAL o 
+                // DOUBLE, la opción de auto_increment estaba seleccionada,
+                // entonces se desmarca
+                if(checkAI.isSelected())
+                    grupo.clearSelection();               
                 break;              
             default:
                 checkUN.setEnabled(false);
                 checkAI.setEnabled(false);
-                if(checkAI.isSelected()){
+                if(checkAI.isSelected())
                     grupo.clearSelection();
-                }
                 break;
         }
     }
