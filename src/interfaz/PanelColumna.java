@@ -415,6 +415,10 @@ public class PanelColumna extends javax.swing.JPanel {
         }
     }
     
+    /**
+     * 
+     * @param evt 
+     */
     private void parametrosFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_parametrosFocusLost
         String entrada = parametros.getText();
         switch(tipoCol.getSelectedIndex()){
@@ -589,6 +593,12 @@ public class PanelColumna extends javax.swing.JPanel {
         } 
     }//GEN-LAST:event_parametrosFocusLost
 
+    /**
+     * Método que muestra una cuadro de diálogo con una descripción del error 
+     * ocurrido cuando el usuario intenta definir los parámetros de una columna.
+     * @param mensaje Descripción del error que ocurre al intentar escribir los
+     * parámetros de una columna según su tipo de dato.
+     */
     private void mostrarMsgError(String mensaje){
         JOptionPane.showMessageDialog(
             ventana, 
