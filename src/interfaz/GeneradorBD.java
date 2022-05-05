@@ -107,6 +107,17 @@ public class GeneradorBD extends SwingWorker<Void,Integer>{
     }
     
     private void crearTabla(String nombreBase,TablaLista hoja) throws SQLException{
+        if(isCancelled()){
+            etiqueta.setText("Importación de la base '"+nombreBase+"' cancelada.");
+            //etiqueta.setText("Cerrando la conexión...");
+            //System.out.println("Cerrando la conexión...");
+            /*try{
+                Thread.sleep(100);
+            }catch(Exception e){
+
+            }*/
+            return;
+        }
         String scriptTabla = crearScriptTabla(nombreBase,hoja); 
         conn.modificarBase(scriptTabla); // crear la tabla
         //System.out.println(scriptTabla);
@@ -155,7 +166,7 @@ public class GeneradorBD extends SwingWorker<Void,Integer>{
             renglonArch = iteradorRenglon.next(); // saltar el encabezado
             while(iteradorRenglon.hasNext()){
                 if(isCancelled()){
-                    etiqueta.setText("Exportación de la base '"+nombreBase+"' cancelada.");
+                    etiqueta.setText("Importación de la base '"+nombreBase+"' cancelada.");
                     return;
                 }
                 renglonArch = iteradorRenglon.next();
@@ -235,14 +246,10 @@ public class GeneradorBD extends SwingWorker<Void,Integer>{
             
             for(int i=0;i<listaHojas.size();i++){
                 if(isCancelled()){
-                    etiqueta.setText("Exportación de la base '"+nombreBase+"' cancelada.");
-                    //etiqueta.setText("Cerrando la conexión...");
-                    //System.out.println("Cerrando la conexión...");
-                    /*try{
-                        Thread.sleep(100);
-                    }catch(Exception e){
-                        
-                    }*/
+                    etiqueta.setText("Importación de la base '"+nombreBase+"' cancelada.");
+                    reporte = "["+temp.obtenerTiempo()+"] Se canceló la importación del esquema '"+nombreBase+"'.\n";
+                    areaRep.append(reporte);
+                    btnImportar.setText("Crear base de datos");
                     return null;
                 }
                 try{
@@ -321,7 +328,7 @@ public class GeneradorBD extends SwingWorker<Void,Integer>{
         }
         generandoBase = false;
         //btnImportar.setEnabled(true);
-        btnImportar.setText("Crear base de datos");
+        //btnImportar.setText("Crear base de datos");
         return null;
     }
     
