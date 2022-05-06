@@ -82,11 +82,6 @@ public class PanelColumna extends javax.swing.JPanel {
                 comboTipoStateChanged(evt);
             }
         });
-        tipoCol.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusLost(java.awt.event.FocusEvent evt) {
-                tipoColFocusLost(evt);
-            }
-        });
 
         parametros.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         parametros.setText("0");
@@ -420,7 +415,6 @@ public class PanelColumna extends javax.swing.JPanel {
      * mostrando un mensaje de error si los parámetros no son válidos para el
      * tipo de dato de la columna. Si son válidos se actualiza la estructura de
      * datos que contiene la información de las columnas del archivo.
-     * 
      * @param evt Evento lanzado cuando el campo que contiene los parámetros de
      * una columna pierde el foco.
      */
@@ -474,11 +468,10 @@ public class PanelColumna extends javax.swing.JPanel {
                             // de la expresión regular
                             n1 = Integer.parseInt(mat.group(1)); // obtener la primer coincidencia del patrón
                             n2 = Integer.parseInt(mat.group(2)); // obtener la segunda coincidencia del patrón    
-                            if(n1>65||n2>30||n1<n2){
+                            if(n1>65||n2>30||n1<n2)
                                 throw new Exception(); 
-                            }else{
+                            else
                                 info.setParametros(entrada);
-                            }
                         }else{
                             throw new Exception(); 
                         }
@@ -507,11 +500,10 @@ public class PanelColumna extends javax.swing.JPanel {
                 try{
                     if(!entrada.equals("")){
                         int tam = Integer.parseInt(entrada);
-                        if(tam<0||tam>53){
+                        if(tam<0||tam>53)
                             throw new Exception();
-                        }else{
+                        else
                             info.setParametros(entrada);
-                        }
                     }else{
                         info.setParametros("");
                     } 
@@ -524,14 +516,17 @@ public class PanelColumna extends javax.swing.JPanel {
                 }
                 break;
             case Tipo.TEXT:
+                /*
+                El tipo de dato text puede aceptar un número entero positivo
+                que indica la longitud máxima de los valores que pueden contener.
+                */
                 try{
                     if(!entrada.equals("")){
                         int tam = Integer.parseInt(entrada);
-                        if(tam<0){
+                        if(tam<0)
                             throw new Exception();
-                        }else{
+                        else
                             info.setParametros(entrada);
-                        }
                     }else{
                         info.setParametros("");
                     } 
@@ -541,23 +536,29 @@ public class PanelColumna extends javax.swing.JPanel {
                         + "\nun valor numérico igual o mayor a cero.  "
                     );
                     parametros.setText(info.getParametros());
-                    //info.setParametros("");
                 }
                 break;
             case Tipo.ENUM:
             case Tipo.SET:
+                /*
+                Los tipos de datos set y enum aceptan como parámetros una lista
+                de elementos separados por coma. Cada elemento debe ir entre 
+                comillas simples (''). La diferencia entre ambos tipos de datos 
+                es que el número máximo de elementos que se pueden definir para 
+                el tipo set es 64 mientras que para enum el número máximo de 
+                elementos en la lista puede ser hasta 65,535.
+                */
                 Matcher mat = patronEnumSet.matcher(entrada);
                 try{
                     if(mat.matches()){
-                        //System.out.println("Regexp encontrada"); 
-                        info.setParametros(entrada);
                         // Verificar el número de elementos en la lista
                         if((tipoCol.getSelectedIndex()==Tipo.SET && obtenerNumElementos(entrada)>64)
-                                ||(tipoCol.getSelectedIndex()==Tipo.ENUM && obtenerNumElementos(entrada)>65535)){             
+                            ||(tipoCol.getSelectedIndex()==Tipo.ENUM && obtenerNumElementos(entrada)>65535)){             
                             throw new Exception();                 
+                        }else{
+                            info.setParametros(entrada);
                         } 
                     }else{
-                        //System.err.println("Regexp NO encontrada");
                         throw new Exception();
                     }
                 }catch(Exception e){
@@ -567,20 +568,24 @@ public class PanelColumna extends javax.swing.JPanel {
                         + "\nPara el tipo SET se admiten como máximo 64 valores distintos.  "
                         + "\nPara el tipo ENUM se admiten como máximo 65,535 valores distintos.  "
                     );
-                    //parametros.setText("''");
                     parametros.setText(info.getParametros());
                 }
                 break;
             case Tipo.CHAR:
             case Tipo.BINARY:
+                /*
+                Los tipos de datos char y binary permiten que el usuario escriba
+                como parámetro un valor entero ubicado entre 0 y 255, indicando el
+                número de caracteres (para el tipo char) o bytes (binary) que se 
+                pueden almacenar en un dato de la columna.
+                */
                 try{
                     if(!entrada.equals("")){
                         int tam = Integer.parseInt(entrada);
-                        if(tam<0||tam>255){
+                        if(tam<0||tam>255)
                             throw new Exception();
-                        }else{
+                        else
                             info.setParametros(entrada);
-                        }
                     }else{
                         info.setParametros("");
                     } 
@@ -590,25 +595,30 @@ public class PanelColumna extends javax.swing.JPanel {
                         + "\nun valor numérico ubicado entre 0 y 255.  "
                     );
                     parametros.setText(info.getParametros());
-                    //info.setParametros("");
                 }
                 break;
             case Tipo.VARCHAR:
             case Tipo.VARBINARY:
+                /*
+                Los tipos de datos char y binary permiten que el usuario escriba
+                como parámetro un valor entero ubicado entre 0 y 65,535, indicando 
+                el número de caracteres (para el tipo char) o bytes (binary) que 
+                se pueden almacenar como máximo en un dato de la columna.
+                Estos tipos de datos no permiten que el campo de parámetros se
+                encuentre vacío.
+                */
                 try{
                     int tam = Integer.parseInt(entrada);
-                    if(tam<0||tam>65535){
+                    if(tam<0||tam>65535)
                         throw new Exception();
-                    }else{
+                    else
                         info.setParametros(entrada);
-                    }
                 }catch(Exception e){
                     mostrarMsgError(
                         "\nPuede incluir un valor numérico ubicado entre  "
                         + "\n0 y 65,535."
                     );
                     parametros.setText(info.getParametros());
-                    //info.setParametros("45");
                 }
                 break;
         } 
@@ -674,10 +684,14 @@ public class PanelColumna extends javax.swing.JPanel {
         //System.out.println("--------------------");
     }//GEN-LAST:event_checkAutoIncActionPerformed
 
-    private void tipoColFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tipoColFocusLost
+    /**
+     * Método que modifica los parámetros de una columna
+     * @param evt Evento que se lanza cuando el componente que permite cambiar
+     * el tipo de dato de la columna pierde el foco.
+    private void tipoColFocusLost(java.awt.event.FocusEvent evt) {                                  
         info.setParametros(parametros.getText());  
-    }//GEN-LAST:event_tipoColFocusLost
-
+    }                                 
+    */
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JCheckBox checkAI;
     private javax.swing.JCheckBox checkNN;
