@@ -416,8 +416,13 @@ public class PanelColumna extends javax.swing.JPanel {
     }
     
     /**
+     * Método que evalúa los parámetros ingresados por el usuario para una columna,
+     * mostrando un mensaje de error si los parámetros no son válidos para el
+     * tipo de dato de la columna. Si son válidos se actualiza la estructura de
+     * datos que contiene la información de las columnas del archivo.
      * 
-     * @param evt 
+     * @param evt Evento lanzado cuando el campo que contiene los parámetros de
+     * una columna pierde el foco.
      */
     private void parametrosFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_parametrosFocusLost
         String entrada = parametros.getText();
@@ -427,14 +432,18 @@ public class PanelColumna extends javax.swing.JPanel {
             case Tipo.MEDIUMINT:
             case Tipo.INT:
             case Tipo.BIGINT:
+                /*
+                Los tipos de datos enteros permiten que se deje vacío el campo o 
+                permiten que el usuario ingrese como paramétro un valor entero 
+                entre 1 y 255, correspondientes al ancho de visualización.
+                */
                 try{
                     if(!entrada.equals("")){
                         int tam = Integer.parseInt(entrada);
-                        if(tam<1||tam>255){
+                        if(tam<1||tam>255)
                             throw new Exception();
-                        }else{
+                        else
                             info.setParametros(entrada);
-                        }
                     }else{
                         info.setParametros("");
                     }
@@ -443,28 +452,34 @@ public class PanelColumna extends javax.swing.JPanel {
                         "\nPuede dejar el campo vacío o incluir"
                         + "\nun valor numérico ubicado entre 1 y 255.  "
                     );
+                    // el campo se reinicia al último valor aceptado
                     parametros.setText(info.getParametros());
-                    //info.setParametros("");
                 }
                 break;
-            case Tipo.DECIMAL:               
+            case Tipo.DECIMAL:         
+                /*
+                El tipo de dato decimal acepta dos valores numéricos separados por
+                una coma(,). El primer número indica el número de dígitos en total
+                que pueden tener los valores de la columna (máximo 65). El segundo 
+                número representa el número de dígitos en la parte decimal del valor
+                (máximo 30). El valor del primer número debe ser mayor al valor del
+                segundo número del parámetro.
+                */
                 try{
                     if(!entrada.equals("")){
                         Matcher mat = patronDecimal.matcher(entrada);
                         int n1,n2;
-                        if (mat.matches()) {
-                            //System.out.println("Regexp encontrada");
-                            n1 = Integer.parseInt(mat.group(1));
-                            n2 = Integer.parseInt(mat.group(2));
-                            //System.out.println("Sujeto:"+mat.group(1));
-                            //System.out.println("Sujeto:"+mat.group(2));
+                        if(mat.matches()){
+                            // Los grupos se determinan por el uso de paréntesis en la definición
+                            // de la expresión regular
+                            n1 = Integer.parseInt(mat.group(1)); // obtener la primer coincidencia del patrón
+                            n2 = Integer.parseInt(mat.group(2)); // obtener la segunda coincidencia del patrón    
                             if(n1>65||n2>30||n1<n2){
                                 throw new Exception(); 
                             }else{
                                 info.setParametros(entrada);
                             }
-                        } else {
-                            //System.err.println("Regexp NO encontrada");
+                        }else{
                             throw new Exception(); 
                         }
                     }else{
@@ -478,10 +493,17 @@ public class PanelColumna extends javax.swing.JPanel {
                         + "\nM debe ser mayor o igual a D."
                     );
                     parametros.setText(info.getParametros());
-                    //info.setParametros("");
                 }
                 break;
             case Tipo.FLOAT:
+                /*
+                El tipo de dato float permite que el campo para los parámetros esté vacio
+                o contenga un número entero entre 0 y 53, indicando el tamaño de
+                almacenamiento. Una precisión de 0 a 23 da como resultado una columna 
+                FLOAT de precisión simple de 4 bytes. 
+                Una precisión de 24 a 53 da como resultado una columna DOUBLE de 
+                precisión doble de 8 bytes.
+                */
                 try{
                     if(!entrada.equals("")){
                         int tam = Integer.parseInt(entrada);
@@ -499,7 +521,6 @@ public class PanelColumna extends javax.swing.JPanel {
                         + "\nun valor numérico ubicado entre 0 y 53.  "
                     );
                     parametros.setText(info.getParametros());
-                    //info.setParametros("");
                 }
                 break;
             case Tipo.TEXT:
