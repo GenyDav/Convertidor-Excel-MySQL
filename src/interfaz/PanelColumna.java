@@ -25,6 +25,8 @@ public class PanelColumna extends javax.swing.JPanel {
     private ButtonGroup grupo;      // grupo al que se va a añadir el checkBox del modificador AUTO_INCREMENT
     private boolean estadoCheckBox; // variable de control que indica si el checkBox del modificador AUTO_INCREMENT está seleccionado o no
     private boolean clic;           // variable que indica si el usuario ha hecho clic o no cuando el estado de checkAI cambia
+    private boolean esCargaInicial; // variable utilizada para evitar que el campo de los parámetros se restablezca al seleccionar 
+                                    // el tipo de dato cuando se carga la ventana
     
     /**
      * Crea una nueva forma PanelColumna
@@ -34,6 +36,7 @@ public class PanelColumna extends javax.swing.JPanel {
      */
     public PanelColumna(InfoColumna col, ConfiguracionTipos ventana, ButtonGroup grupo) {
         initComponents();
+        esCargaInicial = true;
         this.ventana = ventana;
         info = col;
         expDecimal = "(\\d+)\\s*,\\s*(\\d+)";        // dos números enteros separados por coma
@@ -233,6 +236,7 @@ public class PanelColumna extends javax.swing.JPanel {
         estadoCheckBox = info.getAI();
         clic = false;
         tipoCol.setSelectedIndex(info.getTipo());
+        esCargaInicial = false;
         parametros.setText(info.getParametros());     
     }
     
@@ -363,6 +367,8 @@ public class PanelColumna extends javax.swing.JPanel {
      */
     private void configValoresCampo(String texto,boolean enabled,String toolTip){
         parametros.setText(texto);
+        if(!esCargaInicial)
+            info.setParametros(parametros.getText());
         parametros.setEnabled(enabled);
         parametros.setToolTipText(toolTip);
     }
