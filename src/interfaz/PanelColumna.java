@@ -678,15 +678,19 @@ public class PanelColumna extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_parametrosKeyReleased
 
+    /**
+     * Método que actualiza la estructura de datos con la información de la
+     * columna cuando la propiedad auto_increment se modifica de forma indirecta
+     * por un cambio en otra propiedad (y no debido a que el usuario ha hecho 
+     * clic sobre su checkBox).
+     * @param evt evento lanzado cuando el checkBox del modificador auto_increment
+     * modifica su estado.
+     */
     private void checkAutoIncStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_checkAutoIncStateChanged
-        //System.out.println("AI cambió su estado en la columna "+ info.getNombre());
         if(!checkAI.isSelected()&&!clic){
-            //System.out.println("Sin hacer clic");
             estadoCheckBox = false;
             info.setAI(false);
         }
-        //info.setAI(estadoCheckBox);
-        //System.out.println("info.getAI: "+info.getAI());
     }//GEN-LAST:event_checkAutoIncStateChanged
 
     /**
