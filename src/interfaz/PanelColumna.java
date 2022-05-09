@@ -41,9 +41,9 @@ public class PanelColumna extends javax.swing.JPanel {
         info = col;
         expDecimal = "(\\d+)\\s*,\\s*(\\d+)";        // dos números enteros separados por coma
         patronDecimal = Pattern.compile(expDecimal);
-        expEnumSet = "('(\\w+)'\\s*,\\s*)*'(\\w*)'"; // una o más palabras (letras, números y el caracter '_') entre comillas y separadas por comas
+        expEnumSet = "('(\\w+)'(\\s*),(\\s*))*'(\\w*)'"; // una o más palabras (letras, números y el caracter '_') entre comillas y separadas por comas
         patronEnumSet = Pattern.compile(expEnumSet);
-        coma = Pattern.compile(",");
+        coma = Pattern.compile("'(\\w+)'");
         this.grupo = grupo;
         this.grupo.add(checkAI);   
         cargarDatos();
@@ -313,7 +313,7 @@ public class PanelColumna extends javax.swing.JPanel {
         if(evt.getStateChange()==ItemEvent.SELECTED){
             info.setTipo(tipoCol.getSelectedIndex());
             configCampoParametros();
-            configModificadores();
+             configModificadores();
         }
     }//GEN-LAST:event_comboTipoStateChanged
  
@@ -485,6 +485,7 @@ public class PanelColumna extends javax.swing.JPanel {
                         info.setParametros("");
                     }
                 }catch(Exception e){
+                    e.printStackTrace();
                     mostrarMsgError(
                         " Puede dejar el campo vacío o incluir dos valores  "
                         + "\nnuméricos separados por coma (M,D).  "
@@ -560,11 +561,13 @@ public class PanelColumna extends javax.swing.JPanel {
                         // Verificar el número de elementos en la lista
                         if((tipoCol.getSelectedIndex()==Tipo.SET && obtenerNumElementos(entrada)>64)
                             ||(tipoCol.getSelectedIndex()==Tipo.ENUM && obtenerNumElementos(entrada)>65535)){             
+                            System.out.println("numero de elementos");
                             throw new Exception();                 
                         }else{
                             info.setParametros(entrada);
                         } 
                     }else{
+                        System.out.println("error en la expresión");
                         throw new Exception();
                     }
                 }catch(Exception e){
@@ -646,16 +649,29 @@ public class PanelColumna extends javax.swing.JPanel {
         );
     }
     
+    /**
+     * Método que devuelve el número de elementos que el usuario escribió en el 
+     * campo para parámetros cuando el tipo de dato seleccionado es SET o ENUM.
+     * @param parametros lista de elementos que el usuario ingresó en el campo.
+     * @return número de elementos en la lista
+     */
     private int obtenerNumElementos(String parametros){
         int numElementos = 0;
         Matcher mat = coma.matcher(parametros);
         while(mat.find()){
+            //System.out.println(mat.group()); // mostrar la coincidencia actual
             numElementos++;
         }
-        //System.out.println("numero de elementos: "+(numElementos+1));
-        return numElementos+1;
+        return numElementos;
     }
     
+    /**
+     * Método utilizado para dar por terminada la inserción de parámetros en el
+     * campo de texto cuando el usuario presiona la tecla ENTER. El campo pierde
+     * el foco y se realizar la comprobación 
+     * @param evt evento lanzado cuando se presiona una tecla mientras el campo
+     * para los parámetros de la columna tiene el foco.
+     */
     private void parametrosKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_parametrosKeyReleased
         if(evt.getKeyCode()==KeyEvent.VK_ENTER){
             parametros.transferFocus();
@@ -673,31 +689,25 @@ public class PanelColumna extends javax.swing.JPanel {
         //System.out.println("info.getAI: "+info.getAI());
     }//GEN-LAST:event_checkAutoIncStateChanged
 
+    /**
+     * Método que permite actualizar la estructura de datos del archivo cuando 
+     * se selecciona el modificador auto_increment.
+     * @param evt evento lanzado al hacer clic en el checkBox del modificador auto_increment 
+     */
     private void checkAutoIncActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkAutoIncActionPerformed
-        clic = true;
-        //System.out.println("Clic en AutoIncrement");
-        //System.out.println(checkAI.isSelected());
-        if(!estadoCheckBox){
-            //estadoAnterior = true;
-        }else{  
-            grupo.clearSelection();
-            //estadoAnterior = false;
-        }
-        estadoCheckBox = !estadoCheckBox;
+        // Como el checkbox se añadió a un grupo, al hacer clic por primera vez
+        // en él queda seleccionado, pero al vover a hacer clic no se deselecciona.
+        // El único modo de desmarcalo es selccionando otro elemento del grupo o 
+        // limpiando la selección. Por eso hay que modificar el comportamiento de
+        // ese checkbox:
+        clic = true;                        // indicar que el usuario ha hecho clic en el checkbox
+        if(estadoCheckBox)
+            grupo.clearSelection();         // desmarcar el checkbox seleccionado
+        estadoCheckBox = !estadoCheckBox;   // estadoCheckbox es sustituto del valor obtenido de .isSelected()
         info.setAI(estadoCheckBox);
-        //System.out.println("estado: " + estadoCheckBox);
-        clic = false;
-        //System.out.println("--------------------");
+        clic = false; 
     }//GEN-LAST:event_checkAutoIncActionPerformed
 
-    /**
-     * Método que modifica los parámetros de una columna
-     * @param evt Evento que se lanza cuando el componente que permite cambiar
-     * el tipo de dato de la columna pierde el foco.
-    private void tipoColFocusLost(java.awt.event.FocusEvent evt) {                                  
-        info.setParametros(parametros.getText());  
-    }                                 
-    */
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JCheckBox checkAI;
     private javax.swing.JCheckBox checkNN;
