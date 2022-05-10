@@ -1,16 +1,13 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-package interfaz;
+package datos;
 
 /**
- *
+ * Clase que permite obtener los nombres de los tipos de datos disponibles
+ * para ser usados en el programa.
  * @author Geny
+ * @version 1.0
  */
 public class Tipo {
-    public static String[] TIPO = {
+    public static String[] NOMBRES = {
         "TINYINT","SMALLINT","MEDIUMINT","INT","BIGINT",
         "FLOAT","DOUBLE","DECIMAL",
         "CHAR","VARCHAR",
