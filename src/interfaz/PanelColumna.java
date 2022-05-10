@@ -313,7 +313,7 @@ public class PanelColumna extends javax.swing.JPanel {
         if(evt.getStateChange()==ItemEvent.SELECTED){
             info.setTipo(tipoCol.getSelectedIndex());
             configCampoParametros();
-             configModificadores();
+            configModificadores();
         }
     }//GEN-LAST:event_comboTipoStateChanged
  
@@ -485,7 +485,6 @@ public class PanelColumna extends javax.swing.JPanel {
                         info.setParametros("");
                     }
                 }catch(Exception e){
-                    e.printStackTrace();
                     mostrarMsgError(
                         " Puede dejar el campo vacío o incluir dos valores  "
                         + "\nnuméricos separados por coma (M,D).  "
@@ -561,13 +560,11 @@ public class PanelColumna extends javax.swing.JPanel {
                         // Verificar el número de elementos en la lista
                         if((tipoCol.getSelectedIndex()==Tipo.SET && obtenerNumElementos(entrada)>64)
                             ||(tipoCol.getSelectedIndex()==Tipo.ENUM && obtenerNumElementos(entrada)>65535)){             
-                            System.out.println("numero de elementos");
                             throw new Exception();                 
                         }else{
                             info.setParametros(entrada);
                         } 
                     }else{
-                        System.out.println("error en la expresión");
                         throw new Exception();
                     }
                 }catch(Exception e){
