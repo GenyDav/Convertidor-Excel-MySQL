@@ -1366,11 +1366,9 @@ public class InterfazGrafica extends javax.swing.JFrame {
                 if(nombreBase.length()>0){ // comprobar que el usuario escriba algo
                     mat = patron.matcher(nombreBase);
                     if(mat.matches()){
-                        //System.out.println("Regexp encontrada");
                         // crear la base de datos
                         importarArchivo(nombreBase);
                     }else{
-                        //System.err.println("Regexp no encontrada");
                         throw new Exception();
                     }
                 }else{
@@ -1536,7 +1534,27 @@ public class InterfazGrafica extends javax.swing.JFrame {
             }
         }.start();
     }//GEN-LAST:event_btnConectarActionPerformed
-
+    
+    /**
+     * Método que obtiene los nombres de las bases de datos en el servidor y los
+     * añade al jComboBox correspondiente. Si ocurre un error al realizar la
+     * consulta, se muestra un mensaje con la descripción de lo que ocurrió.
+     */
+    public void cargarListaDeBases(){
+        try{
+            ArrayList<String> lista = conn.obtenerBasesDeDatos();
+            lista.stream().forEach((String nomBase) -> {
+                comboBases.addItem(nomBase);
+            });
+        }catch(SQLException e){
+            info.setText("No se pudo cargar la información del servidor "
+            + "(Error MySQL " + e.getErrorCode() + ": " + e.getMessage() + ".");
+        }catch(Exception ex){
+            info.setText("No se pudo cargar la información del servidor ("+ex.getMessage()+")");
+            //ex.printStackTrace();
+        }
+    }
+    
     private void cerrarVentana(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_cerrarVentana
         //System.out.println(generadorArch.estaActivo());
         //System.out.println(genBD.estaActivo());
@@ -1702,21 +1720,6 @@ public class InterfazGrafica extends javax.swing.JFrame {
         mensaje = "Conexión terminada.";
         msj.setText(mensaje);
         btnConectar.setEnabled(true);
-    }
-    
-    public void cargarListaDeBases(){
-        try{
-            ArrayList<String>lista = conn.obtenerBasesDeDatos();
-            lista.stream().forEach((String nomBase) -> {
-                comboBases.addItem(nomBase);
-            });
-        }catch(SQLException e){
-            info.setText("No se pudo cargar la información del servidor "
-            + "(Error MySQL " + e.getErrorCode() + ": " + e.getMessage() + ".");
-        }catch(Exception ex){
-            info.setText("No se pudo cargar la información del servidor ("+ex.getMessage()+")");
-            ex.printStackTrace();
-        }
     }
     
     public void cargarListaDeTablas(String nomBase){
