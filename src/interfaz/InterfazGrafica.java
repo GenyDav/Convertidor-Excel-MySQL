@@ -59,7 +59,7 @@ public class InterfazGrafica extends javax.swing.JFrame {
     private DefaultListModel modeloLista;
     private ArrayList<ElementoLista> listaElementos;
     
-    private int indiceTablaAct;     // variable para el cambio de base de datos
+    private int indiceBaseAct;     // variable para el cambio de base de datos
     private boolean cambioCancelado;
     
     // Atributos para leer archivo de Excel
@@ -118,7 +118,7 @@ public class InterfazGrafica extends javax.swing.JFrame {
         
         listaElementos = new ArrayList<>();
                 
-        indiceTablaAct = 0;
+        indiceBaseAct = 0;
         cambioCancelado = false;
         
         // Inicialización de variables para leer archivoExcel
@@ -1113,7 +1113,7 @@ public class InterfazGrafica extends javax.swing.JFrame {
         
         listaElementos.clear();
         cambioCancelado = false;
-        indiceTablaAct = 0;
+        indiceBaseAct = 0;
     }
     
     private void reiniciarElementosImportacion(){                                                   
@@ -1190,36 +1190,59 @@ public class InterfazGrafica extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_comboTablasItemStateChanged
 
+    /**
+     * Define el comportamiento de los elementos de la interfaz de exportación
+     * cuando el usuario cambia la selección del jComboBox.
+     * @param evt evento lanzado al cambiar el elemento seleccionado en el jComboBox. 
+     */
     private void comboBasesItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_comboBasesItemStateChanged
         if(modeloLista.isEmpty()){
-            tablasCompletas.setSelected(true);
-            btnAgregarTabla.setEnabled(false);
+            // Si no hay tablas seleccionadas, solo se reinician los campos 
+            // y se cargan los nombres de las tablas de la nueva base de datos
+            // seleccionada.
             if(evt.getStateChange()==ItemEvent.SELECTED){
-                cargarListaDeTablas(comboBases.getSelectedItem().toString());
-                indiceTablaAct = comboBases.getSelectedIndex();
+                tablasCompletas.setSelected(true);
+                btnAgregarTabla.setEnabled(false);
                 labelSelTabla.setText("");
+                cargarListaDeTablas(comboBases.getSelectedItem().toString());
+                indiceBaseAct = comboBases.getSelectedIndex();
             }else{         
                 comboTablas.removeAllItems();
             }
         }else{
+            // Si hay tablas seleccionadas, se muestra un cuadro de diálogo donde
+            // se solicita confirmar el cambio de base de datos. Si el cambio se
+            // confirma, se reinician los elementos; si el cambio se cancela, se
+            // utiliza la variable auxiliar cambioCancelado para evitar que la 
+            // ventana de confirmación aparezca dos veces cuando se selecciona
+            // de nuevo la base de datos previa(*).
             if(!cambioCancelado){
                 if(evt.getStateChange()==ItemEvent.SELECTED){
                     comboBases.hidePopup();                  
-                    if(limpiarSeleccion("tablas",modeloLista,
-                        listaElementos,btnQuitar,btnBorrar,labelSelTabla)==0){
+                    if(limpiarSeleccion("tablas",modeloLista,listaElementos,btnQuitar,btnBorrar,labelSelTabla)==JOptionPane.OK_OPTION){
                         comboTablas.removeAllItems();
                         tablasCompletas.setSelected(true);
-                        cargarListaDeTablas(comboBases.getSelectedItem().toString());
+                        btnAgregarTabla.setEnabled(false);
                         labelSelTabla.setText("");
+                        cargarListaDeTablas(comboBases.getSelectedItem().toString());
                     }else{
                         cambioCancelado = true;
-                        comboBases.setSelectedIndex(indiceTablaAct);             
+                        comboBases.setSelectedIndex(indiceBaseAct);//(*)             
                     }               
                 }
             }
-        }
-        
+        }       
     }//GEN-LAST:event_comboBasesItemStateChanged
+
+    /**
+     * Reinicia el valor de la variable auxiliar cuando el usuario quiere cambiar 
+     * de base de datos pero canceló otro cambio antes.
+     * @param evt evento lanzado al hacer clic sobre el combo con los nombres
+     * de las bases de datos
+     */
+    private void comboBasesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_comboBasesMouseClicked
+        cambioCancelado = false;
+    }//GEN-LAST:event_comboBasesMouseClicked
 
     private void btnAgregarTablaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarTablaActionPerformed
         if(!listaElementos.get(comboTablas.getSelectedIndex()).getSeleccionado()){            
@@ -1253,11 +1276,6 @@ public class InterfazGrafica extends javax.swing.JFrame {
             btnAgregarTabla.setEnabled(true);
         }
     }//GEN-LAST:event_btnQuitarActionPerformed
-
-    private void comboBasesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_comboBasesMouseClicked
-        cambioCancelado = false; // reiniciar el valor de la variable cuando el usuario
-                                 // quiere cambiar de tabla pero canceló otro cambio antes
-    }//GEN-LAST:event_comboBasesMouseClicked
 
     private void btnExportarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExportarActionPerformed
         if(btnExportar.getText().equals("Exportar")){
@@ -1540,7 +1558,7 @@ public class InterfazGrafica extends javax.swing.JFrame {
      * añade al jComboBox correspondiente. Si ocurre un error al realizar la
      * consulta, se muestra un mensaje con la descripción de lo que ocurrió.
      */
-    public void cargarListaDeBases(){
+    private void cargarListaDeBases(){
         try{
             ArrayList<String> lista = conn.obtenerBasesDeDatos();
             lista.stream().forEach((String nomBase) -> {
