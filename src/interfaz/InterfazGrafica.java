@@ -5,6 +5,7 @@
  */
 package interfaz;
 
+import datos.InfoColumna;
 import conexion.Conexion;
 import excel.GeneradorExcel;
 import excel.LectorExcel;
@@ -1392,8 +1393,9 @@ public class InterfazGrafica extends javax.swing.JFrame {
     }//GEN-LAST:event_btnImportarActionPerformed
 
     private void btnAgregarHojaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarHojaActionPerformed
-        if(!listaHojas.get(comboHojas.getSelectedIndex()).getSeleccionado()){            
-            modeloListaExcel.addElement(new ElementoLista(comboHojas.getSelectedItem().toString(),comboHojas.getSelectedIndex()));
+        if(!listaHojas.get(comboHojas.getSelectedIndex()).getSeleccionado()){  
+            // new ElementoLista----------------¬
+            modeloListaExcel.addElement(new TablaLista(comboHojas.getSelectedItem().toString(),comboHojas.getSelectedIndex()));
             seleccionHojasExcel.setSelectedIndex(modeloListaExcel.getSize()-1);
             listaHojas.get(comboHojas.getSelectedIndex()).setSeleccionado(true);
             /*for(int i=0;i<listaHojas.size();i++){
@@ -1433,20 +1435,6 @@ public class InterfazGrafica extends javax.swing.JFrame {
                         "No se puede leer el archivo", JOptionPane.WARNING_MESSAGE
                     );
                 }else{
-                    /*tablaExcel.setModel(new DefaultTableModel());
-                    comboHojas.removeAllItems();
-                    comboHojas.setEnabled(false);
-                    btnAbrir.setEnabled(false);
-                    btnTipos.setEnabled(false);
-                    btnAgregarHoja.setEnabled(false);
-                    btnImportar.setEnabled(false);
-                    tablasCompletasExcel.setSelected(true);
-                    tablasCompletasExcel.setEnabled(false);
-                    tablasSelExcel.setEnabled(false);
-                    if(lector!=null && lector.getLibro()!=null){
-                        lector.cerrarArchivo();
-                    }
-                    listaHojas.clear();*/
                     limpiarPantallaImportacion();
                     lector = new LectorExcel(this,comboHojas,tablaExcel,labelRegExcel,labelArchivo,btnAbrir,rutaArch,nomArch,btnTipos,listaHojas,btnImportar,tablasCompletasExcel,tablasSelExcel);
                     lector.execute();
@@ -1509,8 +1497,13 @@ public class InterfazGrafica extends javax.swing.JFrame {
     }//GEN-LAST:event_btnReporteActionPerformed
 
     /**
-     * 
-     * param evt Evento generado al presionar el botón 'Conectar' 
+     * Método encargado de intentar realizar la conexión con el servidor de BD
+     * con los datos proporcionados por el usuario. 
+     * Si la conexión se realiza de forma exitosa, el programa muestra la 
+     * pantalla que permite exportar una base de datos en un archivo Excel. 
+     * Si la conexión no se puede realizar, se muestra un mensaje de error en la
+     * pantalla inicial.
+     * param evt Evento generado al presionar el botón 'Conectar'. 
      */
     private void btnConectarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConectarActionPerformed
         mensaje = "Estableciendo conexión con el servidor...";
@@ -1523,9 +1516,9 @@ public class InterfazGrafica extends javax.swing.JFrame {
             @Override
             public void run(){
                 try{
-                    conn = new Conexion(servidor,usuario,clave);
-                    cargarListaDeBases();
-                    cardLayout.show(jPanel1, "card3");
+                    conn = new Conexion(servidor,usuario,clave); // Conectar con el servidor
+                    cargarListaDeBases(); // obtener los nombres de las bases del servidor
+                    cardLayout.show(jPanel1, "card3"); // cambiar a la pantalla de exportación
                 }catch(SQLException sqle){
                     mensaje += "\nFalló el intento de conexión. "
                     + "\nError MySQL " + sqle.getErrorCode()+": "+sqle.getMessage()+".";
@@ -1533,7 +1526,7 @@ public class InterfazGrafica extends javax.swing.JFrame {
                         mensaje += "\nDatos de conexión incorrectos, verifique e intente de nuevo.";
                     }
                 }catch(ClassNotFoundException cnf){
-                    cnf.printStackTrace();
+                    //cnf.printStackTrace();
                     mensaje += "\nFalló el intento de conexión."
                     + "\nNo se pudo encontar la librería mysql-conector-java";
                 }finally{
