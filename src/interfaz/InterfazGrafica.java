@@ -1300,25 +1300,25 @@ public class InterfazGrafica extends javax.swing.JFrame {
      * todos los elementos de la lista de exportación.
      */
     private void btnBorrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBorrarActionPerformed
-        if(limpiarSeleccion("tablas",modeloLista,listaElementos,btnQuitar,btnBorrar,labelSelTabla)==JOptionPane.OK_OPTION){
+        if(limpiarSeleccion("tablas",modeloLista,listaElementos) == JOptionPane.OK_OPTION){
             btnAgregarTabla.setEnabled(true);
             btnExportar.setEnabled(false);
+            btnBorrar.setEnabled(false);
+            btnQuitar.setEnabled(false);
+            labelSelTabla.setText("Selección de tablas borrada");
         } 
     }//GEN-LAST:event_btnBorrarActionPerformed
 
     /**
-     * 
-     * @param <T>
-     * @param elemento
-     * @param modeloLista
-     * @param listaAux
-     * @param btnQuitar
-     * @param btnBorrar
-     * @param label
-     * @return 
+     * Método que elimina todos los elementos que están en la lista de exportación.
+     * @param <T> Objetos de la clase ElementoLista o que hereden de ella.
+     * @param elemento Tipo de elemento que va a ser eliminado (tabla u hoja).
+     * @param modeloLista Modelo del jList donde están las tablas seleccionadas.
+     * @param listaAux Estructura de datos con la información de las tablas.
+     * @return Valor entero que indica si el usuario ha confirmado o cancelado
+     * la eliminación de los elementos de la lista.
      */
-    public <T extends ElementoLista> int limpiarSeleccion(String elemento,DefaultListModel modeloLista,
-            ArrayList<T> listaAux,JButton btnQuitar,JButton btnBorrar,JLabel label){
+    public <T extends ElementoLista> int limpiarSeleccion(String elemento,DefaultListModel modeloLista,ArrayList<T> listaAux){
         int resp = JOptionPane.showConfirmDialog(
             jPanel1, 
             "Todas las "+elemento+" en la lista se \nborrarán. ¿Continuar?",
@@ -1326,20 +1326,14 @@ public class InterfazGrafica extends javax.swing.JFrame {
             JOptionPane.OK_CANCEL_OPTION,
             JOptionPane.QUESTION_MESSAGE
         );
-        if(resp==JOptionPane.OK_OPTION){                
+        if(resp == JOptionPane.OK_OPTION){                
             ElementoLista elem;
-            for(int i=modeloLista.getSize()-1; i>=0; i--){
+            for(int i=modeloLista.getSize()-1;i>=0;i--){
                 elem = (ElementoLista)modeloLista.getElementAt(i);
                 listaAux.get(elem.getPosicion()).setSeleccionado(false);
             }
-            /*System.out.println("Borrados todos los elementos");
-            for(int k=0;k<listaAux.size();k++){
-                System.out.print("["+listaAux.get(k).getSeleccionado()+"]");
-            }System.out.println();*/
+            // mostrarListaElementos();
             modeloLista.clear();
-            btnBorrar.setEnabled(false);
-            btnQuitar.setEnabled(false);
-            label.setText("Selección de "+elemento+" borrada");
         }
         return resp;
     }
