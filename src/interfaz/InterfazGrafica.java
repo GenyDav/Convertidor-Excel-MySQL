@@ -1212,7 +1212,8 @@ public class InterfazGrafica extends javax.swing.JFrame {
         }else{
             // Si hay tablas seleccionadas, se muestra un cuadro de diálogo donde
             // se solicita confirmar el cambio de base de datos. Si el cambio se
-            // confirma, se reinician los elementos; si el cambio se cancela, se
+            // confirma, se reinician los elementos y se cargan los nombres de 
+            // las tablas de la nueva base de datos. Si el cambio se cancela, se
             // utiliza la variable auxiliar cambioCancelado para evitar que la 
             // ventana de confirmación aparezca dos veces cuando se selecciona
             // de nuevo la base de datos previa(*).
@@ -1573,6 +1574,47 @@ public class InterfazGrafica extends javax.swing.JFrame {
         }
     }
     
+    /**
+     * Método que añade al jComboBox correspondiente los nombres de las tablas
+     * de la base de datos seleccionada. Inicializa la estructura de datos que
+     * lleva la información de los elementos que se van a exportar.
+     * @param nomBase nombre de la base de datos
+     */
+    private void cargarListaDeTablas(String nomBase){
+        try{
+            listaElementos = conn.obtenerTablas(nomBase);
+            listaElementos.stream().forEach(
+                new Consumer<ElementoLista>(){
+                    @Override
+                    public void accept(ElementoLista e1) {
+                        comboTablas.addItem(e1.getNombre());
+                    }
+                }
+            );
+        }catch(SQLException e){
+            info.setText("No se pudo cargar la información "
+            + "(Error MySQL " + e.getErrorCode() + ": " + e.getMessage() + ".");
+        }catch(Exception ex){
+            info.setText("No se pudo cargar la lista de tablas en la base de datos "
+            + comboBases.getSelectedItem()+" ("+ex.toString()+")");
+            //ex.printStackTrace();
+        }
+    }
+    
+    public void cargarDatos(String nomBase,String nomTabla){
+        try{
+            formato = new FormatoTabla(tabla,conn,nomBase,nomTabla,labelRegistros);
+            formato.execute();
+        }catch(SQLException e){
+            info.setText("No se pudo cargar la información "
+            + "(Error MySQL " + e.getErrorCode() + ": " + e.getMessage() + ".");
+        }catch(Exception ex){
+            info.setText("No fue posible cargar los registros de la tabla "
+                +comboTablas.getSelectedItem()+" ("+ex.toString()+")");
+            ex.printStackTrace();
+        }
+    }
+    
     private void cerrarVentana(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_cerrarVentana
         //System.out.println(generadorArch.estaActivo());
         //System.out.println(genBD.estaActivo());
@@ -1738,39 +1780,6 @@ public class InterfazGrafica extends javax.swing.JFrame {
         mensaje = "Conexión terminada.";
         msj.setText(mensaje);
         btnConectar.setEnabled(true);
-    }
-    
-    public void cargarListaDeTablas(String nomBase){
-        try{
-            listaElementos = conn.obtenerTablas(nomBase);
-            listaElementos.stream().forEach(new Consumer<ElementoLista>(){
-                @Override
-                public void accept(ElementoLista e1) {
-                    comboTablas.addItem(e1.getNombre());
-                }
-            });
-        }catch(SQLException e){
-            info.setText("No se pudo cargar la información "
-            + "(Error MySQL " + e.getErrorCode() + ": " + e.getMessage() + ".");
-        }catch(Exception ex){
-            info.setText("No se pudo cargar la lista de tablas en la base de datos "
-            + comboBases.getSelectedItem()+" ("+ex.toString()+")");
-            ex.printStackTrace();
-        }
-    }
-    
-    public void cargarDatos(String nomBase,String nomTabla){
-        try{
-            formato = new FormatoTabla(tabla,conn,nomBase,nomTabla,labelRegistros);
-            formato.execute();
-        }catch(SQLException e){
-            info.setText("No se pudo cargar la información "
-            + "(Error MySQL " + e.getErrorCode() + ": " + e.getMessage() + ".");
-        }catch(Exception ex){
-            info.setText("No fue posible cargar los registros de la tabla "
-                +comboTablas.getSelectedItem()+" ("+ex.toString()+")");
-            ex.printStackTrace();
-        }
     }
     
     /**
