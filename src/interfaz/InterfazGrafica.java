@@ -1243,10 +1243,12 @@ public class InterfazGrafica extends javax.swing.JFrame {
             if(!cambioCancelado){
                 if(evt.getStateChange()==ItemEvent.SELECTED){
                     comboBases.hidePopup();                  
-                    if(limpiarSeleccion("tablas",modeloLista,listaElementos,btnQuitar,btnBorrar,labelSelTabla)==JOptionPane.OK_OPTION){
+                    if(limpiarSeleccion("tablas",modeloLista,listaElementos)==JOptionPane.OK_OPTION){
                         comboTablas.removeAllItems();
                         opcTablasCompletas.setSelected(true);
                         btnAgregarTabla.setEnabled(false);
+                        btnBorrar.setEnabled(false);
+                        btnQuitar.setEnabled(false);
                         labelSelTabla.setText("");
                         cargarListaDeTablas(comboBases.getSelectedItem().toString());
                     }else{
@@ -1507,8 +1509,11 @@ public class InterfazGrafica extends javax.swing.JFrame {
         if(modeloListaExcel.isEmpty()){
             opc = sa.showOpenDialog(jPanel1);
         }
-        if(!modeloListaExcel.isEmpty()&&limpiarSeleccion("hojas",modeloListaExcel,
-            listaHojas,btnQuitarExcel,btnBorrarExcel,labelSelTablaExcel)==0){
+        if(!modeloListaExcel.isEmpty()&&limpiarSeleccion("hojas",modeloListaExcel,listaHojas)==0){
+            // rev!
+            btnBorrarExcel.setEnabled(false);
+            btnQuitarExcel.setEnabled(false);
+            labelSelTablaExcel.setText("");
             opc = sa.showOpenDialog(jPanel1);
         }
         
