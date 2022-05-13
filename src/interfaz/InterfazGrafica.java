@@ -177,7 +177,7 @@ public class InterfazGrafica extends javax.swing.JFrame {
         seleccionTablas = new javax.swing.JList();
         btnQuitar = new javax.swing.JButton();
         btnBorrar = new javax.swing.JButton();
-        tablasSel = new javax.swing.JRadioButton();
+        opTablasSel = new javax.swing.JRadioButton();
         opcTablasCompletas = new javax.swing.JRadioButton();
         btnExportar = new javax.swing.JButton();
         barraProgreso = new javax.swing.JProgressBar();
@@ -528,12 +528,12 @@ public class InterfazGrafica extends javax.swing.JFrame {
             }
         });
 
-        tablasSel.setBackground(new java.awt.Color(255, 255, 255));
-        buttonGroup1.add(tablasSel);
-        tablasSel.setText("Exportar sólo las tablas seleccionadas");
-        tablasSel.addActionListener(new java.awt.event.ActionListener() {
+        opTablasSel.setBackground(new java.awt.Color(255, 255, 255));
+        buttonGroup1.add(opTablasSel);
+        opTablasSel.setText("Exportar sólo las tablas seleccionadas");
+        opTablasSel.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                tablasSelActionPerformed(evt);
+                opTablasSelActionPerformed(evt);
             }
         });
 
@@ -562,7 +562,7 @@ public class InterfazGrafica extends javax.swing.JFrame {
                     .addGroup(jPanel10Layout.createSequentialGroup()
                         .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(opcTablasCompletas)
-                            .addComponent(tablasSel))
+                            .addComponent(opTablasSel))
                         .addGap(0, 0, Short.MAX_VALUE))))
         );
         jPanel10Layout.setVerticalGroup(
@@ -570,7 +570,7 @@ public class InterfazGrafica extends javax.swing.JFrame {
             .addGroup(jPanel10Layout.createSequentialGroup()
                 .addComponent(opcTablasCompletas)
                 .addGap(0, 0, 0)
-                .addComponent(tablasSel)
+                .addComponent(opTablasSel)
                 .addGap(0, 0, 0)
                 .addComponent(jPanel11, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -1151,7 +1151,7 @@ public class InterfazGrafica extends javax.swing.JFrame {
      * opción que permite exportar todas las tablas de la base de datos.
      * Deshabilita el uso de la lista de selección y los botones que permiten 
      * agregar y eliminar elementos a la misma.
-     * @param evt evento lanzado al seleccionar la opción que permite exportar
+     * @param evt Evento lanzado al seleccionar la opción que permite exportar
      * todas las tablas.
      */
     private void opcTablasCompletasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_opcTablasCompletasActionPerformed
@@ -1163,20 +1163,28 @@ public class InterfazGrafica extends javax.swing.JFrame {
         jScrollPaneSel.getVerticalScrollBar().setEnabled(false);
     }//GEN-LAST:event_opcTablasCompletasActionPerformed
 
-    private void tablasSelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tablasSelActionPerformed
-        if(listaElementos.get(comboTablas.getSelectedIndex()).getSeleccionado()){
-            btnAgregarTabla.setEnabled(false);
-        }else{
-            btnAgregarTabla.setEnabled(true);
-        }
+    /**
+     * Configura los elementos de la interfaz cuando el usuario selecciona la
+     * opción que permite exportar solo las tablas seleccionadas.
+     * Habilita el uso de la lista de selección y los botones que permiten 
+     * agregar y eliminar elementos a la misma.
+     * @param evt Evento lanzado al seleccionar la opción que permite exportar
+     * solo las tablas que se encuentren en la lista de exportación.  
+     */
+    private void opTablasSelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_opTablasSelActionPerformed
         seleccionTablas.setEnabled(true);
         jScrollPaneSel.getVerticalScrollBar().setEnabled(true);
-        if(modeloLista.isEmpty()){
+        // Verificar si la tabla que se está mostrando está seleccionada en la lista
+        if(listaElementos.get(comboTablas.getSelectedIndex()).estaSeleccionado())
+            btnAgregarTabla.setEnabled(false);
+        else
+            btnAgregarTabla.setEnabled(true);
+        // Verificar si la lista de exportación contiene elementos
+        if(modeloLista.isEmpty())
             btnExportar.setEnabled(false);
-        }else{
+        else
             btnExportar.setEnabled(true);
-        }
-    }//GEN-LAST:event_tablasSelActionPerformed
+    }//GEN-LAST:event_opTablasSelActionPerformed
 
     /**
      * Detecta el evento cuando cambia el item de la tabla seleccionada
@@ -1188,8 +1196,8 @@ public class InterfazGrafica extends javax.swing.JFrame {
                 cargarDatos(comboBases.getSelectedItem().toString(),comboTablas.getSelectedItem().toString());
             }
             labelSelTabla.setText("");
-            if(tablasSel.isSelected()){
-                if(listaElementos.get(comboTablas.getSelectedIndex()).getSeleccionado()){
+            if(opTablasSel.isSelected()){
+                if(listaElementos.get(comboTablas.getSelectedIndex()).estaSeleccionado()){
                     btnAgregarTabla.setEnabled(false); // deshabilitar el boton si el elemento sel. está en la lista
                 }else{
                     btnAgregarTabla.setEnabled(true);
@@ -1254,7 +1262,7 @@ public class InterfazGrafica extends javax.swing.JFrame {
     }//GEN-LAST:event_comboBasesMouseClicked
 
     private void btnAgregarTablaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarTablaActionPerformed
-        if(!listaElementos.get(comboTablas.getSelectedIndex()).getSeleccionado()){            
+        if(!listaElementos.get(comboTablas.getSelectedIndex()).estaSeleccionado()){            
             modeloLista.addElement(new ElementoLista(comboTablas.getSelectedItem().toString(),comboTablas.getSelectedIndex()));
             seleccionTablas.setSelectedIndex(modeloLista.getSize()-1);
             listaElementos.get(comboTablas.getSelectedIndex()).setSeleccionado(true);
@@ -1281,7 +1289,7 @@ public class InterfazGrafica extends javax.swing.JFrame {
             btnQuitar,btnBorrar,btnExportar,
             "Tabla borrada de la lista de exportación","Tablas borradas de la lista de exportación"
         );
-        if(!listaElementos.get(comboTablas.getSelectedIndex()).getSeleccionado()){
+        if(!listaElementos.get(comboTablas.getSelectedIndex()).estaSeleccionado()){
             btnAgregarTabla.setEnabled(true);
         }
     }//GEN-LAST:event_btnQuitarActionPerformed
@@ -1309,7 +1317,7 @@ public class InterfazGrafica extends javax.swing.JFrame {
     private void comboHojasItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_comboHojasItemStateChanged
         if(evt.getStateChange()==ItemEvent.SELECTED){
             if(tablasSelExcel.isSelected()){
-                if(listaHojas.get(comboHojas.getSelectedIndex()).getSeleccionado()){
+                if(listaHojas.get(comboHojas.getSelectedIndex()).estaSeleccionado()){
                     btnTipos.setEnabled(true);
                     btnAgregarHoja.setEnabled(false);
                 }else{
@@ -1331,7 +1339,7 @@ public class InterfazGrafica extends javax.swing.JFrame {
             btnQuitarExcel,btnBorrarExcel,btnImportar,
             "Hoja borrada de la lista de importación","Hojas borradas de la lista de importación"
         );
-        if(!listaHojas.get(comboHojas.getSelectedIndex()).getSeleccionado()){
+        if(!listaHojas.get(comboHojas.getSelectedIndex()).estaSeleccionado()){
             btnTipos.setEnabled(false);
             btnAgregarHoja.setEnabled(true);
         }
@@ -1348,7 +1356,7 @@ public class InterfazGrafica extends javax.swing.JFrame {
     private void tablasSelExcelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tablasSelExcelActionPerformed
         seleccionHojasExcel.setEnabled(true); // lista con los elementos
         jScrollPaneSel1.getVerticalScrollBar().setEnabled(true);
-        if(listaHojas.get(comboHojas.getSelectedIndex()).getSeleccionado()){
+        if(listaHojas.get(comboHojas.getSelectedIndex()).estaSeleccionado()){
             btnTipos.setEnabled(true);
             btnAgregarHoja.setEnabled(false);
         }else{
@@ -1418,7 +1426,7 @@ public class InterfazGrafica extends javax.swing.JFrame {
     }//GEN-LAST:event_btnImportarActionPerformed
 
     private void btnAgregarHojaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarHojaActionPerformed
-        if(!listaHojas.get(comboHojas.getSelectedIndex()).getSeleccionado()){  
+        if(!listaHojas.get(comboHojas.getSelectedIndex()).estaSeleccionado()){  
             // new ElementoLista----------------¬
             modeloListaExcel.addElement(new TablaLista(comboHojas.getSelectedItem().toString(),comboHojas.getSelectedIndex()));
             seleccionHojasExcel.setSelectedIndex(modeloListaExcel.getSize()-1);
@@ -1677,7 +1685,7 @@ public class InterfazGrafica extends javax.swing.JFrame {
             listaHojasImportar = listaHojas; 
         }else{
             listaHojasImportar = listaHojas.stream()
-                .filter(elemento->elemento.getSeleccionado())
+                .filter(elemento->elemento.estaSeleccionado())
                 .collect(Collectors.toList());
         }
         try{
@@ -1695,7 +1703,7 @@ public class InterfazGrafica extends javax.swing.JFrame {
             ElementoLista elemento = (ElementoLista)modeloLista.getElementAt(t-acomodo);      
             lista.get(elemento.getPosicion()).setSeleccionado(false);
             for(int i=0;i<lista.size();i++){
-                System.out.print("["+lista.get(i).getSeleccionado()+"]");
+                System.out.print("["+lista.get(i).estaSeleccionado()+"]");
             }System.out.println();
             modeloLista.remove(t-acomodo);
             //System.out.println(t-acomodo);
@@ -1732,7 +1740,7 @@ public class InterfazGrafica extends javax.swing.JFrame {
                lista = listaElementos; 
             }else{
                 lista = listaElementos.stream()
-                    .filter(elemento->elemento.getSeleccionado())
+                    .filter(elemento->elemento.estaSeleccionado())
                     .collect(Collectors.toList());
             }
             generadorArch = new GeneradorExcel(con2, bd, lista, info, barraProgreso, this, btnExportar);
@@ -1874,6 +1882,7 @@ public class InterfazGrafica extends javax.swing.JFrame {
     private javax.swing.JLabel labelSelTabla;
     private javax.swing.JLabel labelSelTablaExcel;
     private javax.swing.JTextArea msj;
+    private javax.swing.JRadioButton opTablasSel;
     private javax.swing.JRadioButton opcTablasCompletas;
     private javax.swing.JPanel panelExport;
     private javax.swing.JPanel panelImport;
@@ -1882,7 +1891,6 @@ public class InterfazGrafica extends javax.swing.JFrame {
     private javax.swing.JTable tabla;
     private javax.swing.JTable tablaExcel;
     private javax.swing.JRadioButton tablasCompletasExcel;
-    private javax.swing.JRadioButton tablasSel;
     private javax.swing.JRadioButton tablasSelExcel;
     private javax.swing.JPasswordField txtClave;
     private javax.swing.JTextField txtServidor;
