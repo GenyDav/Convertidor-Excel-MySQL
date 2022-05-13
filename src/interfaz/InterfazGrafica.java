@@ -178,7 +178,7 @@ public class InterfazGrafica extends javax.swing.JFrame {
         btnQuitar = new javax.swing.JButton();
         btnBorrar = new javax.swing.JButton();
         tablasSel = new javax.swing.JRadioButton();
-        tablasCompletas = new javax.swing.JRadioButton();
+        opcTablasCompletas = new javax.swing.JRadioButton();
         btnExportar = new javax.swing.JButton();
         barraProgreso = new javax.swing.JProgressBar();
         info = new javax.swing.JLabel();
@@ -537,13 +537,13 @@ public class InterfazGrafica extends javax.swing.JFrame {
             }
         });
 
-        tablasCompletas.setBackground(new java.awt.Color(255, 255, 255));
-        buttonGroup1.add(tablasCompletas);
-        tablasCompletas.setSelected(true);
-        tablasCompletas.setLabel("Exportar todas las tablas de la base");
-        tablasCompletas.addActionListener(new java.awt.event.ActionListener() {
+        opcTablasCompletas.setBackground(new java.awt.Color(255, 255, 255));
+        buttonGroup1.add(opcTablasCompletas);
+        opcTablasCompletas.setSelected(true);
+        opcTablasCompletas.setLabel("Exportar todas las tablas de la base");
+        opcTablasCompletas.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                tablasCompletasActionPerformed(evt);
+                opcTablasCompletasActionPerformed(evt);
             }
         });
 
@@ -561,14 +561,14 @@ public class InterfazGrafica extends javax.swing.JFrame {
                         .addComponent(btnQuitar, javax.swing.GroupLayout.DEFAULT_SIZE, 134, Short.MAX_VALUE))
                     .addGroup(jPanel10Layout.createSequentialGroup()
                         .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(tablasCompletas)
+                            .addComponent(opcTablasCompletas)
                             .addComponent(tablasSel))
                         .addGap(0, 0, Short.MAX_VALUE))))
         );
         jPanel10Layout.setVerticalGroup(
             jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel10Layout.createSequentialGroup()
-                .addComponent(tablasCompletas)
+                .addComponent(opcTablasCompletas)
                 .addGap(0, 0, 0)
                 .addComponent(tablasSel)
                 .addGap(0, 0, 0)
@@ -1101,7 +1101,7 @@ public class InterfazGrafica extends javax.swing.JFrame {
     private void reiniciarElementosExportacion(){
         comboBases.removeAllItems();
         comboTablas.removeAllItems();
-        tablasCompletas.setSelected(true);
+        opcTablasCompletas.setSelected(true);
         modeloLista.clear();
         tabla.setModel(new DefaultTableModel());
         btnBorrar.setEnabled(false);
@@ -1146,14 +1146,22 @@ public class InterfazGrafica extends javax.swing.JFrame {
         infoImport.setText("Progreso de importación");
     }
     
-    private void tablasCompletasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tablasCompletasActionPerformed
+    /**
+     * Configura los elementos de la interfaz cuando el usuario selecciona la
+     * opción que permite exportar todas las tablas de la base de datos.
+     * Deshabilita el uso de la lista de selección y los botones que permiten 
+     * agregar y eliminar elementos a la misma.
+     * @param evt evento lanzado al seleccionar la opción que permite exportar
+     * todas las tablas.
+     */
+    private void opcTablasCompletasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_opcTablasCompletasActionPerformed
         btnQuitar.setEnabled(false);
         btnBorrar.setEnabled(false);
         btnAgregarTabla.setEnabled(false);
         seleccionTablas.setEnabled(false);
         btnExportar.setEnabled(true);
         jScrollPaneSel.getVerticalScrollBar().setEnabled(false);
-    }//GEN-LAST:event_tablasCompletasActionPerformed
+    }//GEN-LAST:event_opcTablasCompletasActionPerformed
 
     private void tablasSelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tablasSelActionPerformed
         if(listaElementos.get(comboTablas.getSelectedIndex()).getSeleccionado()){
@@ -1201,7 +1209,7 @@ public class InterfazGrafica extends javax.swing.JFrame {
             // y se cargan los nombres de las tablas de la nueva base de datos
             // seleccionada.
             if(evt.getStateChange()==ItemEvent.SELECTED){
-                tablasCompletas.setSelected(true);
+                opcTablasCompletas.setSelected(true);
                 btnAgregarTabla.setEnabled(false);
                 labelSelTabla.setText("");
                 cargarListaDeTablas(comboBases.getSelectedItem().toString());
@@ -1222,7 +1230,7 @@ public class InterfazGrafica extends javax.swing.JFrame {
                     comboBases.hidePopup();                  
                     if(limpiarSeleccion("tablas",modeloLista,listaElementos,btnQuitar,btnBorrar,labelSelTabla)==JOptionPane.OK_OPTION){
                         comboTablas.removeAllItems();
-                        tablasCompletas.setSelected(true);
+                        opcTablasCompletas.setSelected(true);
                         btnAgregarTabla.setEnabled(false);
                         labelSelTabla.setText("");
                         cargarListaDeTablas(comboBases.getSelectedItem().toString());
@@ -1720,7 +1728,7 @@ public class InterfazGrafica extends javax.swing.JFrame {
             String bd = comboBases.getSelectedItem().toString(); 
             Conexion con2 = new Conexion(servidor,usuario,clave);
             List<ElementoLista> lista;
-            if(tablasCompletas.isSelected()){
+            if(opcTablasCompletas.isSelected()){
                lista = listaElementos; 
             }else{
                 lista = listaElementos.stream()
@@ -1866,13 +1874,13 @@ public class InterfazGrafica extends javax.swing.JFrame {
     private javax.swing.JLabel labelSelTabla;
     private javax.swing.JLabel labelSelTablaExcel;
     private javax.swing.JTextArea msj;
+    private javax.swing.JRadioButton opcTablasCompletas;
     private javax.swing.JPanel panelExport;
     private javax.swing.JPanel panelImport;
     private javax.swing.JList seleccionHojasExcel;
     private javax.swing.JList seleccionTablas;
     private javax.swing.JTable tabla;
     private javax.swing.JTable tablaExcel;
-    private javax.swing.JRadioButton tablasCompletas;
     private javax.swing.JRadioButton tablasCompletasExcel;
     private javax.swing.JRadioButton tablasSel;
     private javax.swing.JRadioButton tablasSelExcel;
