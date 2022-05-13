@@ -1284,7 +1284,7 @@ public class InterfazGrafica extends javax.swing.JFrame {
             seleccionTablas.setSelectedIndex(modeloLista.getSize()-1);
             // marcar la tabla como seleccionada en la estructura de datos
             listaElementos.get(comboTablas.getSelectedIndex()).setSeleccionado(true);
-            //mostrarListaElementos();
+            // mostrarListaElementos();
             labelSelTabla.setText("Tabla agregada a la lista de exportación");
             btnQuitar.setEnabled(true);
             btnBorrar.setEnabled(true);
@@ -1293,6 +1293,12 @@ public class InterfazGrafica extends javax.swing.JFrame {
         }   
     }//GEN-LAST:event_btnAgregarTablaActionPerformed
 
+    /**
+     * Método que permite eliminar todos los elementos seleccionados para 
+     * exportarse.
+     * @param evt Evento lanzado al hacer clic sobre el botón que permite borrar
+     * todos los elementos de la lista de exportación.
+     */
     private void btnBorrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBorrarActionPerformed
         if(limpiarSeleccion("tablas",modeloLista,listaElementos,btnQuitar,btnBorrar,labelSelTabla)==JOptionPane.OK_OPTION){
             btnAgregarTabla.setEnabled(true);
@@ -1300,6 +1306,44 @@ public class InterfazGrafica extends javax.swing.JFrame {
         } 
     }//GEN-LAST:event_btnBorrarActionPerformed
 
+    /**
+     * 
+     * @param <T>
+     * @param elemento
+     * @param modeloLista
+     * @param listaAux
+     * @param btnQuitar
+     * @param btnBorrar
+     * @param label
+     * @return 
+     */
+    public <T extends ElementoLista> int limpiarSeleccion(String elemento,DefaultListModel modeloLista,
+            ArrayList<T> listaAux,JButton btnQuitar,JButton btnBorrar,JLabel label){
+        int resp = JOptionPane.showConfirmDialog(
+            jPanel1, 
+            "Todas las "+elemento+" en la lista se \nborrarán. ¿Continuar?",
+            "¿Borrar todo?", 
+            JOptionPane.OK_CANCEL_OPTION,
+            JOptionPane.QUESTION_MESSAGE
+        );
+        if(resp==JOptionPane.OK_OPTION){                
+            ElementoLista elem;
+            for(int i=modeloLista.getSize()-1; i>=0; i--){
+                elem = (ElementoLista)modeloLista.getElementAt(i);
+                listaAux.get(elem.getPosicion()).setSeleccionado(false);
+            }
+            /*System.out.println("Borrados todos los elementos");
+            for(int k=0;k<listaAux.size();k++){
+                System.out.print("["+listaAux.get(k).getSeleccionado()+"]");
+            }System.out.println();*/
+            modeloLista.clear();
+            btnBorrar.setEnabled(false);
+            btnQuitar.setEnabled(false);
+            label.setText("Selección de "+elemento+" borrada");
+        }
+        return resp;
+    }
+    
     private void btnQuitarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnQuitarActionPerformed
         borrarElemento(seleccionTablas,modeloLista,listaElementos,labelSelTabla,
             btnQuitar,btnBorrar,btnExportar,
@@ -1776,33 +1820,6 @@ public class InterfazGrafica extends javax.swing.JFrame {
             info.setText("No se pudo cargar la información del servidor "
             + "(Error MySQL " + ex.getErrorCode() + ": " + ex.getMessage() + ".");
         }
-    }
-    
-    public <T extends ElementoLista> int limpiarSeleccion(String elemento,DefaultListModel modeloLista,
-            ArrayList<T> listaAux,JButton btnQuitar,JButton btnBorrar,JLabel label){
-        int resp = JOptionPane.showConfirmDialog(
-            jPanel1, 
-            "Todas las "+elemento+" en la lista se \nborrarán. ¿Continuar?",
-            "¿Borrar todo?", 
-            JOptionPane.OK_CANCEL_OPTION,
-            JOptionPane.QUESTION_MESSAGE
-        );
-        if(resp==JOptionPane.OK_OPTION){                
-            ElementoLista elem;
-            for(int i=modeloLista.getSize()-1; i>=0; i--){
-                elem = (ElementoLista)modeloLista.getElementAt(i);
-                listaAux.get(elem.getPosicion()).setSeleccionado(false);
-            }
-            /*System.out.println("Borrados todos los elementos");
-            for(int k=0;k<listaAux.size();k++){
-                System.out.print("["+listaAux.get(k).getSeleccionado()+"]");
-            }System.out.println();*/
-            modeloLista.clear();
-            btnBorrar.setEnabled(false);
-            btnQuitar.setEnabled(false);
-            label.setText("Selección de "+elemento+" borrada");
-        }
-        return resp;
     }
     
     public void reiniciarCamposInicio(){
