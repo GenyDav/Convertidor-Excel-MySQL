@@ -133,6 +133,13 @@ public class InterfazGrafica extends javax.swing.JFrame {
         rep = new Reporte(this,true); 
     }
     
+    private void mostrarListaElementos(){
+        for(int i=0;i<listaElementos.size();i++){
+            System.out.print("["+listaElementos.get(i).estaSeleccionado()+"]");
+        }
+        System.out.println();
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -1261,20 +1268,29 @@ public class InterfazGrafica extends javax.swing.JFrame {
         cambioCancelado = false;
     }//GEN-LAST:event_comboBasesMouseClicked
 
+    /**
+     * Método que comprueba si la tabla seleccionada está agregada a la lista de
+     * exportación. Si no lo está, la agrega y habilita los botones para eliminar
+     * elementos y realizar la exportación. Si la tabla ya está en la lista, no
+     * se realiza ninguna acción.
+     * @param evt Evento lanzado al hacer clic sobre el botón que permite agregar
+     * una tabla a lista de exportación.
+     */
     private void btnAgregarTablaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarTablaActionPerformed
-        if(!listaElementos.get(comboTablas.getSelectedIndex()).estaSeleccionado()){            
+        if(!listaElementos.get(comboTablas.getSelectedIndex()).estaSeleccionado()){
+            // añadir el nuevo elemento al jList
             modeloLista.addElement(new ElementoLista(comboTablas.getSelectedItem().toString(),comboTablas.getSelectedIndex()));
+            // seleccionar el último elemento del jList
             seleccionTablas.setSelectedIndex(modeloLista.getSize()-1);
+            // marcar la tabla como seleccionada en la estructura de datos
             listaElementos.get(comboTablas.getSelectedIndex()).setSeleccionado(true);
-            /*for(int i=0;i<listaElementos.size();i++){
-                System.out.print("["+listaElementos.get(i).getSeleccionado()+"]");
-            }System.out.println();*/
+            //mostrarListaElementos();
             labelSelTabla.setText("Tabla agregada a la lista de exportación");
             btnQuitar.setEnabled(true);
             btnBorrar.setEnabled(true);
+            btnAgregarTabla.setEnabled(false);
+            btnExportar.setEnabled(true);
         }   
-        btnAgregarTabla.setEnabled(false);
-        btnExportar.setEnabled(true);
     }//GEN-LAST:event_btnAgregarTablaActionPerformed
 
     private void btnBorrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBorrarActionPerformed
