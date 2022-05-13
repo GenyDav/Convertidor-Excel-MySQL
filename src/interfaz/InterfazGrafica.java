@@ -1400,10 +1400,13 @@ public class InterfazGrafica extends javax.swing.JFrame {
     }//GEN-LAST:event_btnQuitarExcelActionPerformed
 
     private void btnBorrarExcelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBorrarExcelActionPerformed
-        if(limpiarSeleccion("hojas",modeloListaExcel,listaHojas,btnQuitarExcel,btnBorrarExcel,labelSelTablaExcel)==JOptionPane.OK_OPTION){
+        if(limpiarSeleccion("hojas",modeloListaExcel,listaHojas)==JOptionPane.OK_OPTION){
             btnTipos.setEnabled(false);
             btnAgregarHoja.setEnabled(true);
             btnImportar.setEnabled(false);
+            btnBorrarExcel.setEnabled(false);
+            btnQuitarExcel.setEnabled(false);
+            labelSelTablaExcel.setText("Selección de hojas borrada");
         }
     }//GEN-LAST:event_btnBorrarExcelActionPerformed
 
