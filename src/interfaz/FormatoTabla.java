@@ -40,8 +40,9 @@ public class FormatoTabla extends SwingWorker<Void,Void>{
      * @param nomBase Nombre de la base de datos en donde está la tabla que se va a mostrar.
      * @param nomTabla Nombre de la tabla que se va a mostrar.
      * @param reg Etiqueta en donde se muestra el número de registros cargados. 
+     * @throws java.sql.SQLException Error al consultar los datos en el servidor de BD.
      */
-    public FormatoTabla(JTable t,Conexion c,String nomBase,String nomTabla,JLabel reg){
+    public FormatoTabla(JTable t,Conexion c,String nomBase,String nomTabla,JLabel reg) throws SQLException{
         tabla = t;
         modelo = new DefaultTableModel(){
             @Override
@@ -76,11 +77,16 @@ public class FormatoTabla extends SwingWorker<Void,Void>{
         modelo.setColumnIdentifiers(columnas);
     }
     
-    public void mostrarInformacion() throws SQLException{
+    /**
+     * Método que permite añadir los registros de la base de datos en la tabla.
+     * @throws SQLException Error ocurrido al consultar los registros en la 
+     * base de datos.
+     */
+    public void mostrarRenglones() throws SQLException{
         Object []renglon = new Object[numColumnas];
         while(resultados.next()){           
             for(int i=0;i<numColumnas;i++){
-                renglon[i] = resultados.getObject(i+1);
+                renglon[i] = "  " + resultados.getObject(i+1) + "  ";
             }
             modelo.addRow(renglon);    
         } 
@@ -123,7 +129,7 @@ public class FormatoTabla extends SwingWorker<Void,Void>{
         metaDatos = resultados.getMetaData();
         asignarNombresColumnas();
         labeRegistros.setText("Formateando registros...");
-        mostrarInformacion();
+        mostrarRenglones();
         //Se llama al metodo que ajusta las columnas
         resizeColumnWidth(tabla);
         //Se desactiva el Auto Resize de la tabla
