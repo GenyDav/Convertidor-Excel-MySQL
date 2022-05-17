@@ -1320,7 +1320,7 @@ public class InterfazGrafica extends javax.swing.JFrame {
      * @return Valor entero que indica si el usuario ha confirmado o cancelado
      * la eliminación de los elementos de la lista.
      */
-    public <T extends ElementoLista> int limpiarSeleccion(String elemento,DefaultListModel modeloLista,ArrayList<T> listaAux){
+    private <T extends ElementoLista> int limpiarSeleccion(String elemento,DefaultListModel modeloLista,ArrayList<T> listaAux){
         int resp = JOptionPane.showConfirmDialog(
             jPanel1, 
             "Todas las "+elemento+" en la lista se \nborrarán. ¿Continuar?",
@@ -1331,7 +1331,8 @@ public class InterfazGrafica extends javax.swing.JFrame {
         if(resp == JOptionPane.OK_OPTION){                
             ElementoLista elem;
             for(int i=modeloLista.getSize()-1;i>=0;i--){
-                elem = (ElementoLista)modeloLista.getElementAt(i);
+                elem = (T)modeloLista.getElementAt(i);
+                // desmarca como seleccionado el elemento en la estructura de datos
                 listaAux.get(elem.getPosicion()).setSeleccionado(false);
             }
             // mostrarListaElementos();
@@ -1341,15 +1342,48 @@ public class InterfazGrafica extends javax.swing.JFrame {
     }
     
     private void btnQuitarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnQuitarActionPerformed
-        borrarElemento(seleccionTablas,modeloLista,listaElementos,labelSelTabla,
-            btnQuitar,btnBorrar,btnExportar,
-            "Tabla borrada de la lista de exportación","Tablas borradas de la lista de exportación"
-        );
+        borrarElemento(seleccionTablas,modeloLista,listaElementos);
         if(!listaElementos.get(comboTablas.getSelectedIndex()).estaSeleccionado()){
             btnAgregarTabla.setEnabled(true);
         }
+        if(modeloLista.isEmpty()){
+            btnQuitar.setEnabled(false);
+            btnBorrar.setEnabled(false);
+            btnExportar.setEnabled(false);
+        }
     }//GEN-LAST:event_btnQuitarActionPerformed
 
+    /**
+     * Método que permite eliminar los elementos seleccionados en la lista de 
+     * exportación.
+     * @param <T> Objetos de la clase ElementoLista o que hereden de ella.
+     * @param seleccion JList en donde están las tablas seleccionadas.
+     * @param modeloLista Modelo del jList donde están las tablas seleccionadas.
+     * @param lista Estructura de datos con la información de las tablas.
+     */
+    private <T extends ElementoLista> void borrarElemento(JList seleccion,DefaultListModel modeloLista,ArrayList<T> lista){
+        int []elemSeleccionados; // posicion de los elementos que se van a borrar
+        T elemento; // elemento que se va a eliminar
+        
+        elemSeleccionados = seleccion.getSelectedIndices(); // Obtener las posiciones de los elementos a eliminar
+        for(int i=elemSeleccionados.length-1;i>=0;i--){
+            elemento = (T)modeloLista.getElementAt(elemSeleccionados[i]);      
+            lista.get(elemento.getPosicion()).setSeleccionado(false); // Desmarcar el elemento de la estructura de datos 
+            modeloLista.remove(elemSeleccionados[i]);
+            //mostrarListaElementos();
+        }
+        if(elemSeleccionados.length>1){  // si se seleccionaron varios elementos para borrarlos
+            if(!modeloLista.isEmpty())
+                seleccion.setSelectedIndex(0);
+        }else{ // solo se elimina un elemento
+            if(elemSeleccionados[0]==modeloLista.getSize()){ // si el elemento que se borró es el último de la lista
+                seleccion.setSelectedIndex(modeloLista.getSize()-1); // se selecciona el elemento anterior al eliminado
+            }else{
+                seleccion.setSelectedIndex(elemSeleccionados[0]); // seleccionar el elemento siguiente a eliminado
+            }
+        }
+    }
+    
     private void btnExportarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExportarActionPerformed
         if(btnExportar.getText().equals("Exportar")){
             guardarArchivo();
@@ -1391,13 +1425,16 @@ public class InterfazGrafica extends javax.swing.JFrame {
     }//GEN-LAST:event_comboHojasItemStateChanged
 
     private void btnQuitarExcelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnQuitarExcelActionPerformed
-        borrarElemento(seleccionHojasExcel,modeloListaExcel,listaHojas,labelSelTablaExcel,
-            btnQuitarExcel,btnBorrarExcel,btnImportar,
-            "Hoja borrada de la lista de importación","Hojas borradas de la lista de importación"
-        );
+        borrarElemento(seleccionHojasExcel,modeloListaExcel,listaHojas);
         if(!listaHojas.get(comboHojas.getSelectedIndex()).estaSeleccionado()){
             btnTipos.setEnabled(false);
             btnAgregarHoja.setEnabled(true);
+        }
+        // rev!
+        if(modeloLista.isEmpty()){
+            btnQuitarExcel.setEnabled(false);
+            btnBorrarExcel.setEnabled(false);
+            btnImportar.setEnabled(false);
         }
     }//GEN-LAST:event_btnQuitarExcelActionPerformed
 
@@ -1757,41 +1794,6 @@ public class InterfazGrafica extends javax.swing.JFrame {
             e.printStackTrace();
         }
     }  
-    
-    public <T extends ElementoLista> void borrarElemento(JList seleccion,DefaultListModel modeloLista,ArrayList<T> lista,JLabel label,JButton btnQuitar,JButton btnBorrar,JButton btnOperacion,String msj,String msjPlural){
-        int []elemBorrados = seleccion.getSelectedIndices(); // posiciones de los elementos a eliminar
-        int acomodo = 0;    // para el desfase que ocurre al eliminar elementos de la lista
-        for(int t:elemBorrados){     
-            ElementoLista elemento = (ElementoLista)modeloLista.getElementAt(t-acomodo);      
-            lista.get(elemento.getPosicion()).setSeleccionado(false);
-            for(int i=0;i<lista.size();i++){
-                System.out.print("["+lista.get(i).estaSeleccionado()+"]");
-            }System.out.println();
-            modeloLista.remove(t-acomodo);
-            //System.out.println(t-acomodo);
-            acomodo++;
-        }
-        if(elemBorrados.length>1){  // si se seleccionaron varios elementos para borrarlos
-            label.setText(msjPlural);
-            if(!modeloLista.isEmpty()){
-                seleccion.setSelectedIndex(0);
-            }
-        }else{ // solo se elimina un elemento
-            label.setText(msj);
-            //System.out.println(elemBorrados[0]);
-            //System.out.println(modeloLista.getSize()-1);
-            if(elemBorrados[0]==modeloLista.getSize()){   // si el elemento borrado es el último de la lista
-                seleccion.setSelectedIndex(modeloLista.getSize()-1); // se selecciona el elemento anterior al eliminado
-            }else{
-                seleccion.setSelectedIndex(elemBorrados[0]);    // selec. el elemento sig a eliminado
-            }
-        }
-        if(modeloLista.isEmpty()){
-            btnQuitar.setEnabled(false);
-            btnBorrar.setEnabled(false);
-            btnOperacion.setEnabled(false); 
-        }
-    }
     
     public void guardarArchivo(){ 
         try {
