@@ -20,41 +20,45 @@ import javax.swing.table.TableColumnModel;
 /**
  *
  * @author Geny
+ * @version 1.0
  */
 public class FormatoTabla extends SwingWorker<Void,Void>{
-    private DefaultTableModel modelo; 
-    private JTable tabla;
-    private Conexion conn;
-    private ResultSet resultados;
-    private ResultSetMetaData metaDatos;
+    private DefaultTableModel modelo;
+    private JTable tabla;           
+    private Conexion conn;        
+    private String nomBase, nomTabla;
+    private JLabel labeRegistros;       
+    private ResultSet resultados;        // datos de la tabla
+    private ResultSetMetaData metaDatos; // información de la tabla obtenida desde la base de datos
     private int numColumnas;
     private int numRegistros;
-    private String nomBase, nomTabla;
-    private JLabel reg;
     
-    public FormatoTabla(JTable t,Conexion c,String nomBase,String nomTabla,JLabel reg) throws SQLException{
+    /**
+     * Constructor.
+     * @param t Tabla sobre la que se mostrarán los datos.
+     * @param c Conexión con la base de datos.
+     * @param nomBase Nombre de la base de datos en donde está la tabla que se va a mostrar.
+     * @param nomTabla Nombre de la tabla que se va a mostrar.
+     * @param reg Etiqueta en donde se muestra el número de registros cargados. 
+     */
+    public FormatoTabla(JTable t,Conexion c,String nomBase,String nomTabla,JLabel reg){
+        tabla = t;
         modelo = new DefaultTableModel(){
             @Override
             public boolean isCellEditable (int row, int column){
-                // Aquí devolvemos true o false según queramos que una celda
-                // identificada por fila,columna (row,column), sea o no editable
-                //if (column == 3)
-                //   return true;
-                return false;
+                return false; // Deshabilitar la edición de todas las celdas
             }
         };
-        
-        tabla = t;
         tabla.setModel(modelo);
         conn = c;
+        this.nomBase = nomBase;
+        this.nomTabla = nomTabla;
+        labeRegistros = reg;
+        labeRegistros.setText("");
         numColumnas = 0;
         numRegistros = 0;
         resultados = null;
         metaDatos = null;
-        this.nomBase = nomBase;
-        this.nomTabla = nomTabla;
-        this.reg = reg;
-        this.reg.setText("");
     } 
     
     public final void asignarNombresColumnas() throws SQLException{
@@ -74,7 +78,7 @@ public class FormatoTabla extends SwingWorker<Void,Void>{
             }
             modelo.addRow(renglon);    
         } 
-        reg.setText(numRegistros + " registros cargados");
+        labeRegistros.setText(numRegistros + " registros cargados");
     }
     
     /**
@@ -107,12 +111,12 @@ public class FormatoTabla extends SwingWorker<Void,Void>{
     
     @Override
     public Void doInBackground() throws SQLException{
-        reg.setText("Buscando registros...");
+        labeRegistros.setText("Buscando registros...");
         numRegistros = conn.obtenerNumRegistros(nomBase, nomTabla);
         resultados = conn.obtenerRegistros(nomBase, nomTabla);
         metaDatos = resultados.getMetaData();
         asignarNombresColumnas();
-        reg.setText("Formateando registros...");
+        labeRegistros.setText("Formateando registros...");
         mostrarInformacion();
         //Se llama al metodo que ajusta las columnas
         resizeColumnWidth(tabla);
