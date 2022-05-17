@@ -1297,7 +1297,7 @@ public class InterfazGrafica extends javax.swing.JFrame {
 
     /**
      * Método que permite eliminar todos los elementos seleccionados para 
-     * exportarse.
+     * exportarse al hacer clic sobre el botón.
      * @param evt Evento lanzado al hacer clic sobre el botón que permite borrar
      * todos los elementos de la lista de exportación.
      */
@@ -1341,11 +1341,19 @@ public class InterfazGrafica extends javax.swing.JFrame {
         return resp;
     }
     
+    /**
+     * Método que permite eliminar los elementos seleccionados por el usuario 
+     * en la lista de exportación al hacer clic en el botón.
+     * @param evt Evento lanzado al hacer clic sobre el botón que permite borrar
+     * los elementos.
+     */
     private void btnQuitarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnQuitarActionPerformed
         borrarElemento(seleccionTablas,modeloLista,listaElementos);
+        // Revisar si la tabla que se se está mostrando está en la lista de exportación
         if(!listaElementos.get(comboTablas.getSelectedIndex()).estaSeleccionado()){
             btnAgregarTabla.setEnabled(true);
         }
+        // Deshabilitar botones si la lista está vacía
         if(modeloLista.isEmpty()){
             btnQuitar.setEnabled(false);
             btnBorrar.setEnabled(false);
@@ -1375,7 +1383,7 @@ public class InterfazGrafica extends javax.swing.JFrame {
         if(elemSeleccionados.length>1){  // si se seleccionaron varios elementos para borrarlos
             if(!modeloLista.isEmpty())
                 seleccion.setSelectedIndex(0);
-        }else{ // solo se elimina un elemento
+        }else{
             if(elemSeleccionados[0]==modeloLista.getSize()){ // si el elemento que se borró es el último de la lista
                 seleccion.setSelectedIndex(modeloLista.getSize()-1); // se selecciona el elemento anterior al eliminado
             }else{
