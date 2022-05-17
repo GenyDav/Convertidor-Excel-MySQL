@@ -192,7 +192,6 @@ public class InterfazGrafica extends javax.swing.JFrame {
         jLabel7 = new javax.swing.JLabel();
         jPanel8 = new javax.swing.JPanel();
         btnAgregarTabla = new javax.swing.JButton();
-        labelSelTabla = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         jPanel14 = new javax.swing.JPanel();
         labelRegistros = new javax.swing.JLabel();
@@ -619,14 +618,11 @@ public class InterfazGrafica extends javax.swing.JFrame {
             jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel8Layout.createSequentialGroup()
                 .addComponent(btnAgregarTabla)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(labelSelTabla, javax.swing.GroupLayout.PREFERRED_SIZE, 219, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addContainerGap(243, Short.MAX_VALUE))
         );
         jPanel8Layout.setVerticalGroup(
             jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(btnAgregarTabla)
-            .addComponent(labelSelTabla, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
         jLabel4.setFont(new java.awt.Font("Dialog", 1, 13)); // NOI18N
@@ -1114,7 +1110,6 @@ public class InterfazGrafica extends javax.swing.JFrame {
         btnBorrar.setEnabled(false);
         btnQuitar.setEnabled(false);
         btnAgregarTabla.setEnabled(false);
-        labelSelTabla.setText("");
         info.setText("Progreso de exportación");
         barraProgreso.setValue(0);
         
@@ -1205,7 +1200,6 @@ public class InterfazGrafica extends javax.swing.JFrame {
             if(comboTablas.getItemCount()>0){
                 cargarDatos(comboBases.getSelectedItem().toString(),comboTablas.getSelectedItem().toString());
             }
-            //labelSelTabla.setText("");
             if(opTablasSel.isSelected()){
                 if(listaElementos.get(comboTablas.getSelectedIndex()).estaSeleccionado()){
                     btnAgregarTabla.setEnabled(false); // deshabilitar el boton si la tabla actual está en la lista
@@ -1229,7 +1223,6 @@ public class InterfazGrafica extends javax.swing.JFrame {
             if(evt.getStateChange()==ItemEvent.SELECTED){
                 opcTablasCompletas.setSelected(true);
                 btnAgregarTabla.setEnabled(false);
-                labelSelTabla.setText("");
                 cargarListaDeTablas(comboBases.getSelectedItem().toString());
                 indiceBaseAct = comboBases.getSelectedIndex();
             }else{         
@@ -1252,7 +1245,6 @@ public class InterfazGrafica extends javax.swing.JFrame {
                         btnAgregarTabla.setEnabled(false);
                         btnBorrar.setEnabled(false);
                         btnQuitar.setEnabled(false);
-                        labelSelTabla.setText("");
                         cargarListaDeTablas(comboBases.getSelectedItem().toString());
                     }else{
                         cambioCancelado = true;
@@ -1290,7 +1282,6 @@ public class InterfazGrafica extends javax.swing.JFrame {
             // marcar la tabla como seleccionada en la estructura de datos
             listaElementos.get(comboTablas.getSelectedIndex()).setSeleccionado(true);
             // mostrarListaElementos();
-            labelSelTabla.setText("Tabla agregada a la lista de exportación");
             btnQuitar.setEnabled(true);
             btnBorrar.setEnabled(true);
             btnAgregarTabla.setEnabled(false);
@@ -1310,7 +1301,6 @@ public class InterfazGrafica extends javax.swing.JFrame {
             btnExportar.setEnabled(false);
             btnBorrar.setEnabled(false);
             btnQuitar.setEnabled(false);
-            labelSelTabla.setText("Selección de tablas borrada");
         } 
     }//GEN-LAST:event_btnBorrarActionPerformed
 
@@ -1727,6 +1717,11 @@ public class InterfazGrafica extends javax.swing.JFrame {
         }
     }
     
+    /**
+     * Método que muestra en pantalla los datos de una tabla determinada.
+     * @param nomBase nombre de la base de datos en donde se encuentra la tabla
+     * @param nomTabla nombre de la tabla
+     */
     public void cargarDatos(String nomBase,String nomTabla){
         try{
             formato = new FormatoTabla(tabla,conn,nomBase,nomTabla,labelRegistros);
@@ -1737,7 +1732,7 @@ public class InterfazGrafica extends javax.swing.JFrame {
         }catch(Exception ex){
             info.setText("No fue posible cargar los registros de la tabla "
                 +comboTablas.getSelectedItem()+" ("+ex.toString()+")");
-            ex.printStackTrace();
+            //ex.printStackTrace();
         }
     }
     
@@ -1927,7 +1922,6 @@ public class InterfazGrafica extends javax.swing.JFrame {
     private javax.swing.JLabel labelArchivo;
     private javax.swing.JLabel labelRegExcel;
     private javax.swing.JLabel labelRegistros;
-    private javax.swing.JLabel labelSelTabla;
     private javax.swing.JLabel labelSelTablaExcel;
     private javax.swing.JTextArea msj;
     private javax.swing.JRadioButton opTablasSel;
