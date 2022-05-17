@@ -1194,18 +1194,21 @@ public class InterfazGrafica extends javax.swing.JFrame {
     }//GEN-LAST:event_opTablasSelActionPerformed
 
     /**
-     * Detecta el evento cuando cambia el item de la tabla seleccionada
-     * @param evt 
+     * Detecta el evento cuando se cambia el item en la lista de tablas. Al
+     * cambiar de tabla, se actualizan los datos en pantalla y se comprueba si 
+     * el botón que permite añadir elementos a la lista debe habilitarse o no.
+     * @param evt Evento lanzado al seleccionar un nuevo elemento de la lista de
+     * tablas
      */
     private void comboTablasItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_comboTablasItemStateChanged
         if(evt.getStateChange()==ItemEvent.SELECTED){
             if(comboTablas.getItemCount()>0){
                 cargarDatos(comboBases.getSelectedItem().toString(),comboTablas.getSelectedItem().toString());
             }
-            labelSelTabla.setText("");
+            //labelSelTabla.setText("");
             if(opTablasSel.isSelected()){
                 if(listaElementos.get(comboTablas.getSelectedIndex()).estaSeleccionado()){
-                    btnAgregarTabla.setEnabled(false); // deshabilitar el boton si el elemento sel. está en la lista
+                    btnAgregarTabla.setEnabled(false); // deshabilitar el boton si la tabla actual está en la lista
                 }else{
                     btnAgregarTabla.setEnabled(true);
                 }
