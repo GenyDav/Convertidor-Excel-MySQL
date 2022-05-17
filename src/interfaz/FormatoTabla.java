@@ -61,11 +61,17 @@ public class FormatoTabla extends SwingWorker<Void,Void>{
         metaDatos = null;
     } 
     
-    public final void asignarNombresColumnas() throws SQLException{
-        numColumnas = metaDatos.getColumnCount();   // obtener el número de columnas
+    /**
+     * Método que obtiene los nombres de la columnas desde la base de datos y los
+     * asigna a la tabla.
+     * @throws SQLException Error ocurrido al consultar el nombre de las columnas
+     * en la base de datos.
+     */
+    private void asignarNombresColumnas() throws SQLException{
+        numColumnas = metaDatos.getColumnCount();       // obtener el número de columnas
         String []columnas = new String[numColumnas];
-        for(int i=0;i<numColumnas;i++){             // obtener el nombre de cada columna
-            columnas[i] = metaDatos.getColumnName(i+1);
+        for(int i=0;i<numColumnas;i++){             
+            columnas[i] = metaDatos.getColumnName(i+1); // obtener el nombre de cada columna
         }
         modelo.setColumnIdentifiers(columnas);
     }
