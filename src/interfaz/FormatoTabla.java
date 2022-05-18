@@ -82,7 +82,7 @@ public class FormatoTabla extends SwingWorker<Void,Void>{
      * @throws SQLException Error ocurrido al consultar los registros en la 
      * base de datos.
      */
-    public void mostrarRenglones() throws SQLException{
+    private void mostrarRenglones() throws SQLException{
         Object []renglon = new Object[numColumnas];
         while(resultados.next()){           
             for(int i=0;i<numColumnas;i++){
@@ -94,30 +94,22 @@ public class FormatoTabla extends SwingWorker<Void,Void>{
     }
     
     /**
-    * Metodo que ajusta el ancho de la columna de una tabla
-    * @param table 
+    * Metodo que ajusta el ancho de cada columna de una tabla en base a su 
+    * contenido. 
     */
-    private void resizeColumnWidth(JTable table){
-        //Se obtiene el modelo de la columna
-        TableColumnModel modeloColumna = table.getColumnModel();
-        //Se obtiene el total de las columnas
-        for(int columna=0;columna<table.getColumnCount();columna++){
-            //Establecemos un valor minimo para el ancho de la columna
-            int ancho = 50;
-            //Obtenemos el numero de filas de la tabla
-            for(int renglon=0;renglon<table.getRowCount();renglon++){
-                //Obtenemos el renderizador de la tabla
-                TableCellRenderer renderer = table.getCellRenderer(renglon,columna);
-                //Creamos un objeto para preparar el renderer
-                Component comp = table.prepareRenderer(renderer,renglon,columna);
-                //Establecemos el ancho según el valor maximo del ancho de la columna
-                ancho = Math.max(comp.getPreferredSize().width + 1, ancho);
+    private void ajustarAnchoColumna(){
+        TableColumnModel modeloColumna = tabla.getColumnModel(); // Se obtiene el modelo de la columna
+        for(int col=0;col<tabla.getColumnCount();col++){
+            int ancho = 50; // valor minimo para el ancho de la columna
+            for(int renglon=0;renglon<tabla.getRowCount();renglon++){
+                TableCellRenderer renderer = tabla.getCellRenderer(renglon,col); // Obtener el renderizador de la tabla
+                Component comp = tabla.prepareRenderer(renderer,renglon,col);    // Crear un objeto para preparar el renderer
+                // Comparar el valor actual de la variable ancho con el tamaño de la celda
+                ancho = Math.max(comp.getPreferredSize().width,ancho);
             }
-            //Se establece una condicion para no sobrepasar el valor de 300
-            if (ancho>300)
+            if (ancho>300) // no sobrepasar el valor de 300
                 ancho = 300;
-            //Se establece el ancho de la columna
-            modeloColumna.getColumn(columna).setPreferredWidth(ancho);
+            modeloColumna.getColumn(col).setPreferredWidth(ancho); // Establecer el ancho de la columna
         }
     }
     
@@ -131,7 +123,7 @@ public class FormatoTabla extends SwingWorker<Void,Void>{
         labeRegistros.setText("Formateando registros...");
         mostrarRenglones();
         //Se llama al metodo que ajusta las columnas
-        resizeColumnWidth(tabla);
+        ajustarAnchoColumna();
         //Se desactiva el Auto Resize de la tabla
         //Es importante que vaya despues de el metodo que ajusta el ancho de la columna
         tabla.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
