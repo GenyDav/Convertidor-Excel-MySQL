@@ -13,8 +13,8 @@ import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumnModel;
 
 /**
- * Permite crear los objetos que consultan la base de datos y muestran los 
- * resultados en pantalla.
+ * Permite crear los objetos que consultan una tabla de la base de datos y 
+ * muestran los resultados en pantalla.
  * @author Geny
  * @version 1.0
  */
