@@ -1,9 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-package interfaz;
+package formatoTablas;
 
 import conexion.Conexion;
 import java.awt.Component;
@@ -18,7 +13,8 @@ import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumnModel;
 
 /**
- *
+ * Permite crear los objetos que consultan la base de datos y muestran los 
+ * resultados en pantalla.
  * @author Geny
  * @version 1.0
  */
@@ -83,10 +79,13 @@ public class FormatoTabla extends SwingWorker<Void,Void>{
      * base de datos.
      */
     private void mostrarRenglones() throws SQLException{
-        Object []renglon = new Object[numColumnas];
-        while(resultados.next()){           
+        Object aux;
+        while(resultados.next()){  
+            Object []renglon = new Object[numColumnas];
             for(int i=0;i<numColumnas;i++){
-                renglon[i] = "  " + resultados.getObject(i+1) + "  ";
+                aux = resultados.getObject(i+1);
+                if(aux!=null)
+                    renglon[i] = "  " + aux + "  ";
             }
             modelo.addRow(renglon);    
         } 
@@ -105,14 +104,22 @@ public class FormatoTabla extends SwingWorker<Void,Void>{
                 TableCellRenderer renderer = tabla.getCellRenderer(renglon,col); // Obtener el renderizador de la tabla
                 Component comp = tabla.prepareRenderer(renderer,renglon,col);    // Crear un objeto para preparar el renderer
                 // Comparar el valor actual de la variable ancho con el tamaño de la celda
-                ancho = Math.max(comp.getPreferredSize().width,ancho);
+                ancho = Math.max(comp.getPreferredSize().width+1,ancho);
             }
             if (ancho>300) // no sobrepasar el valor de 300
                 ancho = 300;
             modeloColumna.getColumn(col).setPreferredWidth(ancho); // Establecer el ancho de la columna
         }
+        //tabla.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
     }
     
+    /**
+     * Método ejecutado en segundo plano que llama a los otros métodos necesarios 
+     * para mostrar los datos de la tabla.
+     * @return void.
+     * @throws SQLException Error ocurrido al intentar obtener los datos desde 
+     * el servidor.
+     */
     @Override
     public Void doInBackground() throws SQLException{
         labeRegistros.setText("Buscando registros...");
@@ -122,11 +129,7 @@ public class FormatoTabla extends SwingWorker<Void,Void>{
         asignarNombresColumnas();
         labeRegistros.setText("Formateando registros...");
         mostrarRenglones();
-        //Se llama al metodo que ajusta las columnas
         ajustarAnchoColumna();
-        //Se desactiva el Auto Resize de la tabla
-        //Es importante que vaya despues de el metodo que ajusta el ancho de la columna
-        tabla.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-            return null;
-        }
+        return null;
+    }
 }
