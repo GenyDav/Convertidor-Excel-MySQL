@@ -5,6 +5,7 @@
  */
 package interfaz;
 
+import formatoTablas.FormatoTabla;
 import datos.InfoColumna;
 import conexion.Conexion;
 import excel.GeneradorExcel;
@@ -472,7 +473,7 @@ public class InterfazGrafica extends javax.swing.JFrame {
 
             }
         ));
-        tabla.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_ALL_COLUMNS);
+        tabla.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_OFF);
         tabla.setDragEnabled(true);
         tabla.setGridColor(new java.awt.Color(204, 204, 204));
         tabla.setOpaque(false);
@@ -1197,9 +1198,8 @@ public class InterfazGrafica extends javax.swing.JFrame {
      */
     private void comboTablasItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_comboTablasItemStateChanged
         if(evt.getStateChange()==ItemEvent.SELECTED){
-            if(comboTablas.getItemCount()>0){
+            if(comboTablas.getItemCount()>0)
                 cargarDatos(comboBases.getSelectedItem().toString(),comboTablas.getSelectedItem().toString());
-            }
             if(opTablasSel.isSelected()){
                 if(listaElementos.get(comboTablas.getSelectedIndex()).estaSeleccionado()){
                     btnAgregarTabla.setEnabled(false); // deshabilitar el boton si la tabla actual está en la lista
@@ -1385,11 +1385,17 @@ public class InterfazGrafica extends javax.swing.JFrame {
         }
     }
     
+    /**
+     * Método que permite iniciar o detener la creación de un archivo de Excel
+     * con los datos obtenidos de una base de datos al presionar el botón
+     * correspondiente.
+     * @param evt Evento lanzado al prsionar el boton 'Exportar'
+     */
     private void btnExportarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExportarActionPerformed
         if(btnExportar.getText().equals("Exportar")){
             guardarArchivo();
         }else{
-            generadorArch.cancel(true);
+            generadorArch.cancel(true); // cancelar la ejecución del swingWorker
         }
     }//GEN-LAST:event_btnExportarActionPerformed
 
@@ -1722,7 +1728,7 @@ public class InterfazGrafica extends javax.swing.JFrame {
      * @param nomBase nombre de la base de datos en donde se encuentra la tabla
      * @param nomTabla nombre de la tabla
      */
-    public void cargarDatos(String nomBase,String nomTabla){
+    private void cargarDatos(String nomBase,String nomTabla){
         try{
             formato = new FormatoTabla(tabla,conn,nomBase,nomTabla,labelRegistros);
             formato.execute();
