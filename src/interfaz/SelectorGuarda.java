@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package interfaz;
 
 import excel.GeneradorExcel;
@@ -15,8 +10,10 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.plaf.basic.BasicFileChooserUI;
 
 /**
- *
+ * Crea una nueva ventana de selección de archivos modificada para los 
+ * propósitos del programa.
  * @author Geny
+ * @version 1.0
  */
 public class SelectorGuarda extends JFileChooser {
     private String rutaArch;
@@ -25,6 +22,13 @@ public class SelectorGuarda extends JFileChooser {
     private BasicFileChooserUI interfaz;
     private GeneradorExcel gen;
     
+    /**
+     * Constructor. Crea una nueva ventana de selección de archivos personalizada
+     * que funciona de forma similar al selector de archivos del programa Excel.
+     * @param archivo objeto File con el nombre de la base de datos que se va a 
+     * exportar.
+     * @param gen Objeto encargado de crear el archivo de Excel en segundo plano.
+     */
     public SelectorGuarda(File archivo, GeneradorExcel gen){
         setSelectedFile(archivo);
         setDialogTitle("Guardar archivo Excel");
@@ -38,6 +42,8 @@ public class SelectorGuarda extends JFileChooser {
         interfaz = (BasicFileChooserUI)getUI();
         this.gen = gen;
         
+        // Detectar cuando el usuario cambia el fitro del archivo seleccionado 
+        // y actualizar la extensión en el nombre del archivo
         addPropertyChangeListener(JFileChooser.FILE_FILTER_CHANGED_PROPERTY, new PropertyChangeListener(){
             // NOTA: cuando se selecciona un tipo de archivo distinto al actual
             // el archivo seleccionado se convierte en null
@@ -56,35 +62,42 @@ public class SelectorGuarda extends JFileChooser {
                     nomArch = nomArch.substring(0, nomArch.length()-4);
                 }  
                 nomArch += "." + extension;
-                //System.out.println("Nombre nuevo: "+nomArch);
                 interfaz.setFileName(nomArch);
             }
         });
         
+        // Detectar cuando el usuario cambia el archivo seleccionado 
         addPropertyChangeListener(JFileChooser.SELECTED_FILE_CHANGED_PROPERTY, new PropertyChangeListener(){
-            // El evento se lanza al seleccionar un archivo 
-            // tambien al cambiar el filtro de tipo y el archivo se convierte en null
+            // El evento se lanza al seleccionar un archivo de la ventana, 
+            // tambien al cambiar el filtro de tipo porque el archivo se convierte en null
+            // y al hacer clic en el boton 'Aceptar' del jFileChooser.
             @Override
             public void propertyChange(PropertyChangeEvent evt){
                 File f = getSelectedFile();
                 if(f!=null){                   
-                    nomArch = getSelectedFile().getName(); // si el usuario selecciona un archivo del jfileChooser
+                    nomArch = getSelectedFile().getName();
                 }
             }
         });
     }
     
+    /**
+     * Método que se llama cuando el usuario presiona el boton 'Aceptar' después 
+     * de seleccionar un archivo de la ventana o despues de escribir un nuevo 
+     * nombre para el archivo.
+     */
     @Override
     public void approveSelection(){
-        nomArch = getSelectedFile().getName();
+        // System.out.println(nomArch);
         rutaArch = getSelectedFile().getPath();    
         // Verificar la extensión del archivo antes de guardarlo
         if(!rutaArch.endsWith(extension)){
             rutaArch += "." + extension;
             nomArch += "." + extension;
         }
-        //System.out.println("ruta nueva: "+rutaArch);
         File archivo = new File(rutaArch);
+        // Verificar si el archivo ya existe, si es así, se muestra un mensaje
+        // de confirmación para sobreescribirlo.
         if(archivo.exists()){
             int resp = JOptionPane.showConfirmDialog(
                 this, 
@@ -93,7 +106,7 @@ public class SelectorGuarda extends JFileChooser {
                 JOptionPane.OK_CANCEL_OPTION,
                 JOptionPane.WARNING_MESSAGE
             );
-            if(resp==JOptionPane.OK_OPTION){
+            if(resp == JOptionPane.OK_OPTION){
                 gen.defInfoArchivo(rutaArch, extension);
                 gen.execute();
             }else{
