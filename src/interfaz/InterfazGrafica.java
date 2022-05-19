@@ -189,7 +189,7 @@ public class InterfazGrafica extends javax.swing.JFrame {
         opcTablasCompletas = new javax.swing.JRadioButton();
         btnExportar = new javax.swing.JButton();
         barraProgreso = new javax.swing.JProgressBar();
-        info = new javax.swing.JLabel();
+        labelInfo = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
         jPanel8 = new javax.swing.JPanel();
         btnAgregarTabla = new javax.swing.JButton();
@@ -599,8 +599,8 @@ public class InterfazGrafica extends javax.swing.JFrame {
         barraProgreso.setFocusable(false);
         barraProgreso.setStringPainted(true);
 
-        info.setBackground(new java.awt.Color(255, 255, 255));
-        info.setText("Progreso de exportación");
+        labelInfo.setBackground(new java.awt.Color(255, 255, 255));
+        labelInfo.setText("Progreso de exportación");
 
         jLabel7.setFont(new java.awt.Font("Arial", 1, 18)); // NOI18N
         jLabel7.setText("Exportar tablas de MySQL a Excel");
@@ -681,7 +681,7 @@ public class InterfazGrafica extends javax.swing.JFrame {
                     .addComponent(barraProgreso, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(panelExportLayout.createSequentialGroup()
                         .addGap(2, 2, 2)
-                        .addComponent(info, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addComponent(labelInfo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addContainerGap(35, Short.MAX_VALUE))
         );
         panelExportLayout.setVerticalGroup(
@@ -712,7 +712,7 @@ public class InterfazGrafica extends javax.swing.JFrame {
                 .addGap(26, 26, 26)
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 4, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, 0)
-                .addComponent(info, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(labelInfo, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, 0)
                 .addComponent(barraProgreso, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(50, 50, 50))
@@ -1111,7 +1111,7 @@ public class InterfazGrafica extends javax.swing.JFrame {
         btnBorrar.setEnabled(false);
         btnQuitar.setEnabled(false);
         btnAgregarTabla.setEnabled(false);
-        info.setText("Progreso de exportación");
+        labelInfo.setText("Progreso de exportación");
         barraProgreso.setValue(0);
         
         listaElementos.clear();
@@ -1399,6 +1399,39 @@ public class InterfazGrafica extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btnExportarActionPerformed
 
+    /**
+     * Método encargado de inicializar todos los componentes necesarios para
+     * crear el archivo de Excel en base a la base de datos seleccionada y sus
+     * tablas marcadas.
+     */
+    private void guardarArchivo(){ 
+        List<ElementoLista> lista; // lista definitiva de tablas que se van a exportar
+        String directorio; // directorio por defecto del usuario
+        try {
+            String nombreBD = comboBases.getSelectedItem().toString(); 
+            // Crear una nueva conexión que se encargará de obtener los datos de la BD
+            Conexion con2 = new Conexion(servidor,usuario,clave);
+            if(opcTablasCompletas.isSelected()){
+               lista = listaElementos; 
+            }else{
+                lista = listaElementos.stream()
+                    .filter(elemento->elemento.estaSeleccionado())
+                    .collect(Collectors.toList());
+            }
+            // Inicializar el objeto que va a crear el archivo de Excel
+            generadorArch = new GeneradorExcel(con2,nombreBD,lista,labelInfo,barraProgreso,this,btnExportar);
+            directorio = FileSystemView.getFileSystemView().getDefaultDirectory().getPath();
+            // Instanciar y mostrar la ventana de selección de archivos
+            SelectorGuarda sg = new SelectorGuarda(new File(directorio+"\\"+nombreBD+".xlsx"),generadorArch);
+            sg.showSaveDialog(jPanel1);
+        } catch (ClassNotFoundException ex) {
+            labelInfo.setText("nNo se pudo encontar la librería mysql-conector-java...");
+        } catch (SQLException ex) {
+            labelInfo.setText("No se pudo cargar la información del servidor "
+            + "(Error MySQL " + ex.getErrorCode() + ": " + ex.getMessage() + ".");
+        }
+    }
+    
     private void guardar_bdActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_guardar_bdActionPerformed
         modo = IMP;
         cardLayout2.show(jPanel7, "cardImport");
@@ -1688,10 +1721,10 @@ public class InterfazGrafica extends javax.swing.JFrame {
                 comboBases.addItem(nomBase);
             });
         }catch(SQLException e){
-            info.setText("No se pudo cargar la información del servidor "
+            labelInfo.setText("No se pudo cargar la información del servidor "
             + "(Error MySQL " + e.getErrorCode() + ": " + e.getMessage() + ".");
         }catch(Exception ex){
-            info.setText("No se pudo cargar la información del servidor ("+ex.getMessage()+")");
+            labelInfo.setText("No se pudo cargar la información del servidor ("+ex.getMessage()+")");
             //ex.printStackTrace();
         }
     }
@@ -1714,10 +1747,10 @@ public class InterfazGrafica extends javax.swing.JFrame {
                 }
             );
         }catch(SQLException e){
-            info.setText("No se pudo cargar la información "
+            labelInfo.setText("No se pudo cargar la información "
             + "(Error MySQL " + e.getErrorCode() + ": " + e.getMessage() + ".");
         }catch(Exception ex){
-            info.setText("No se pudo cargar la lista de tablas en la base de datos "
+            labelInfo.setText("No se pudo cargar la lista de tablas en la base de datos "
             + comboBases.getSelectedItem()+" ("+ex.toString()+")");
             //ex.printStackTrace();
         }
@@ -1733,10 +1766,10 @@ public class InterfazGrafica extends javax.swing.JFrame {
             formato = new FormatoTabla(tabla,conn,nomBase,nomTabla,labelRegistros);
             formato.execute();
         }catch(SQLException e){
-            info.setText("No se pudo cargar la información "
+            labelInfo.setText("No se pudo cargar la información "
             + "(Error MySQL " + e.getErrorCode() + ": " + e.getMessage() + ".");
         }catch(Exception ex){
-            info.setText("No fue posible cargar los registros de la tabla "
+            labelInfo.setText("No fue posible cargar los registros de la tabla "
                 +comboTablas.getSelectedItem()+" ("+ex.toString()+")");
             //ex.printStackTrace();
         }
@@ -1807,37 +1840,6 @@ public class InterfazGrafica extends javax.swing.JFrame {
         }
     }  
     
-    public void guardarArchivo(){ 
-        try {
-            String bd = comboBases.getSelectedItem().toString(); 
-            Conexion con2 = new Conexion(servidor,usuario,clave);
-            List<ElementoLista> lista;
-            if(opcTablasCompletas.isSelected()){
-               lista = listaElementos; 
-            }else{
-                lista = listaElementos.stream()
-                    .filter(elemento->elemento.estaSeleccionado())
-                    .collect(Collectors.toList());
-            }
-            generadorArch = new GeneradorExcel(con2, bd, lista, info, barraProgreso, this, btnExportar);
-            String directorio = FileSystemView.getFileSystemView().getDefaultDirectory().getPath();
-            SelectorGuarda sg = new SelectorGuarda(new File(directorio+"\\"+bd+".xlsx"),generadorArch);
-            //sg.showSaveDialog(jPanel1);
-            if(sg.showSaveDialog(jPanel1)==JFileChooser.CANCEL_OPTION){
-                System.out.println("Cancelando");
-                btnExportar.setEnabled(true);
-            }else{
-                System.out.println("Aceptando");
-            }
-            
-        } catch (ClassNotFoundException ex) {
-            info.setText("nNo se pudo encontar la librería mysql-conector-java...");
-        } catch (SQLException ex) {
-            info.setText("No se pudo cargar la información del servidor "
-            + "(Error MySQL " + ex.getErrorCode() + ": " + ex.getMessage() + ".");
-        }
-    }
-    
     public void reiniciarCamposInicio(){
         txtServidor.setText("");
         txtUsuario.setText("");
@@ -1889,7 +1891,6 @@ public class InterfazGrafica extends javax.swing.JFrame {
     private javax.swing.JComboBox comboTablas;
     private javax.swing.JButton guardar_bd;
     private javax.swing.JButton guardar_excel;
-    private javax.swing.JLabel info;
     private javax.swing.JLabel infoImport;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
@@ -1926,6 +1927,7 @@ public class InterfazGrafica extends javax.swing.JFrame {
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator2;
     private javax.swing.JLabel labelArchivo;
+    private javax.swing.JLabel labelInfo;
     private javax.swing.JLabel labelRegExcel;
     private javax.swing.JLabel labelRegistros;
     private javax.swing.JLabel labelSelTablaExcel;
