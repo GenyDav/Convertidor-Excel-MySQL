@@ -38,10 +38,11 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 /**
  *
  * @author Geny
+ * @version 1.0
  */
 public class GeneradorExcel extends SwingWorker<Void,Integer>{
-    private String nombreBase;
-    private ArrayList<ElementoLista> tablas;
+    private String nombreBase;                  
+    private ArrayList<ElementoLista> tablas;    // lista de tablas que se van a exportar
     private int numTablas;
     private int indiceTablaAct;
     private Conexion conn;
@@ -55,8 +56,12 @@ public class GeneradorExcel extends SwingWorker<Void,Integer>{
     private JFrame ventana;
     private JButton boton;
     private int numRegistros;
-    private boolean generandoArchivo;
+    //private boolean generandoArchivo;
     
+    /**
+     * Crea un nuevo objeto que inicializa los atributos al iniciar el prograna 
+     * a su valor por defecto.
+     */
     public GeneradorExcel(){
         conn = null;
         nombreBase = null;
@@ -70,9 +75,20 @@ public class GeneradorExcel extends SwingWorker<Void,Integer>{
         barra = null;
         ventana = null;
         numRegistros = 0;
-        generandoArchivo = false;
+        //generandoArchivo = false;
     }
     
+    /**
+     * Crea un nuevo objeto con la información dada por el usuario para crear el
+     * archivo de Excel.
+     * @param c Conexión con el servidor de bases de datos
+     * @param base Nombre de la base de datos a exportar
+     * @param tablas Lista de tablas que se van a exportar
+     * @param label Etiqueta en la que se muestra información del proceso
+     * @param barra Barra de progreso de la interfaz
+     * @param ventana Ventana sobre la que se muestra el programa
+     * @param btn Botón que inicia/cancela el proceso de exportación
+     */
     public GeneradorExcel(Conexion c, String base, List<ElementoLista>tablas, JLabel label, JProgressBar barra, JFrame ventana, JButton btn){
         conn = c;
         nombreBase = base;
@@ -87,15 +103,16 @@ public class GeneradorExcel extends SwingWorker<Void,Integer>{
         this.ventana = ventana;
         boton = btn;
         numRegistros = 0;
-        generandoArchivo = false;
+        //generandoArchivo = false;
     }
     
     public void defInfoArchivo(String rutaArch, String extension){
         this.rutaArch = rutaArch;
+        System.out.println(rutaArch);
         tipoArch = extension;
     }
     
-    public void crearLibro(){    
+    private void crearLibro(){    
         try (OutputStream flujoSalida = new FileOutputStream(rutaArch)) {
             labelProgreso.setText("Iniciando exportación de la base '" + nombreBase + "'...");
             if(tipoArch.equals("xls")){
@@ -107,18 +124,22 @@ public class GeneradorExcel extends SwingWorker<Void,Integer>{
             for(int i=0;i<numTablas;i++){
                 if(isCancelled()){
                     labelProgreso.setText("Exportación de la base "+nombreBase+"' cancelada.");
+                    libro.write(flujoSalida);
+                    libro.close();
+                    libro = null;
+                    flujoSalida.flush();
+                    flujoSalida.close();
                     return;
                 }
                 indiceTablaAct = i;
                 crearHoja(tablas.get(i).getNombre());
             }
-
             libro.write(flujoSalida);
-            libro.close();
+            /*libro.close();
             libro = null;
             flujoSalida.flush();
             flujoSalida.close();
-            
+            */
             //conn.terminarConexion();
             //conn = null;
             labelProgreso.setText("Exportación de la base '" + nombreBase + "' terminada");
@@ -246,19 +267,19 @@ public class GeneradorExcel extends SwingWorker<Void,Integer>{
         return estiloCelda;
     }
 
-    public boolean estaActivo(){
+    /*public boolean estaActivo(){
         return generandoArchivo;
-    }
+    }*/
     
     @Override
     protected Void doInBackground() throws Exception {
         //boton.setEnabled(false);
         boton.setText("Cancelar exportación");
-        generandoArchivo = true;
+        //generandoArchivo = true;
         crearLibro();
         //boton.setEnabled(true);
         boton.setText("Exportar");
-        generandoArchivo = false;
+        //generandoArchivo = false;
         return null;
     }
     
