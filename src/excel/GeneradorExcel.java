@@ -106,9 +106,13 @@ public class GeneradorExcel extends SwingWorker<Void,Integer>{
         //generandoArchivo = false;
     }
     
+    /**
+     * Establece la ruta y la extensión del archivo de Excel que va a ser creado.
+     * @param rutaArch Dirección del archivo.
+     * @param extension Extensión del archivo. 
+     */
     public void defInfoArchivo(String rutaArch, String extension){
         this.rutaArch = rutaArch;
-        System.out.println(rutaArch);
         tipoArch = extension;
     }
     
