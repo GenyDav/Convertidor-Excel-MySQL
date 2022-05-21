@@ -130,13 +130,15 @@ public class GeneradorExcel extends SwingWorker<Void,Integer>{
             conn.terminarConexion();
             conn = null;
         } catch (IOException ex) {
-            ex.printStackTrace();
+            //ex.printStackTrace();
             labelProgreso.setText("Error: "+ex.getMessage());
         }
     }
     
     /**
-     * 
+     * Método que crea un nuevo archivo de Excel con la extensión xls o xlsx.
+     * Cada hoja del archivo corresponde a una de las tablas de la base de datos
+     * seleccionadas por el usuario.
      */
     private void crearLibro(){    
         labelProgreso.setText("Iniciando exportación de la base '" + nombreBase + "'...");
