@@ -56,7 +56,7 @@ public class GeneradorExcel extends SwingWorker<Void,Integer>{
     private JFrame ventana;
     private JButton boton;
     private int numRegistros;
-    //private boolean generandoArchivo;
+    private OutputStream flujoSalida;
     
     /**
      * Crea un nuevo objeto que inicializa los atributos al iniciar el prograna 
@@ -75,7 +75,7 @@ public class GeneradorExcel extends SwingWorker<Void,Integer>{
         barra = null;
         ventana = null;
         numRegistros = 0;
-        //generandoArchivo = false;
+        flujoSalida = null;
     }
     
     /**
@@ -103,7 +103,7 @@ public class GeneradorExcel extends SwingWorker<Void,Integer>{
         this.ventana = ventana;
         boton = btn;
         numRegistros = 0;
-        //generandoArchivo = false;
+        flujoSalida = null;
     }
     
     /**
@@ -116,36 +116,44 @@ public class GeneradorExcel extends SwingWorker<Void,Integer>{
         tipoArch = extension;
     }
     
+    
+    private void terminarEscritura(){
+        try {
+            libro.write(flujoSalida);
+            libro.close();
+            libro = null;
+            flujoSalida.flush();
+            flujoSalida.close();
+            conn.terminarConexion();
+            conn = null;
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            labelProgreso.setText("Error: "+ex.getMessage());
+        }
+    }
+    
+    /**
+     * 
+     */
     private void crearLibro(){    
-        try (OutputStream flujoSalida = new FileOutputStream(rutaArch)) {
-            labelProgreso.setText("Iniciando exportación de la base '" + nombreBase + "'...");
-            if(tipoArch.equals("xls")){
+        labelProgreso.setText("Iniciando exportación de la base '" + nombreBase + "'...");
+        try {
+            flujoSalida = new FileOutputStream(rutaArch);
+            if(tipoArch.equals("xls"))
                 libro = new HSSFWorkbook();
-            }else{
+            else
                 libro = new XSSFWorkbook();
-            }
-
             for(int i=0;i<numTablas;i++){
-                if(isCancelled()){
-                    labelProgreso.setText("Exportación de la base "+nombreBase+"' cancelada.");
-                    libro.write(flujoSalida);
-                    libro.close();
-                    libro = null;
-                    flujoSalida.flush();
-                    flujoSalida.close();
+                if(isCancelled()){  // Verificar si el usuario no ha cancelado la exportación
+                    labelProgreso.setText("Cancelando la exportación de la base de datos...");
+                    terminarEscritura();
+                    labelProgreso.setText("Exportación de la base " + nombreBase + "' cancelada.");
                     return;
                 }
                 indiceTablaAct = i;
                 crearHoja(tablas.get(i).getNombre());
             }
-            libro.write(flujoSalida);
-            /*libro.close();
-            libro = null;
-            flujoSalida.flush();
-            flujoSalida.close();
-            */
-            //conn.terminarConexion();
-            //conn = null;
+            terminarEscritura();
             labelProgreso.setText("Exportación de la base '" + nombreBase + "' terminada");
             publish(100);
             JOptionPane.showMessageDialog(
@@ -157,7 +165,7 @@ public class GeneradorExcel extends SwingWorker<Void,Integer>{
         }catch (FileNotFoundException ex){
             // si el archivo está abierto cuando se intenta sobreescribir
             // se le pide al usuario que cierre el archivo antes de comenzar
-            // a exportar la base de datos
+            // a exportar la base de datos.
             JOptionPane.showMessageDialog(
                 ventana, 
                 "El archivo está siendo utilizado por otro programa.  "
@@ -166,9 +174,6 @@ public class GeneradorExcel extends SwingWorker<Void,Integer>{
                 JOptionPane.INFORMATION_MESSAGE
             );
             // ex.printStackTrace();
-        }catch (IOException ex) {
-            ex.printStackTrace();
-            labelProgreso.setText("Error: "+ex.getMessage());
         }
     }
     
@@ -198,7 +203,10 @@ public class GeneradorExcel extends SwingWorker<Void,Integer>{
         int numColumnas = metaDatos.getColumnCount();
 
         CellStyle estiloCelda = defEstiloEnc();
-        for(int i=0;i<numColumnas;i++){             // obtener el nombre de cada columna
+        for(int i=0;i<numColumnas;i++){ // obtener el nombre de cada columna
+            if(isCancelled()){
+                return -1;
+            }
             Cell celda = renglon.createCell(i);
             celda.setCellValue(metaDatos.getColumnName(i+1));
             celda.setCellStyle(estiloCelda);
@@ -220,7 +228,6 @@ public class GeneradorExcel extends SwingWorker<Void,Integer>{
         
         while(resultados.next()){
             if(isCancelled()){
-                labelProgreso.setText("Exportación de la base "+nombreBase+"' cancelada.");
                 return;
             }
             Row reg = hoja.createRow(renglon);
@@ -270,20 +277,13 @@ public class GeneradorExcel extends SwingWorker<Void,Integer>{
         estiloCelda.setBorderRight(BorderStyle.THIN);
         return estiloCelda;
     }
-
-    /*public boolean estaActivo(){
-        return generandoArchivo;
-    }*/
     
     @Override
     protected Void doInBackground() throws Exception {
-        //boton.setEnabled(false);
         boton.setText("Cancelar exportación");
-        //generandoArchivo = true;
         crearLibro();
-        //boton.setEnabled(true);
+        boton.setEnabled(true);
         boton.setText("Exportar");
-        //generandoArchivo = false;
         return null;
     }
     
