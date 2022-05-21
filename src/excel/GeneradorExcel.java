@@ -116,7 +116,10 @@ public class GeneradorExcel extends SwingWorker<Void,Integer>{
         tipoArch = extension;
     }
     
-    
+    /**
+     * Cierra el flujo de salida y el archivo que están siendo utilizados. 
+     * Termina la conexión con el servidor.
+     */
     private void terminarEscritura(){
         try {
             libro.write(flujoSalida);
