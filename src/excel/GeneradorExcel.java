@@ -142,7 +142,7 @@ public class GeneradorExcel extends SwingWorker<Void,Integer>{
      */
     private void crearLibro(){    
         labelProgreso.setText("Iniciando exportación de la base '" + nombreBase + "'...");
-        try {
+        try{
             flujoSalida = new FileOutputStream(rutaArch);
             if(tipoArch.equals("xls"))
                 libro = new HSSFWorkbook();
@@ -167,7 +167,7 @@ public class GeneradorExcel extends SwingWorker<Void,Integer>{
                 "Proceso terminado", 
                 JOptionPane.INFORMATION_MESSAGE
             );
-        }catch (FileNotFoundException ex){
+        }catch(FileNotFoundException ex){
             // si el archivo está abierto cuando se intenta sobreescribir
             // se le pide al usuario que cierre el archivo antes de comenzar
             // a exportar la base de datos.
@@ -182,6 +182,11 @@ public class GeneradorExcel extends SwingWorker<Void,Integer>{
         }
     }
     
+    /**
+     * Método que crea una nueva hoja en el archivo y llama a los métodos que 
+     * insertan los datos en ella.
+     * @param t Nombre que se le va a asignar a la nueva hoja.
+     */
     private void crearHoja(String t){
         int columnas;   // número de columnas en la hoja
         Sheet hoja = libro.createSheet(t);
@@ -199,10 +204,16 @@ public class GeneradorExcel extends SwingWorker<Void,Integer>{
         }catch(SQLException ex){
             labelProgreso.setText("No se pudo cargar la información del servidor "
             + "(Error MySQL " + ex.getErrorCode() + ": " + ex.getMessage() + ".");
-            ex.printStackTrace();
+            //ex.printStackTrace();
         }
     }
     
+    /**
+     * Escribe los nombres de las columnas en la hoja.
+     * @param hoja Hoja en la que se van a escribir los datos.
+     * @return Número de columnas en la hoja.
+     * @throws SQLException Error al consultar los datos en la base.
+     */
     private int escribirEncabezados(Sheet hoja) throws SQLException{
         Row renglon = hoja.createRow(0);
         int numColumnas = metaDatos.getColumnCount();
