@@ -121,6 +121,7 @@ public class GeneradorExcel extends SwingWorker<Void,Integer>{
      */
     private void terminarEscritura(){
         try {
+            tablas.clear();
             libro.write(flujoSalida);
             libro.close();
             libro = null;
