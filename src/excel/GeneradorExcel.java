@@ -215,11 +215,11 @@ public class GeneradorExcel extends SwingWorker<Void,Integer>{
      * @throws SQLException Error al consultar los datos en la base.
      */
     private int escribirEncabezados(Sheet hoja) throws SQLException{
-        Row renglon = hoja.createRow(0);
+        Row renglon = hoja.createRow(0); // Reservar el primer renglón de la hoja para los encabezados
         int numColumnas = metaDatos.getColumnCount();
 
         CellStyle estiloCelda = defEstiloEnc();
-        for(int i=0;i<numColumnas;i++){ // obtener el nombre de cada columna
+        for(int i=0;i<numColumnas;i++){ // Obtener el nombre de cada columna
             if(isCancelled()){
                 return -1;
             }
@@ -230,6 +230,13 @@ public class GeneradorExcel extends SwingWorker<Void,Integer>{
         return numColumnas;
     }
     
+    /**
+     * Método que inserta los registros obtenidos desde la base de datos en la 
+     * hoja correspondiente del archivo Excel.
+     * @param hoja Hoja en la que se van a insertar los registros.
+     * @param numColumnas Número de columnas en los registros de la base de datos.
+     * @throws SQLException Error al consultar los datos en la base.
+     */
     private void escribirDatos(Sheet hoja,int numColumnas) throws SQLException{
         float incremento;
         float progreso = 0F;
@@ -237,42 +244,36 @@ public class GeneradorExcel extends SwingWorker<Void,Integer>{
         
         resultados.last();
         numRegistros = resultados.getRow();
-        //System.out.println("numero de registros: "+numRegistros);
-        incremento = 100F/numRegistros;
-        //System.out.println("incremento: "+incremento);
+        incremento = 100F/numRegistros; // Calcular que porcentaje le corresponde a cada registro
         resultados.beforeFirst();
-        
         while(resultados.next()){
-            if(isCancelled()){
-                return;
-            }
-            Row reg = hoja.createRow(renglon);
+            if(isCancelled()) // Si el usuario ha interrumpido la exportación 
+                return;  
+            Row reng = hoja.createRow(renglon);
             for(int i=0;i<numColumnas;i++){
-                //Cell celda = reg.createCell(i);
-                Object res = resultados.getObject(i+1);
-                if(res!=null && !res.toString().equals("")){
-                    Cell celda = reg.createCell(i);
-                    if(res.getClass().getSuperclass().getSimpleName().equals("Number")){
-                        Number n = (Number)res;
+                Object dato = resultados.getObject(i+1); // leer cada columna del registro
+                if(dato!=null && !dato.toString().equals("")){
+                    Cell celda = reng.createCell(i);
+                    // Cuando se agrega una celda, hacer la distición de su tipo de dato
+                    if(dato.getClass().getSuperclass().getSimpleName().equals("Number")){
+                        Number n = (Number)dato;
                         celda.setCellValue(n.doubleValue());
                     }else{
-                        celda.setCellValue(res.toString());
+                        celda.setCellValue(dato.toString());
                     }
                 }
             }
             progreso = renglon*incremento;
-            //System.out.println("progreso: "+progreso);
             try{
                 Thread.sleep(1);
+                publish(Math.round(progreso));
             }catch(Exception e){}
-            publish(Math.round(progreso));
             renglon++;
         }
         // Ajustar el ancho de las columnas a su contenido
         for(int j=0;j<numColumnas;j++){
             hoja.autoSizeColumn(j);
         }   
-        //publish(100);
     }
     
     private CellStyle defEstiloEnc(){
