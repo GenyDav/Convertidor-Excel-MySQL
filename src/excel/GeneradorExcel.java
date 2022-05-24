@@ -42,25 +42,24 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
  */
 public class GeneradorExcel extends SwingWorker<Void,Integer>{
     private String nombreBase;                  
-    private ArrayList<ElementoLista> tablas;    // lista de tablas que se van a exportar
+    private ArrayList<ElementoLista> tablas;// lista de tablas que se van a exportar
     private int numTablas;
     private int indiceTablaAct;
+    private int numRegistros;
     private Conexion conn;
     private Workbook libro;
-    private ResultSet resultados;
-    private ResultSetMetaData metaDatos;
+    private ResultSet resultados;           // registros obtenidos de la base de datos
+    private ResultSetMetaData metaDatos;    // información sobre los registros obtenidos
     private String rutaArch;
     private String tipoArch;
-    private JLabel labelProgreso;
-    private JProgressBar barra;
-    private JFrame ventana;
-    private JButton boton;
-    private int numRegistros;
+    private JLabel labelProgreso;           // etiqueta en donde se describe el progreso de la exportación
+    private JProgressBar barra;                 
+    private JFrame ventana;                 // contenedor sobre el que se muestran los cuadros de diálogo    
+    private JButton botonExp;
     private OutputStream flujoSalida;
     
     /**
-     * Crea un nuevo objeto que inicializa los atributos al iniciar el prograna 
-     * a su valor por defecto.
+     * Crea un nuevo objeto que inicializa los atributos a su valor por defecto.
      */
     public GeneradorExcel(){
         conn = null;
@@ -101,7 +100,7 @@ public class GeneradorExcel extends SwingWorker<Void,Integer>{
         labelProgreso = label;
         this.barra = barra;
         this.ventana = ventana;
-        boton = btn;
+        botonExp = btn;
         numRegistros = 0;
         flujoSalida = null;
     }
@@ -277,7 +276,7 @@ public class GeneradorExcel extends SwingWorker<Void,Integer>{
     }
     
     /**
-     * Método que permite definir el estilo de las celdas del encabezado de la 
+     * Método que permite definir el estilo de las celdas del encabezado en la 
      * hoja.
      * @return Objeto que define el estilo de la celda. 
      */
@@ -300,17 +299,32 @@ public class GeneradorExcel extends SwingWorker<Void,Integer>{
         return estiloCelda;
     }
     
+    /**
+     * Método que se ejecuta en el proceso en segundo plano, llama al método que
+     * permite crear el archivo de Excel. Cuando termina la creación del archivo, 
+     * el botón 'Exportar' regresa a su estado original.
+     * @return void
+     * @throws Exception Error al escribir el archivo Excel.
+     */
     @Override
     protected Void doInBackground() throws Exception {
-        boton.setText("Cancelar exportación");
+        botonExp.setText("Cancelar exportación");
         crearLibro();
-        boton.setEnabled(true);
-        boton.setText("Exportar");
+        botonExp.setEnabled(true);
+        botonExp.setText("Exportar");
         return null;
     }
     
+    /**
+     * Método que actualiza el valor de la barra de progreso.
+     * @param chunks Lista de enteros con los valores de progreso que se van a
+     * mostrar en la barra.
+     */
     @Override
     protected void process(List<Integer> chunks){
-        barra.setValue(chunks.get(0));
+        //barra.setValue(chunks.get(0));
+        chunks.stream().forEach((cad) -> {
+            barra.setValue(cad);
+        });
     }
 }
