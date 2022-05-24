@@ -1491,9 +1491,17 @@ public class InterfazGrafica extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btnBorrarExcelActionPerformed
 
+    /**
+     * Método que actualiza el estado de los elementos que permiten agregar/eliminar
+     * elementos a la lista de importación cuando el usuario selecciona la opción
+     * que permite importar solo las tablas marcadas.
+     * @param evt Evento lanzado al seleccionar la opción que indica que se van 
+     * importar solo las hojas seleccionadas del archivo.
+     */
     private void tablasSelExcelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tablasSelExcelActionPerformed
-        jListHojas.setEnabled(true); // lista con los elementos
+        jListHojas.setEnabled(true);
         jScrollPaneSel1.getVerticalScrollBar().setEnabled(true);
+        // Revisar si la tabla que se está mostrando está agregada a la lista de importación
         if(listaHojas.get(comboHojas.getSelectedIndex()).estaSeleccionado()){
             btnTipos.setEnabled(true);
             btnAgregarHoja.setEnabled(false);
@@ -1501,6 +1509,7 @@ public class InterfazGrafica extends javax.swing.JFrame {
             btnTipos.setEnabled(false);
             btnAgregarHoja.setEnabled(true);
         }
+        // Habilitar los botones según el contenido del jList
         if(!modeloListaExcel.isEmpty()){
             btnQuitarExcel.setEnabled(true);
             btnBorrarExcel.setEnabled(true);
