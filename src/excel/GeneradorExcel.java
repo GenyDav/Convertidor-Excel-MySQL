@@ -218,7 +218,7 @@ public class GeneradorExcel extends SwingWorker<Void,Integer>{
         Row renglon = hoja.createRow(0); // Reservar el primer renglón de la hoja para los encabezados
         int numColumnas = metaDatos.getColumnCount();
 
-        CellStyle estiloCelda = defEstiloEnc();
+        CellStyle estiloCelda = defEstiloEncabezado();
         for(int i=0;i<numColumnas;i++){ // Obtener el nombre de cada columna
             if(isCancelled()){
                 return -1;
@@ -276,7 +276,12 @@ public class GeneradorExcel extends SwingWorker<Void,Integer>{
         }   
     }
     
-    private CellStyle defEstiloEnc(){
+    /**
+     * Método que permite definir el estilo de las celdas del encabezado de la 
+     * hoja.
+     * @return Objeto que define el estilo de la celda. 
+     */
+    private CellStyle defEstiloEncabezado(){
         Font fuente = libro.createFont();
         fuente.setFontHeightInPoints((short)11);
         fuente.setFontName("Arial Unicode MS");
