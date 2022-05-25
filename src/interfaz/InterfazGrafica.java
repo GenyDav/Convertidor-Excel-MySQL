@@ -129,9 +129,9 @@ public class InterfazGrafica extends javax.swing.JFrame {
         rep = new Reporte(this,true); 
     }
     
-    private void mostrarListaElementos(){
-        for(int i=0;i<listaElementos.size();i++){
-            System.out.print("["+listaElementos.get(i).estaSeleccionado()+"]");
+    private <T extends ElementoLista> void mostrarListaElementos(ArrayList<T> lista){
+        for(int i=0;i<lista.size();i++){
+            System.out.print("["+lista.get(i).estaSeleccionado()+"]");
         }
         System.out.println();
     }
@@ -1305,7 +1305,7 @@ public class InterfazGrafica extends javax.swing.JFrame {
     }//GEN-LAST:event_btnBorrarActionPerformed
 
     /**
-     * Método que elimina todos los elementos que están en la lista de exportación.
+     * Método que elimina todos los elementos que están en la lista de exportación/importación.
      * @param <T> Objetos de la clase ElementoLista o que hereden de ella.
      * @param elemento Tipo de elemento que va a ser eliminado (tabla u hoja).
      * @param modeloLista Modelo del jList donde están las tablas seleccionadas.
@@ -1324,11 +1324,11 @@ public class InterfazGrafica extends javax.swing.JFrame {
         if(resp == JOptionPane.OK_OPTION){                
             ElementoLista elem;
             for(int i=modeloLista.getSize()-1;i>=0;i--){
-                elem = (T)modeloLista.getElementAt(i);
+                elem = (ElementoLista)modeloLista.getElementAt(i);
                 // desmarca como seleccionado el elemento en la estructura de datos
                 listaAux.get(elem.getPosicion()).setSeleccionado(false);
             }
-            // mostrarListaElementos();
+            //mostrarListaElementos(listaAux);
             modeloLista.clear();
         }
         return resp;
@@ -1480,6 +1480,12 @@ public class InterfazGrafica extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btnQuitarExcelActionPerformed
 
+    /**
+     * Método que permite eliminar todos los elementos seleccionados para 
+     * importarse al hacer clic sobre el botón.
+     * @param evt Evento lanzado al hacer clic sobre el botón que permite borrar
+     * todos los elementos de la lista de importación.
+     */
     private void btnBorrarExcelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBorrarExcelActionPerformed
         if(limpiarSeleccion("hojas",modeloListaExcel,listaHojas)==JOptionPane.OK_OPTION){
             btnTipos.setEnabled(false);
@@ -1487,7 +1493,6 @@ public class InterfazGrafica extends javax.swing.JFrame {
             btnImportar.setEnabled(false);
             btnBorrarExcel.setEnabled(false);
             btnQuitarExcel.setEnabled(false);
-            labelSelTablaExcel.setText("Selección de hojas borrada");
         }
     }//GEN-LAST:event_btnBorrarExcelActionPerformed
 
