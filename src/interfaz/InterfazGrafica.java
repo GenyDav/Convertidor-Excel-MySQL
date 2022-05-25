@@ -1466,14 +1466,20 @@ public class InterfazGrafica extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_comboHojasItemStateChanged
 
+    /**
+     * Método que elimina las tablas seleccionadas de la lista de importación y
+     * actualiza los elementos de la interfaz según el contenido de la lista.
+     * @param evt Evento lanzado al presionar el botón que elimina las tablas
+     * seleccionadas de la lista de importación.
+     */
     private void btnQuitarExcelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnQuitarExcelActionPerformed
         borrarElemento(jListHojas,modeloListaExcel,listaHojas);
+        //mostrarListaElementos(listaHojas);
         if(!listaHojas.get(comboHojas.getSelectedIndex()).estaSeleccionado()){
             btnTipos.setEnabled(false);
             btnAgregarHoja.setEnabled(true);
         }
-        // rev!
-        if(modeloLista.isEmpty()){
+        if(modeloListaExcel.isEmpty()){
             btnQuitarExcel.setEnabled(false);
             btnBorrarExcel.setEnabled(false);
             btnImportar.setEnabled(false);
