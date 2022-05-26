@@ -1467,7 +1467,7 @@ public class InterfazGrafica extends javax.swing.JFrame {
 
     /**
      * Método que configura la apariencia de los botones que cambian la interfaz
-     * cuando el usuario hace que el mouse salga del área del boton del modo Importar.
+     * cuando el usuario hace que el mouse salga del área del botón del modo Importar.
      * @param evt Evento lanzado cuando el puntero del mouse sale del área del
      * botón que cambia el modo del programa a Importar
      */
@@ -1478,11 +1478,23 @@ public class InterfazGrafica extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btnImportMouseExited
 
+    /**
+     * Método que configura la apariencia de los botones que cambian la interfaz
+     * cuando el usuario pasa el mouse sobre el botón del modo Exportar.
+     * @param evt Evento lanzado cuando el puntero del mouse entral al área del
+     * botón que cambia el modo del programa a Exportar.
+     */
     private void btnExportarMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnExportarMouseEntered
         modoExport.setIcon(new ImageIcon(getClass().getResource("/imagenes/btn1.png")));
         modoImport.setIcon(new ImageIcon(getClass().getResource("/imagenes/btn2.png")));
     }//GEN-LAST:event_btnExportarMouseEntered
 
+    /**
+     * Método que configurs la apariencia de los botones que cambian la interfaz
+     * cuando el usuario hace que el mouse salga del área del botón del modo Importar.
+     * @param evt Evento lanzado cuando el puntero del mouse sale del área del 
+     * botón que cambia el modo del programa a Importar.
+     */
     private void btnExportarMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnExportarMouseExited
         if(modo==IMP){
             modoExport.setIcon(new ImageIcon(getClass().getResource("/imagenes/btn1_1.png")));
