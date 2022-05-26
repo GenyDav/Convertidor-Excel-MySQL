@@ -163,8 +163,8 @@ public class InterfazGrafica extends javax.swing.JFrame {
         jLabel13 = new javax.swing.JLabel();
         jPanel4 = new javax.swing.JPanel();
         jPanel5 = new javax.swing.JPanel();
-        guardar_excel = new javax.swing.JButton();
-        guardar_bd = new javax.swing.JButton();
+        modoExport = new javax.swing.JButton();
+        modoImport = new javax.swing.JButton();
         btnSalir = new javax.swing.JButton();
         jPanel7 = new javax.swing.JPanel();
         panelExport = new javax.swing.JPanel();
@@ -359,15 +359,15 @@ public class InterfazGrafica extends javax.swing.JFrame {
         jPanel5.setBackground(new java.awt.Color(51, 51, 51));
         jPanel5.setForeground(new java.awt.Color(255, 255, 255));
 
-        guardar_excel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/btn1.png"))); // NOI18N
-        guardar_excel.setToolTipText("Convertir una base de datos en un archivo de Excel");
-        guardar_excel.setBorder(null);
-        guardar_excel.setBorderPainted(false);
-        guardar_excel.setContentAreaFilled(false);
-        guardar_excel.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        guardar_excel.setDefaultCapable(false);
-        guardar_excel.setFocusPainted(false);
-        guardar_excel.addMouseListener(new java.awt.event.MouseAdapter() {
+        modoExport.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/btn1.png"))); // NOI18N
+        modoExport.setToolTipText("Convertir una base de datos en un archivo de Excel");
+        modoExport.setBorder(null);
+        modoExport.setBorderPainted(false);
+        modoExport.setContentAreaFilled(false);
+        modoExport.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        modoExport.setDefaultCapable(false);
+        modoExport.setFocusPainted(false);
+        modoExport.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 btnExportarMouseEntered(evt);
             }
@@ -375,21 +375,21 @@ public class InterfazGrafica extends javax.swing.JFrame {
                 btnExportarMouseExited(evt);
             }
         });
-        guardar_excel.addActionListener(new java.awt.event.ActionListener() {
+        modoExport.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                guardar_excelActionPerformed(evt);
+                modoExportActionPerformed(evt);
             }
         });
 
-        guardar_bd.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/btn2.png"))); // NOI18N
-        guardar_bd.setToolTipText("Crear una base de datos desde un archivo de Excel");
-        guardar_bd.setBorder(null);
-        guardar_bd.setBorderPainted(false);
-        guardar_bd.setContentAreaFilled(false);
-        guardar_bd.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        guardar_bd.setDefaultCapable(false);
-        guardar_bd.setFocusPainted(false);
-        guardar_bd.addMouseListener(new java.awt.event.MouseAdapter() {
+        modoImport.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/btn2.png"))); // NOI18N
+        modoImport.setToolTipText("Crear una base de datos desde un archivo de Excel");
+        modoImport.setBorder(null);
+        modoImport.setBorderPainted(false);
+        modoImport.setContentAreaFilled(false);
+        modoImport.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        modoImport.setDefaultCapable(false);
+        modoImport.setFocusPainted(false);
+        modoImport.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 btnImportMouseEntered(evt);
             }
@@ -397,9 +397,9 @@ public class InterfazGrafica extends javax.swing.JFrame {
                 btnImportMouseExited(evt);
             }
         });
-        guardar_bd.addActionListener(new java.awt.event.ActionListener() {
+        modoImport.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                guardar_bdActionPerformed(evt);
+                modoImportActionPerformed(evt);
             }
         });
 
@@ -424,17 +424,17 @@ public class InterfazGrafica extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
                 .addGap(0, 6, Short.MAX_VALUE)
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(guardar_bd, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(guardar_excel, javax.swing.GroupLayout.PREFERRED_SIZE, 66, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(modoImport, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(modoExport, javax.swing.GroupLayout.PREFERRED_SIZE, 66, javax.swing.GroupLayout.PREFERRED_SIZE)))
             .addComponent(btnSalir, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel5Layout.createSequentialGroup()
                 .addGap(6, 6, 6)
-                .addComponent(guardar_excel)
+                .addComponent(modoExport)
                 .addGap(0, 0, 0)
-                .addComponent(guardar_bd)
+                .addComponent(modoImport)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 406, Short.MAX_VALUE)
                 .addComponent(btnSalir)
                 .addGap(5, 5, 5))
@@ -1092,8 +1092,8 @@ public class InterfazGrafica extends javax.swing.JFrame {
         conn.terminarConexion();
         reiniciarCamposInicio();
         modo = 1;
-        guardar_excel.setIcon(new ImageIcon(getClass().getResource("/imagenes/btn1.png")));
-        guardar_bd.setIcon(new ImageIcon(getClass().getResource("/imagenes/btn2.png")));
+        modoExport.setIcon(new ImageIcon(getClass().getResource("/imagenes/btn1.png")));
+        modoImport.setIcon(new ImageIcon(getClass().getResource("/imagenes/btn2.png")));
         reiniciarElementosExportacion();
         reiniciarElementosImportacion();
     }
@@ -1430,17 +1430,23 @@ public class InterfazGrafica extends javax.swing.JFrame {
         }
     }
     
-    private void guardar_bdActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_guardar_bdActionPerformed
+    /**
+     * Método que muestra la interfaz con los elementos para crear una base de
+     * datos a partir de un archivo de Excel.
+     * @param evt Evento lanzado al presionar el botón que muestra la interfaz
+     * para importar bases de datos.
+     */
+    private void modoImportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_modoImportActionPerformed
         modo = IMP;
         cardLayout2.show(jPanel7, "cardImport");
         jPanel4.setBackground(new Color(104,104,104));
-    }//GEN-LAST:event_guardar_bdActionPerformed
+    }//GEN-LAST:event_modoImportActionPerformed
 
-    private void guardar_excelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_guardar_excelActionPerformed
+    private void modoExportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_modoExportActionPerformed
         modo = EXP;
         cardLayout2.show(jPanel7, "cardExport");
         jPanel4.setBackground(new Color(153,153,153));
-    }//GEN-LAST:event_guardar_excelActionPerformed
+    }//GEN-LAST:event_modoExportActionPerformed
 
     /**
      * Cuando se selecciona una tabla nueva en el combo, el método verifica que 
@@ -1829,26 +1835,26 @@ public class InterfazGrafica extends javax.swing.JFrame {
     }//GEN-LAST:event_cerrarVentana
 
     private void btnImportMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnImportMouseEntered
-        guardar_bd.setIcon(new ImageIcon(getClass().getResource("/imagenes/btn2_1.png")));
-        guardar_excel.setIcon(new ImageIcon(getClass().getResource("/imagenes/btn1_1.png")));
+        modoImport.setIcon(new ImageIcon(getClass().getResource("/imagenes/btn2_1.png")));
+        modoExport.setIcon(new ImageIcon(getClass().getResource("/imagenes/btn1_1.png")));
     }//GEN-LAST:event_btnImportMouseEntered
 
     private void btnExportarMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnExportarMouseEntered
-        guardar_excel.setIcon(new ImageIcon(getClass().getResource("/imagenes/btn1.png")));
-        guardar_bd.setIcon(new ImageIcon(getClass().getResource("/imagenes/btn2.png")));
+        modoExport.setIcon(new ImageIcon(getClass().getResource("/imagenes/btn1.png")));
+        modoImport.setIcon(new ImageIcon(getClass().getResource("/imagenes/btn2.png")));
     }//GEN-LAST:event_btnExportarMouseEntered
 
     private void btnExportarMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnExportarMouseExited
         if(modo==IMP){
-            guardar_excel.setIcon(new ImageIcon(getClass().getResource("/imagenes/btn1_1.png")));
-            guardar_bd.setIcon(new ImageIcon(getClass().getResource("/imagenes/btn2_1.png")));
+            modoExport.setIcon(new ImageIcon(getClass().getResource("/imagenes/btn1_1.png")));
+            modoImport.setIcon(new ImageIcon(getClass().getResource("/imagenes/btn2_1.png")));
         }
     }//GEN-LAST:event_btnExportarMouseExited
 
     private void btnImportMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnImportMouseExited
         if(modo==EXP){
-            guardar_excel.setIcon(new ImageIcon(getClass().getResource("/imagenes/btn1.png")));
-            guardar_bd.setIcon(new ImageIcon(getClass().getResource("/imagenes/btn2.png")));
+            modoExport.setIcon(new ImageIcon(getClass().getResource("/imagenes/btn1.png")));
+            modoImport.setIcon(new ImageIcon(getClass().getResource("/imagenes/btn2.png")));
         }
     }//GEN-LAST:event_btnImportMouseExited
         
@@ -1919,8 +1925,6 @@ public class InterfazGrafica extends javax.swing.JFrame {
     private javax.swing.JComboBox comboBases;
     private javax.swing.JComboBox comboHojas;
     private javax.swing.JComboBox comboTablas;
-    private javax.swing.JButton guardar_bd;
-    private javax.swing.JButton guardar_excel;
     private javax.swing.JRadioButton hojasCompletas;
     private javax.swing.JLabel infoImport;
     private javax.swing.JLabel jLabel1;
@@ -1963,6 +1967,8 @@ public class InterfazGrafica extends javax.swing.JFrame {
     private javax.swing.JLabel labelInfo;
     private javax.swing.JLabel labelRegExcel;
     private javax.swing.JLabel labelRegistros;
+    private javax.swing.JButton modoExport;
+    private javax.swing.JButton modoImport;
     private javax.swing.JTextArea msj;
     private javax.swing.JRadioButton opTablasSel;
     private javax.swing.JRadioButton opcTablasCompletas;
