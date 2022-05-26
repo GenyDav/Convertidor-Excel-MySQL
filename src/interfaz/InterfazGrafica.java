@@ -1443,6 +1443,54 @@ public class InterfazGrafica extends javax.swing.JFrame {
     }//GEN-LAST:event_modoExportActionPerformed
 
     /**
+     * Método que muestra la interfaz con los elementos para crear una base de
+     * datos a partir de un archivo de Excel.
+     * @param evt Evento lanzado al presionar el botón que muestra la interfaz
+     * para importar bases de datos.
+     */
+    private void modoImportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_modoImportActionPerformed
+        modo = IMP;
+        cardLayout2.show(jPanel7, "cardImport");
+        jPanel4.setBackground(new Color(104,104,104));
+    }//GEN-LAST:event_modoImportActionPerformed
+
+    /**
+     * Método que configura la apariencia de los botones que cambian la interfaz
+     * cuando el usuario pasa el mouse sobre el botón del modo Importar.
+     * @param evt Evento lanzado cuando el puntero del mouse entra al área del 
+     * botón que cambia el modo de programa a Importar.
+     */
+    private void btnImportMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnImportMouseEntered
+        modoImport.setIcon(new ImageIcon(getClass().getResource("/imagenes/btn2_1.png")));
+        modoExport.setIcon(new ImageIcon(getClass().getResource("/imagenes/btn1_1.png")));
+    }//GEN-LAST:event_btnImportMouseEntered
+
+    /**
+     * Método que configura la apariencia de los botones que cambian la interfaz
+     * cuando el usuario hace que el mouse salga del área del boton del modo Importar.
+     * @param evt Evento lanzado cuando el puntero del mouse sale del área del
+     * botón que cambia el modo del programa a Importar
+     */
+    private void btnImportMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnImportMouseExited
+        if(modo==EXP){
+            modoExport.setIcon(new ImageIcon(getClass().getResource("/imagenes/btn1.png")));
+            modoImport.setIcon(new ImageIcon(getClass().getResource("/imagenes/btn2.png")));
+        }
+    }//GEN-LAST:event_btnImportMouseExited
+
+    private void btnExportarMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnExportarMouseEntered
+        modoExport.setIcon(new ImageIcon(getClass().getResource("/imagenes/btn1.png")));
+        modoImport.setIcon(new ImageIcon(getClass().getResource("/imagenes/btn2.png")));
+    }//GEN-LAST:event_btnExportarMouseEntered
+
+    private void btnExportarMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnExportarMouseExited
+        if(modo==IMP){
+            modoExport.setIcon(new ImageIcon(getClass().getResource("/imagenes/btn1_1.png")));
+            modoImport.setIcon(new ImageIcon(getClass().getResource("/imagenes/btn2_1.png")));
+        }
+    }//GEN-LAST:event_btnExportarMouseExited
+
+    /**
      * Cuando se selecciona una tabla nueva en el combo, el método verifica que 
      * opción de importación está seleccionada. 
      * Si está seleccionada la opción que permite importar solo las tablas 
@@ -1827,42 +1875,6 @@ public class InterfazGrafica extends javax.swing.JFrame {
             System.exit(0);
         }
     }//GEN-LAST:event_cerrarVentana
-
-    private void btnImportMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnImportMouseEntered
-        modoImport.setIcon(new ImageIcon(getClass().getResource("/imagenes/btn2_1.png")));
-        modoExport.setIcon(new ImageIcon(getClass().getResource("/imagenes/btn1_1.png")));
-    }//GEN-LAST:event_btnImportMouseEntered
-
-    private void btnExportarMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnExportarMouseEntered
-        modoExport.setIcon(new ImageIcon(getClass().getResource("/imagenes/btn1.png")));
-        modoImport.setIcon(new ImageIcon(getClass().getResource("/imagenes/btn2.png")));
-    }//GEN-LAST:event_btnExportarMouseEntered
-
-    private void btnExportarMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnExportarMouseExited
-        if(modo==IMP){
-            modoExport.setIcon(new ImageIcon(getClass().getResource("/imagenes/btn1_1.png")));
-            modoImport.setIcon(new ImageIcon(getClass().getResource("/imagenes/btn2_1.png")));
-        }
-    }//GEN-LAST:event_btnExportarMouseExited
-
-    private void btnImportMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnImportMouseExited
-        if(modo==EXP){
-            modoExport.setIcon(new ImageIcon(getClass().getResource("/imagenes/btn1.png")));
-            modoImport.setIcon(new ImageIcon(getClass().getResource("/imagenes/btn2.png")));
-        }
-    }//GEN-LAST:event_btnImportMouseExited
-
-    /**
-     * Método que muestra la interfaz con los elementos para crear una base de
-     * datos a partir de un archivo de Excel.
-     * @param evt Evento lanzado al presionar el botón que muestra la interfaz
-     * para importar bases de datos.
-     */
-    private void modoImportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_modoImportActionPerformed
-        modo = IMP;
-        cardLayout2.show(jPanel7, "cardImport");
-        jPanel4.setBackground(new Color(104,104,104));
-    }//GEN-LAST:event_modoImportActionPerformed
     
     public void importarArchivo(String nombre){
         List<TablaLista> listaHojasImportar;
