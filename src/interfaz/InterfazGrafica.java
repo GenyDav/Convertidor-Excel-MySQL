@@ -1431,17 +1431,11 @@ public class InterfazGrafica extends javax.swing.JFrame {
     }
     
     /**
-     * Método que muestra la interfaz con los elementos para crear una base de
-     * datos a partir de un archivo de Excel.
+     * Método que muestra la interfaz con los elementos para crear un archivo
+     * Excel a partir de una base de datos.
      * @param evt Evento lanzado al presionar el botón que muestra la interfaz
-     * para importar bases de datos.
+     * para exportar bases de datos.
      */
-    private void modoImportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_modoImportActionPerformed
-        modo = IMP;
-        cardLayout2.show(jPanel7, "cardImport");
-        jPanel4.setBackground(new Color(104,104,104));
-    }//GEN-LAST:event_modoImportActionPerformed
-
     private void modoExportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_modoExportActionPerformed
         modo = EXP;
         cardLayout2.show(jPanel7, "cardExport");
@@ -1857,7 +1851,19 @@ public class InterfazGrafica extends javax.swing.JFrame {
             modoImport.setIcon(new ImageIcon(getClass().getResource("/imagenes/btn2.png")));
         }
     }//GEN-LAST:event_btnImportMouseExited
-        
+
+    /**
+     * Método que muestra la interfaz con los elementos para crear una base de
+     * datos a partir de un archivo de Excel.
+     * @param evt Evento lanzado al presionar el botón que muestra la interfaz
+     * para importar bases de datos.
+     */
+    private void modoImportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_modoImportActionPerformed
+        modo = IMP;
+        cardLayout2.show(jPanel7, "cardImport");
+        jPanel4.setBackground(new Color(104,104,104));
+    }//GEN-LAST:event_modoImportActionPerformed
+    
     public void importarArchivo(String nombre){
         List<TablaLista> listaHojasImportar;
         btnReporte.setEnabled(true);
