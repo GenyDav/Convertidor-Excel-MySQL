@@ -1442,6 +1442,15 @@ public class InterfazGrafica extends javax.swing.JFrame {
         jPanel4.setBackground(new Color(153,153,153));
     }//GEN-LAST:event_guardar_excelActionPerformed
 
+    /**
+     * Cuando se selecciona una tabla nueva en el combo, el método verifica que 
+     * opción de importación está seleccionada. 
+     * Si está seleccionada la opción que permite importar solo las tablas 
+     * escogidas, se comprueba si la tabla actual está en la lista de importación 
+     * para determinar si los botones que modifican los tipos de datos y para 
+     * agregar una hoja a la lista se deben habilitar o deshabilitar.
+     * @param evt Evento lanzado al seleccionar una nueva hoja del combo.
+     */
     private void comboHojasItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_comboHojasItemStateChanged
         if(evt.getStateChange()==ItemEvent.SELECTED){
             if(tablasSelExcel.isSelected()){
@@ -1453,12 +1462,8 @@ public class InterfazGrafica extends javax.swing.JFrame {
                     btnAgregarHoja.setEnabled(true);
                 }
             }
-            
-            if(comboHojas.getItemCount()>0){
-                formatoExcel = new FormatoTablaExcel(comboHojas.getSelectedIndex(),lector);
-                formatoExcel.execute();
-            }
-            //labelSelTablaExcel.setText("");
+            formatoExcel = new FormatoTablaExcel(comboHojas.getSelectedIndex(),lector);
+            formatoExcel.execute();
         }
     }//GEN-LAST:event_comboHojasItemStateChanged
 
