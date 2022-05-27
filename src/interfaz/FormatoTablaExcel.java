@@ -8,6 +8,7 @@ package interfaz;
 import excel.LectorExcel;
 import java.util.ArrayList;
 import java.util.Iterator;
+import javax.swing.JTable;
 import javax.swing.SwingWorker;
 import javax.swing.table.DefaultTableModel;
 import org.apache.poi.ss.usermodel.Cell;
@@ -21,21 +22,29 @@ import org.apache.poi.ss.usermodel.Sheet;
 public class FormatoTablaExcel extends SwingWorker<Void,Void>{
     private DefaultTableModel modelo; 
     private LectorExcel lector;
+    private JTable tabla;
     private Sheet hoja;
-    private int indiceColInicio;
+    private int indiceColInicio;    // primer columna de la tabla en la hoja
+    private int indice;             // indice de la hoja que se muestra en pantalla
+    private int numColumnas;        // columnas de la hoja actual
     
-    private int indice; // indice de la hoja que se muestra en pantalla
-    private int numColumnas; // columnas de la hoja actual
-    
-    public FormatoTablaExcel(int indiceHoja,LectorExcel lector){
-        //modelo = new DefaultTableModel();
+    /**
+     * COnstructor. Condfigura y asigna el modelo a la tabla en donde se van a 
+     * mostrar los datos y extrae la hoja del archivo de Excel según el índice 
+     * que se pasó por parámetros.
+     * @param indiceHoja Índice de la hoja que se va a mostrar en la tabla.
+     * @param lector Obejto encargado de leer el archivo Excel.
+     * @param tabla Tabla sobre la que se van a mostrar los datos.
+     */
+    public FormatoTablaExcel(int indiceHoja, LectorExcel lector, JTable tabla){
         modelo = new DefaultTableModel(){
             @Override
             public boolean isCellEditable (int row, int column){
                 return false;
             }
         };
-        lector.getTabla().setModel(modelo);
+        this.tabla = tabla;
+        this.tabla.setModel(modelo);
         this.lector = lector;
         this.indice = indiceHoja;
         hoja = lector.getLibro().getSheetAt(indice);
