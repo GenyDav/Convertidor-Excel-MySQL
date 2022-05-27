@@ -1664,7 +1664,7 @@ public class InterfazGrafica extends javax.swing.JFrame {
         modeloListaExcel.addElement(new ElementoLista(comboHojas.getSelectedItem().toString(),comboHojas.getSelectedIndex()));
         jListHojas.setSelectedIndex(modeloListaExcel.getSize()-1);
         listaHojas.get(comboHojas.getSelectedIndex()).setSeleccionado(true);
-        mostrarListaElementos(listaHojas);
+        //mostrarListaElementos(listaHojas);
         btnQuitarExcel.setEnabled(true);
         btnBorrarExcel.setEnabled(true);
         btnTipos.setEnabled(true);
@@ -1672,27 +1672,41 @@ public class InterfazGrafica extends javax.swing.JFrame {
         btnImportar.setEnabled(true);
     }//GEN-LAST:event_btnAgregarHojaActionPerformed
 
+    /**
+     * 
+     * @param evt Evento lanzado al hacer clic sobre el botón que permite abrir
+     * un archivo nuevo.
+     */
     private void btnAbrirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAbrirActionPerformed
         int opc = 100;
         SelectorApertura sa = new SelectorApertura();
-        
-        if(modeloListaExcel.isEmpty()){
+        // Revisar si hay tablas seleccionadas en la lista de importación
+        // Si la lista está vacía, la ventana para seleccionar el archivo nuevo
+        // se muestra inmediatamente.
+        if(modeloListaExcel.isEmpty())
             opc = sa.showOpenDialog(jPanel1);
-        }
-        if(!modeloListaExcel.isEmpty()&&limpiarSeleccion("hojas",modeloListaExcel,listaHojas)==0){
-            // rev!
+        // Si la lista no está vacía, se muestra un cuadro de diálogo donde se 
+        // le solicita al usuario la confirmación para eliminar las tablas de la 
+        // lista antes de abrir el nuevo archivo.
+        if(!modeloListaExcel.isEmpty()&&limpiarSeleccion("hojas",modeloListaExcel,listaHojas)==JOptionPane.OK_OPTION){
             btnBorrarExcel.setEnabled(false);
             btnQuitarExcel.setEnabled(false);
-            //labelSelTablaExcel.setText("");
+            if(tablasSelExcel.isSelected()){
+                btnImportar.setEnabled(false);
+                btnAgregarHoja.setEnabled(true);
+                btnTipos.setEnabled(false);
+            }
             opc = sa.showOpenDialog(jPanel1);
         }
-        
+        // Si el usuario selecciona un archivo y presiona el botón 'Aceptar' se
+        // comprueba que el tamaño del archivo sea mayor a cero. Si no lo es, se
+        // muestra un mensaje informando el error. Si el tamaño es mayor a cero,
+        // se procede a cargar el archivo.
         if(opc == JFileChooser.APPROVE_OPTION){
             try{
                 nomArch = sa.getSelectedFile().getName();
                 rutaArch = sa.getSelectedFile().getPath();
                 File archivo = new File(rutaArch);
-                //System.out.println("Tamaño del archivo: " + archivo.length());
                 if(archivo.length()==0){                   
                     reiniciarElementosImportacion();
                     JOptionPane.showMessageDialog(
@@ -1703,17 +1717,6 @@ public class InterfazGrafica extends javax.swing.JFrame {
                     limpiarPantallaImportacion();
                     lector = new LectorExcel(this,comboHojas,tablaExcel,labelRegExcel,labelArchivo,btnAbrir,rutaArch,nomArch,btnTipos,listaHojas,btnImportar,hojasCompletas,tablasSelExcel);
                     lector.execute();
-
-                    new Thread(){ // esperar a que se cargue el archivo para obtener el número de hojas
-                        @Override
-                        public void run(){
-                            while(lector.getLibro()==null){
-                                //System.out.println("Esperando libro");
-                            }
-                            //System.out.println("Libro cargado");
-                        }
-                    }.start();
-                    //labelArchivo.setText("  " + nomArch );  
                 }
             }catch(Exception e3){
                 e3.printStackTrace();
@@ -1740,7 +1743,6 @@ public class InterfazGrafica extends javax.swing.JFrame {
         if(lector!=null && lector.getLibro()!=null){
             lector.cerrarArchivo();
         }                  
-        //labelSelTablaExcel.setText("");
         //rep.getTextArea().setText("");
     }
     
