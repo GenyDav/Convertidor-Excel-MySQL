@@ -59,22 +59,20 @@ public class FormatoTablaExcel extends SwingWorker<Void,Void>{
     public final void asignarNombresColumnas(){
         Row encabezado;
         ArrayList<Object> encabezadosTabla = new ArrayList<>();
-        if(hoja.getPhysicalNumberOfRows()>0){ // si la hoja no está vacía
-            // Obtener el primer renglón con datos de la hoja, el conteo inicia en 0
-            encabezado = hoja.getRow(hoja.getFirstRowNum());
-            System.out.println("renglon: "+hoja.getFirstRowNum());
-            // Obtener el índice de la primer celda en el renglón, el conteo inicia en 0
-            indiceColInicio = encabezado.getFirstCellNum();
-            // Recorrer el renglón
-            Iterator<Cell> iterador = encabezado.cellIterator();
-            while(iterador.hasNext()){
-                encabezadosTabla.add(iterador.next());
-            }
-            // Determinar el número de columnas según el número de celdas del encabezado
-            numColumnas = encabezado.getPhysicalNumberOfCells();
-            // Asignar las columnas a la tabla
-            modelo.setColumnIdentifiers(encabezadosTabla.toArray());
+        // Obtener el primer renglón con datos de la hoja, el conteo inicia en 0
+        encabezado = hoja.getRow(hoja.getFirstRowNum());
+        System.out.println("renglon: "+hoja.getFirstRowNum());
+        // Obtener el índice de la primer celda en el renglón, el conteo inicia en 0
+        indiceColInicio = encabezado.getFirstCellNum();
+        // Recorrer el renglón
+        Iterator<Cell> iterador = encabezado.cellIterator();
+        while(iterador.hasNext()){
+            encabezadosTabla.add(iterador.next());
         }
+        // Determinar el número de columnas según el número de celdas del encabezado
+        numColumnas = encabezado.getPhysicalNumberOfCells();
+        // Asignar las columnas a la tabla
+        modelo.setColumnIdentifiers(encabezadosTabla.toArray());
     }
     
     /**
@@ -104,11 +102,15 @@ public class FormatoTablaExcel extends SwingWorker<Void,Void>{
         }   
     }
     
+    /**
+     * Método ejecutado en segundo plano. Verifica que la hoja que se quiere
+     * mostrar no esté vacía antes de llamar a los métodos encargados de leer y
+     * agregar los datos en la tabla.
+     * @return void. 
+     */
     @Override
     public Void doInBackground(){
-        System.out.println("Segundo plano");
         if(hoja.getPhysicalNumberOfRows()>0){
-            System.out.println("Tabla");
             asignarNombresColumnas();
             escribirCeldas();
             lector.getLabel().setText(hoja.getPhysicalNumberOfRows()-1+ " renglones cargados");
