@@ -60,46 +60,55 @@ public class FormatoTablaExcel extends SwingWorker<Void,Void>{
         Row encabezado;
         ArrayList<Object> encabezadosTabla = new ArrayList<>();
         if(hoja.getPhysicalNumberOfRows()>0){ // si la hoja no está vacía
-            // Obtener el primer renglón con datos de la hoja
+            // Obtener el primer renglón con datos de la hoja, el conteo inicia en 0
             encabezado = hoja.getRow(hoja.getFirstRowNum());
-            // Obtener el índice de la primer celda en el renglón
+            System.out.println("renglon: "+hoja.getFirstRowNum());
+            // Obtener el índice de la primer celda en el renglón, el conteo inicia en 0
             indiceColInicio = encabezado.getFirstCellNum();
             // Recorrer el renglón
             Iterator<Cell> iterador = encabezado.cellIterator();
             while(iterador.hasNext()){
                 encabezadosTabla.add(iterador.next());
             }
+            // Determinar el número de columnas según el número de celdas del encabezado
             numColumnas = encabezado.getPhysicalNumberOfCells();
             // Asignar las columnas a la tabla
             modelo.setColumnIdentifiers(encabezadosTabla.toArray());
         }
     }
     
+    /**
+     * Método que lee los datos de la hoja y los transcribe a la tabla.
+     */
     public final void escribirCeldas(){
-        try{
-        if(hoja.getPhysicalNumberOfRows()>1){
-            //System.out.println("Ultima linea: "+indiceRengFinal);
-            
-            Object []renglon = new Object[numColumnas];
-            Row renglonArch;
+        Object []renglonTabla = new Object[numColumnas];
+        Object aux; // variable auxiliar que guarda el valor de cada celda en un renglón
+        Row renglonArch;
+        if(hoja.getPhysicalNumberOfRows()>1){          
             Iterator<Row> iteradorRenglon = hoja.rowIterator();
-            renglonArch = iteradorRenglon.next(); // saltar el encabezado
+            renglonArch = iteradorRenglon.next(); // Saltar el renglón del encabezado
+            // Recorrer cada renglón del archivo
             while(iteradorRenglon.hasNext()){
                 renglonArch = iteradorRenglon.next();
+                // Obtener el valor de cada columna
                 for(int i=0;i<numColumnas;i++){
-                    //System.out.println("Columna: "+(i+indiceColInicio));
-                    renglon[i] = renglonArch.getCell(i+indiceColInicio);
-                }               
-                modelo.addRow(renglon);             
+                    aux = renglonArch.getCell(i+indiceColInicio);
+                    if(aux!=null)
+                        renglonTabla[i] = "  "+aux + "  ";
+                    else
+                        renglonTabla[i] = "";
+                }           
+                // Añadir el renglón a la tabla
+                modelo.addRow(renglonTabla);             
             }
         }   
-        }catch(Exception e){System.out.println("Error 1");e.printStackTrace();}
     }
     
     @Override
     public Void doInBackground(){
-        //System.out.println("numero de renglones: "+hoja.getPhysicalNumberOfRows());
+        System.out.println("Segundo plano");
         if(hoja.getPhysicalNumberOfRows()>0){
+            System.out.println("Tabla");
             asignarNombresColumnas();
             escribirCeldas();
             lector.getLabel().setText(hoja.getPhysicalNumberOfRows()-1+ " renglones cargados");
