@@ -3,14 +3,17 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package interfaz;
+package formatoTablas;
 
 import excel.LectorExcel;
+import java.awt.Component;
 import java.util.ArrayList;
 import java.util.Iterator;
 import javax.swing.JTable;
 import javax.swing.SwingWorker;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableColumnModel;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -103,6 +106,26 @@ public class FormatoTablaExcel extends SwingWorker<Void,Void>{
     }
     
     /**
+    * Metodo que ajusta el ancho de cada columna de una tabla en base a su 
+    * contenido. 
+    */
+    private void ajustarAnchoColumna(){
+        TableColumnModel modeloColumna = tabla.getColumnModel(); // Se obtiene el modelo de la columna
+        for(int col=0;col<tabla.getColumnCount();col++){
+            int ancho = 50; // valor minimo para el ancho de la columna
+            for(int renglon=0;renglon<tabla.getRowCount();renglon++){
+                TableCellRenderer renderer = tabla.getCellRenderer(renglon,col); // Obtener el renderizador de la tabla
+                Component comp = tabla.prepareRenderer(renderer,renglon,col);    // Crear un objeto para preparar el renderer
+                // Comparar el valor actual de la variable ancho con el tamaño de la celda
+                ancho = Math.max(comp.getPreferredSize().width+1,ancho);
+            }
+            if (ancho>300) // no sobrepasar el valor de 300
+                ancho = 300;
+            modeloColumna.getColumn(col).setPreferredWidth(ancho); // Establecer el ancho de la columna
+        }
+    }
+    
+    /**
      * Método ejecutado en segundo plano. Verifica que la hoja que se quiere
      * mostrar no esté vacía antes de llamar a los métodos encargados de leer y
      * agregar los datos en la tabla.
@@ -113,6 +136,7 @@ public class FormatoTablaExcel extends SwingWorker<Void,Void>{
         if(hoja.getPhysicalNumberOfRows()>0){
             asignarNombresColumnas();
             escribirCeldas();
+            ajustarAnchoColumna();
             lector.getLabel().setText(hoja.getPhysicalNumberOfRows()-1+ " renglones cargados");
         }else{
             lector.getLabel().setText("La hoja está vacía");
