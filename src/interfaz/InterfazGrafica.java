@@ -5,6 +5,8 @@
  */
 package interfaz;
 
+import datos.ElementoLista;
+import formatoTablas.FormatoTablaExcel;
 import formatoTablas.FormatoTabla;
 import datos.InfoColumna;
 import conexion.Conexion;
@@ -204,8 +206,8 @@ public class InterfazGrafica extends javax.swing.JFrame {
         jListHojas = new javax.swing.JList();
         btnQuitarExcel = new javax.swing.JButton();
         btnBorrarExcel = new javax.swing.JButton();
-        tablasSelExcel = new javax.swing.JRadioButton();
-        hojasCompletas = new javax.swing.JRadioButton();
+        opcHojasSel = new javax.swing.JRadioButton();
+        opcHojasCompletas = new javax.swing.JRadioButton();
         btnImportar = new javax.swing.JButton();
         barraProgresoImport = new javax.swing.JProgressBar();
         infoImport = new javax.swing.JLabel();
@@ -726,7 +728,7 @@ public class InterfazGrafica extends javax.swing.JFrame {
 
             }
         ));
-        tablaExcel.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_ALL_COLUMNS);
+        tablaExcel.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_OFF);
         tablaExcel.setGridColor(new java.awt.Color(204, 204, 204));
         tablaExcel.setSelectionBackground(new java.awt.Color(2, 97, 140));
         tablaExcel.getTableHeader().setReorderingAllowed(false);
@@ -787,24 +789,24 @@ public class InterfazGrafica extends javax.swing.JFrame {
             }
         });
 
-        tablasSelExcel.setBackground(new java.awt.Color(255, 255, 255));
-        buttonGroup2.add(tablasSelExcel);
-        tablasSelExcel.setText("Importar solo las hojas seleccionadas");
-        tablasSelExcel.setEnabled(false);
-        tablasSelExcel.addActionListener(new java.awt.event.ActionListener() {
+        opcHojasSel.setBackground(new java.awt.Color(255, 255, 255));
+        buttonGroup2.add(opcHojasSel);
+        opcHojasSel.setText("Importar solo las hojas seleccionadas");
+        opcHojasSel.setEnabled(false);
+        opcHojasSel.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                tablasSelExcelActionPerformed(evt);
+                opcHojasSelActionPerformed(evt);
             }
         });
 
-        hojasCompletas.setBackground(new java.awt.Color(255, 255, 255));
-        buttonGroup2.add(hojasCompletas);
-        hojasCompletas.setSelected(true);
-        hojasCompletas.setText("Importar todas las hojas del archivo");
-        hojasCompletas.setEnabled(false);
-        hojasCompletas.addActionListener(new java.awt.event.ActionListener() {
+        opcHojasCompletas.setBackground(new java.awt.Color(255, 255, 255));
+        buttonGroup2.add(opcHojasCompletas);
+        opcHojasCompletas.setSelected(true);
+        opcHojasCompletas.setText("Importar todas las hojas del archivo");
+        opcHojasCompletas.setEnabled(false);
+        opcHojasCompletas.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                hojasCompletasActionPerformed(evt);
+                opcHojasCompletasActionPerformed(evt);
             }
         });
 
@@ -822,16 +824,16 @@ public class InterfazGrafica extends javax.swing.JFrame {
                         .addComponent(btnQuitarExcel, javax.swing.GroupLayout.DEFAULT_SIZE, 134, Short.MAX_VALUE))
                     .addGroup(jPanel12Layout.createSequentialGroup()
                         .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(hojasCompletas)
-                            .addComponent(tablasSelExcel))
+                            .addComponent(opcHojasCompletas)
+                            .addComponent(opcHojasSel))
                         .addGap(0, 0, Short.MAX_VALUE))))
         );
         jPanel12Layout.setVerticalGroup(
             jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel12Layout.createSequentialGroup()
-                .addComponent(hojasCompletas)
+                .addComponent(opcHojasCompletas)
                 .addGap(0, 0, 0)
-                .addComponent(tablasSelExcel)
+                .addComponent(opcHojasSel)
                 .addGap(0, 0, 0)
                 .addComponent(jPanel13, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -1120,9 +1122,9 @@ public class InterfazGrafica extends javax.swing.JFrame {
         comboHojas.removeAllItems(); //
         comboHojas.setEnabled(false);//
         btnTipos.setEnabled(false);//
-        hojasCompletas.setSelected(true);//
-        hojasCompletas.setEnabled(false);//
-        tablasSelExcel.setEnabled(false);//
+        opcHojasCompletas.setSelected(true);//
+        opcHojasCompletas.setEnabled(false);//
+        opcHojasSel.setEnabled(false);//
         modeloListaExcel.clear();
         tablaExcel.setModel(new DefaultTableModel());// 
         btnAgregarHoja.setEnabled(false);//
@@ -1513,7 +1515,7 @@ public class InterfazGrafica extends javax.swing.JFrame {
      */
     private void comboHojasItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_comboHojasItemStateChanged
         if(evt.getStateChange()==ItemEvent.SELECTED){
-            if(tablasSelExcel.isSelected()){
+            if(opcHojasSel.isSelected()){
                 if(listaHojas.get(comboHojas.getSelectedIndex()).estaSeleccionado()){
                     btnTipos.setEnabled(true);
                     btnAgregarHoja.setEnabled(false);
@@ -1522,7 +1524,7 @@ public class InterfazGrafica extends javax.swing.JFrame {
                     btnAgregarHoja.setEnabled(true);
                 }
             }
-            formatoExcel = new FormatoTablaExcel(comboHojas.getSelectedIndex(),lector);
+            formatoExcel = new FormatoTablaExcel(comboHojas.getSelectedIndex(),lector,tablaExcel);
             formatoExcel.execute();
         }
     }//GEN-LAST:event_comboHojasItemStateChanged
@@ -1570,7 +1572,7 @@ public class InterfazGrafica extends javax.swing.JFrame {
      * @param evt Evento lanzado al seleccionar la opción que indica que se van 
      * importar solo las hojas seleccionadas del archivo.
      */
-    private void tablasSelExcelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tablasSelExcelActionPerformed
+    private void opcHojasSelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_opcHojasSelActionPerformed
         jListHojas.setEnabled(true);
         jScrollPaneSel1.getVerticalScrollBar().setEnabled(true);
         // Revisar si la tabla que se está mostrando está agregada a la lista de importación
@@ -1589,7 +1591,7 @@ public class InterfazGrafica extends javax.swing.JFrame {
         }else{
             btnImportar.setEnabled(false);
         }
-    }//GEN-LAST:event_tablasSelExcelActionPerformed
+    }//GEN-LAST:event_opcHojasSelActionPerformed
 
     /**
      * Deshabilita los elementos de la interfaz que permiten agregar y eliminar
@@ -1599,7 +1601,7 @@ public class InterfazGrafica extends javax.swing.JFrame {
      * @param evt Evento lanzado al seleccionar la opción que indica que se van 
      * importar todas las hojas del archivo.
      */
-    private void hojasCompletasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_hojasCompletasActionPerformed
+    private void opcHojasCompletasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_opcHojasCompletasActionPerformed
         btnQuitarExcel.setEnabled(false);
         btnBorrarExcel.setEnabled(false);
         btnAgregarHoja.setEnabled(false);
@@ -1607,7 +1609,7 @@ public class InterfazGrafica extends javax.swing.JFrame {
         jScrollPaneSel1.getVerticalScrollBar().setEnabled(false);
         btnTipos.setEnabled(true);
         btnImportar.setEnabled(true);
-    }//GEN-LAST:event_hojasCompletasActionPerformed
+    }//GEN-LAST:event_opcHojasCompletasActionPerformed
 
     private void btnImportarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnImportarActionPerformed
         if(btnImportar.getText().equals("Cancelar importación")){
@@ -1673,36 +1675,37 @@ public class InterfazGrafica extends javax.swing.JFrame {
     }//GEN-LAST:event_btnAgregarHojaActionPerformed
 
     /**
-     * 
+     * Método que permite cargar un nuevo archivo de Excel al presionar el botón
+     * correspondiente.
      * @param evt Evento lanzado al hacer clic sobre el botón que permite abrir
      * un archivo nuevo.
      */
     private void btnAbrirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAbrirActionPerformed
-        int opc = 100;
+        int selUsuario = -1 ;
         SelectorApertura sa = new SelectorApertura();
         // Revisar si hay tablas seleccionadas en la lista de importación
         // Si la lista está vacía, la ventana para seleccionar el archivo nuevo
         // se muestra inmediatamente.
         if(modeloListaExcel.isEmpty())
-            opc = sa.showOpenDialog(jPanel1);
+            selUsuario = sa.showOpenDialog(jPanel1);
         // Si la lista no está vacía, se muestra un cuadro de diálogo donde se 
         // le solicita al usuario la confirmación para eliminar las tablas de la 
         // lista antes de abrir el nuevo archivo.
         if(!modeloListaExcel.isEmpty()&&limpiarSeleccion("hojas",modeloListaExcel,listaHojas)==JOptionPane.OK_OPTION){
             btnBorrarExcel.setEnabled(false);
             btnQuitarExcel.setEnabled(false);
-            if(tablasSelExcel.isSelected()){
+            if(opcHojasSel.isSelected()){
                 btnImportar.setEnabled(false);
                 btnAgregarHoja.setEnabled(true);
                 btnTipos.setEnabled(false);
             }
-            opc = sa.showOpenDialog(jPanel1);
+            selUsuario = sa.showOpenDialog(jPanel1);
         }
         // Si el usuario selecciona un archivo y presiona el botón 'Aceptar' se
         // comprueba que el tamaño del archivo sea mayor a cero. Si no lo es, se
         // muestra un mensaje informando el error. Si el tamaño es mayor a cero,
         // se procede a cargar el archivo.
-        if(opc == JFileChooser.APPROVE_OPTION){
+        if(selUsuario == JFileChooser.APPROVE_OPTION){
             try{
                 nomArch = sa.getSelectedFile().getName();
                 rutaArch = sa.getSelectedFile().getPath();
@@ -1715,11 +1718,12 @@ public class InterfazGrafica extends javax.swing.JFrame {
                     );
                 }else{
                     limpiarPantallaImportacion();
-                    lector = new LectorExcel(this,comboHojas,tablaExcel,labelRegExcel,labelArchivo,btnAbrir,rutaArch,nomArch,btnTipos,listaHojas,btnImportar,hojasCompletas,tablasSelExcel);
+                    lector = new LectorExcel(this,comboHojas,labelRegExcel,labelArchivo,btnAbrir,rutaArch,nomArch,btnTipos,listaHojas,btnImportar,opcHojasCompletas,opcHojasSel);
                     lector.execute();
                 }
-            }catch(Exception e3){
-                e3.printStackTrace();
+            }catch(Exception ex){
+                // ex.printStackTrace();
+                infoImport.setText(ex.getMessage());
             }
         }
     }//GEN-LAST:event_btnAbrirActionPerformed
@@ -1733,9 +1737,9 @@ public class InterfazGrafica extends javax.swing.JFrame {
         btnTipos.setEnabled(false);
         btnAgregarHoja.setEnabled(false);
         btnImportar.setEnabled(false);
-        hojasCompletas.setSelected(true);
-        hojasCompletas.setEnabled(false);
-        tablasSelExcel.setEnabled(false);
+        opcHojasCompletas.setSelected(true);
+        opcHojasCompletas.setEnabled(false);
+        opcHojasSel.setEnabled(false);
         infoImport.setText("Progreso de importación");
         barraProgresoImport.setValue(0);
         btnReporte.setEnabled(false);    
@@ -1893,7 +1897,7 @@ public class InterfazGrafica extends javax.swing.JFrame {
     public void importarArchivo(String nombre){
         List<TablaLista> listaHojasImportar;
         btnReporte.setEnabled(true);
-        if(hojasCompletas.isSelected()){
+        if(opcHojasCompletas.isSelected()){
             listaHojasImportar = listaHojas; 
         }else{
             listaHojasImportar = listaHojas.stream()
@@ -1957,7 +1961,6 @@ public class InterfazGrafica extends javax.swing.JFrame {
     private javax.swing.JComboBox comboBases;
     private javax.swing.JComboBox comboHojas;
     private javax.swing.JComboBox comboTablas;
-    private javax.swing.JRadioButton hojasCompletas;
     private javax.swing.JLabel infoImport;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
@@ -2003,12 +2006,13 @@ public class InterfazGrafica extends javax.swing.JFrame {
     private javax.swing.JButton modoImport;
     private javax.swing.JTextArea msj;
     private javax.swing.JRadioButton opTablasSel;
+    private javax.swing.JRadioButton opcHojasCompletas;
+    private javax.swing.JRadioButton opcHojasSel;
     private javax.swing.JRadioButton opcTablasCompletas;
     private javax.swing.JPanel panelExport;
     private javax.swing.JPanel panelImport;
     private javax.swing.JTable tabla;
     private javax.swing.JTable tablaExcel;
-    private javax.swing.JRadioButton tablasSelExcel;
     private javax.swing.JPasswordField txtClave;
     private javax.swing.JTextField txtServidor;
     private javax.swing.JTextField txtUsuario;
