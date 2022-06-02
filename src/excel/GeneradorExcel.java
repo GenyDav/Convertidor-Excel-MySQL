@@ -1,12 +1,7 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package excel;
 
 import conexion.Conexion;
-import interfaz.ElementoLista;
+import datos.ElementoLista;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -36,7 +31,8 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 /**
- *
+ * Clase que crea un proceso ejecutado en segundo plano que genera un archivo de
+ * Excel con la información obtenida de una base de datos.
  * @author Geny
  * @version 1.0
  */
@@ -121,7 +117,6 @@ public class GeneradorExcel extends SwingWorker<Void,Integer>{
      */
     private void terminarEscritura(){
         try {
-            tablas.clear();
             libro.write(flujoSalida);
             libro.close();
             libro = null;
