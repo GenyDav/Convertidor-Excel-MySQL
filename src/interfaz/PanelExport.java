@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package interfaz;
 
 import conexion.Conexion;
@@ -25,24 +20,29 @@ import javax.swing.filechooser.FileSystemView;
 import javax.swing.table.DefaultTableModel;
 
 /**
- *
+ * Crea una nueva forma PanelExport que contiene todos los elementos gráficos
+ * y estructuras de datos necesarias para convertir una base de datos en un
+ * archivo de Excel.
  * @author Geny
+ * @version 1.1
  */
 public class PanelExport extends javax.swing.JPanel {
     private JFrame ventana;
     private JPanel panel;
-    private DefaultListModel modeloLista;
     private int indiceBaseAct;
-    private ArrayList<ElementoLista> listaElementos;
     private boolean cambioCancelado;
+    private ArrayList<ElementoLista> listaElementos;
+    private DefaultListModel modeloLista; // modelo que contiene a los elementos seleccionados en la lista de exportación
     private GeneradorExcel generadorArch;
     private Conexion conn;
     private FormatoTabla formato;   // formato de la tabla en donde se muestran los datos
     
     /**
-     * Creates new form PanelExport
+     * Crea una nueva forma PanelExport.
+     * @param frame Ventana padre del programa.
+     * @param panel Panel sobre el que se va a mostrar la forma de exportación.
      */
-    public PanelExport(JFrame frame, JPanel panel,Conexion conn) {
+    public PanelExport(JFrame frame, JPanel panel) {
         initComponents();
         ventana = frame;
         this.panel = panel;
@@ -52,7 +52,7 @@ public class PanelExport extends javax.swing.JPanel {
         listaElementos = new ArrayList<>();
         cambioCancelado = false;
         generadorArch = new GeneradorExcel();
-        this.conn = conn;
+        conn = null;
         formato = null;
     }
 
@@ -384,7 +384,8 @@ public class PanelExport extends javax.swing.JPanel {
 
     /**
      * Define el comportamiento de los elementos de la interfaz de exportación
-     * cuando el usuario cambia la selección del jComboBox.
+     * cuando el usuario cambia la selección del jComboBox, escogiendo un nombre
+     * de base de datos distinto.
      * @param evt evento lanzado al cambiar el elemento seleccionado en el jComboBox. 
      */
     private void comboBasesItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_comboBasesItemStateChanged
@@ -393,10 +394,10 @@ public class PanelExport extends javax.swing.JPanel {
             // y se cargan los nombres de las tablas de la nueva base de datos
             // seleccionada.
             if(evt.getStateChange()==ItemEvent.SELECTED){
+                cargarListaDeTablas(comboBases.getSelectedItem().toString());
                 opcTablasCompletas.setSelected(true);
                 btnAgregarTabla.setEnabled(false);
-                System.out.println("Cargando listas");
-                cargarListaDeTablas(comboBases.getSelectedItem().toString());
+                btnExportar.setEnabled(true);
                 indiceBaseAct = comboBases.getSelectedIndex();
             }else{
                 comboTablas.removeAllItems();
@@ -419,9 +420,10 @@ public class PanelExport extends javax.swing.JPanel {
                         btnBorrar.setEnabled(false);
                         btnQuitar.setEnabled(false);
                         cargarListaDeTablas(comboBases.getSelectedItem().toString());
+                        indiceBaseAct = comboBases.getSelectedIndex();
                     }else{
                         cambioCancelado = true;
-                        comboBases.setSelectedIndex(indiceBaseAct);//(*)
+                        comboBases.setSelectedIndex(indiceBaseAct); //(*)
                     }
                 }
             }
@@ -432,6 +434,7 @@ public class PanelExport extends javax.swing.JPanel {
      * Método que obtiene los nombres de las bases de datos en el servidor y los
      * añade al jComboBox correspondiente. Si ocurre un error al realizar la
      * consulta, se muestra un mensaje con la descripción de lo que ocurrió.
+     * @param con Conexión con la base de datos.
      */
     public void cargarListaDeBases(Conexion con){
         conn = con;
@@ -456,10 +459,10 @@ public class PanelExport extends javax.swing.JPanel {
      * @param nomBase nombre de la base de datos
      */
     public void cargarListaDeTablas(String nomBase){
-        System.out.println("nombre: "+nomBase);
         try{
             listaElementos = conn.obtenerTablas(nomBase);
-            System.out.println(listaElementos.size());
+            if(listaElementos.isEmpty())
+                tabla.setModel(new DefaultTableModel());
             listaElementos.stream().forEach(
                 new Consumer<ElementoLista>(){
                     @Override
@@ -468,7 +471,6 @@ public class PanelExport extends javax.swing.JPanel {
                     }
                 }
             );
-            System.out.println("-"+listaElementos.size());
         }catch(SQLException e){
             labelInfo.setText("No se pudo cargar la información "
             + "(Error MySQL " + e.getErrorCode() + ": " + e.getMessage() + ".");
@@ -494,26 +496,24 @@ public class PanelExport extends javax.swing.JPanel {
      * cambiar de tabla, se actualizan los datos en pantalla y se comprueba si 
      * el botón que permite añadir elementos a la lista debe habilitarse o no.
      * @param evt Evento lanzado al seleccionar un nuevo elemento de la lista de
-     * tablas
+     * tablas.
      */
     private void comboTablasItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_comboTablasItemStateChanged
         if(evt.getStateChange()==ItemEvent.SELECTED){
-            if(comboTablas.getItemCount()>0)
-                cargarDatos(comboBases.getSelectedItem().toString(),comboTablas.getSelectedItem().toString());
+            cargarDatos(comboBases.getSelectedItem().toString(),comboTablas.getSelectedItem().toString());
             if(opTablasSel.isSelected()){
-                if(listaElementos.get(comboTablas.getSelectedIndex()).estaSeleccionado()){
+                if(listaElementos.get(comboTablas.getSelectedIndex()).estaSeleccionado())
                     btnAgregarTabla.setEnabled(false); // deshabilitar el boton si la tabla actual está en la lista
-                }else{
-                    btnAgregarTabla.setEnabled(true);
-                }
+                else
+                    btnAgregarTabla.setEnabled(true); 
             }
         }
     }//GEN-LAST:event_comboTablasItemStateChanged
 
     /**
      * Método que muestra en pantalla los datos de una tabla determinada.
-     * @param nomBase nombre de la base de datos en donde se encuentra la tabla
-     * @param nomTabla nombre de la tabla
+     * @param nomBase Nombre de la base de datos en donde se encuentra la tabla.
+     * @param nomTabla Nombre de la tabla.
      */
     private void cargarDatos(String nomBase,String nomTabla){
         try{
@@ -537,10 +537,10 @@ public class PanelExport extends javax.swing.JPanel {
      */
     private void btnQuitarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnQuitarActionPerformed
         InterfazGrafica.borrarElemento(jListTablas,modeloLista,listaElementos);
+        //InterfazGrafica.mostrarListaElementos(listaElementos);
         // Revisar si la tabla que se se está mostrando está en la lista de exportación
-        if(!listaElementos.get(comboTablas.getSelectedIndex()).estaSeleccionado()){
+        if(!listaElementos.get(comboTablas.getSelectedIndex()).estaSeleccionado())
             btnAgregarTabla.setEnabled(true);
-        }
         // Deshabilitar botones si la lista está vacía
         if(modeloLista.isEmpty()){
             btnQuitar.setEnabled(false);
@@ -557,6 +557,7 @@ public class PanelExport extends javax.swing.JPanel {
      */
     private void btnBorrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBorrarActionPerformed
         if(InterfazGrafica.limpiarSeleccion(panel,"tablas",modeloLista,listaElementos) == JOptionPane.OK_OPTION){
+            //InterfazGrafica.mostrarListaElementos(listaElementos);
             btnAgregarTabla.setEnabled(true);
             btnExportar.setEnabled(false);
             btnBorrar.setEnabled(false);
@@ -576,15 +577,18 @@ public class PanelExport extends javax.swing.JPanel {
         jListTablas.setEnabled(true);
         jScrollPaneSel.getVerticalScrollBar().setEnabled(true);
         // Verificar si la tabla que se está mostrando está seleccionada en la lista
-        System.out.println(listaElementos.size());
         if(listaElementos.get(comboTablas.getSelectedIndex()).estaSeleccionado())
             btnAgregarTabla.setEnabled(false);
         else
             btnAgregarTabla.setEnabled(true);
         // Verificar si la lista de exportación contiene elementos
         if(modeloLista.isEmpty()){
+            btnQuitar.setEnabled(false);
+            btnBorrar.setEnabled(false);
             btnExportar.setEnabled(false);
         }else{
+            btnQuitar.setEnabled(true);
+            btnBorrar.setEnabled(true);
             btnExportar.setEnabled(true);
         }
     }//GEN-LAST:event_opTablasSelActionPerformed
@@ -602,23 +606,23 @@ public class PanelExport extends javax.swing.JPanel {
         btnBorrar.setEnabled(false);
         btnAgregarTabla.setEnabled(false);
         jListTablas.setEnabled(false);
-        btnExportar.setEnabled(true);
         jScrollPaneSel.getVerticalScrollBar().setEnabled(false);
+        btnExportar.setEnabled(true);
     }//GEN-LAST:event_opcTablasCompletasActionPerformed
 
     /**
      * Método que permite iniciar o detener la creación de un archivo de Excel
-     * con los datos obtenidos de una base de datos al presionar el botón
-     * correspondiente.
+     * dependiendo del estado del proceso (si se está ejecutando o no) al 
+     * presionar el botón correspondiente.
      * @param evt Evento lanzado al prsionar el boton 'Exportar'
      */
     private void btnExportarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExportarActionPerformed
-        if(btnExportar.getText().equals("Exportar")){
-            guardarArchivo();
-        }else{
+        if(generadorArch.getState()==StateValue.STARTED){
             btnExportar.setEnabled(false);
-            labelInfo.setText("Cancelando la exportación de la base de datos...");
             generadorArch.cancel(true); // cancelar la ejecución del swingWorker
+            labelInfo.setText("Cancelando la exportación de la base de datos...");
+        }else{ // StateValue.PENDING || StateValue.DONE
+            guardarArchivo();
         }
     }//GEN-LAST:event_btnExportarActionPerformed
 
@@ -638,7 +642,7 @@ public class PanelExport extends javax.swing.JPanel {
             jListTablas.setSelectedIndex(modeloLista.getSize()-1);
             // marcar la tabla como seleccionada en la estructura de datos
             listaElementos.get(comboTablas.getSelectedIndex()).setSeleccionado(true);
-            // mostrarListaElementos();
+            // InterfazGrafica.mostrarListaElementos();
             btnQuitar.setEnabled(true);
             btnBorrar.setEnabled(true);
             btnAgregarTabla.setEnabled(false);
@@ -679,6 +683,7 @@ public class PanelExport extends javax.swing.JPanel {
         }
     }
     
+    /*
     public void reiniciarElementosExportacion(){
         comboBases.removeAllItems();
         comboTablas.removeAllItems();
@@ -694,15 +699,26 @@ public class PanelExport extends javax.swing.JPanel {
         listaElementos.clear();
         cambioCancelado = false;
         indiceBaseAct = 0;
-    }
+    }*/
     
+    /**
+     * Método que permite conocer el estado del proceso encargado de crear el 
+     * archivo.
+     * @return Estado del proceso (StateValue.PENDING, StateValue.STARTED, 
+     * StateValue.DONE).
+     */
     public StateValue consultarEstadoProceso(){
         return generadorArch.getState();
     }
     
+    /**
+     * Método que interrumpe la creación del archivo.
+     * @return valor booleano que indica si el proceso puede ser cancelado o no.
+     */
     public boolean cancelarProceso(){
         return generadorArch.cancel(cambioCancelado);
     }
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JProgressBar barraProgreso;
     private javax.swing.JButton btnAgregarTabla;
