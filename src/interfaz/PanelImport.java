@@ -18,10 +18,14 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import javax.swing.DefaultListModel;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JRadioButton;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -614,7 +618,8 @@ public class PanelImport extends javax.swing.JPanel {
                     );
                 }else{
                     limpiarPantallaImportacion();
-                    lector = new LectorExcel(ventana,comboHojas,labelRegExcel,labelArchivo,btnAbrir,rutaArch,nomArch,btnTipos,listaHojas,btnImportar,opcHojasCompletas,opcHojasSel);
+                    //lector = new LectorExcel(ventana,comboHojas,labelRegExcel,labelArchivo,btnAbrir,rutaArch,nomArch,btnTipos,listaHojas,btnImportar,opcHojasCompletas,opcHojasSel);
+                    lector = new LectorExcel(ventana, this);
                     lector.execute();
                 }
             }catch(Exception ex){
@@ -623,6 +628,50 @@ public class PanelImport extends javax.swing.JPanel {
             }
         }
     }//GEN-LAST:event_btnAbrirActionPerformed
+
+    public ArrayList<TablaLista> getListaHojas() {
+        return listaHojas;
+    }
+
+    public JButton getBtnImportar() {
+        return btnImportar;
+    }
+
+    public JRadioButton getOpcHojasCompletas() {
+        return opcHojasCompletas;
+    }
+
+    public JRadioButton getOpcHojasSel() {
+        return opcHojasSel;
+    }
+
+    public String getNomArch() {
+        return nomArch;
+    }
+
+    public String getRutaArch() {
+        return rutaArch;
+    }
+
+    public JButton getBtnAbrir() {
+        return btnAbrir;
+    }
+
+    public JButton getBtnTipos() {
+        return btnTipos;
+    }
+
+    public JComboBox getComboHojas() {
+        return comboHojas;
+    }
+
+    public JLabel getLabelArchivo() {
+        return labelArchivo;
+    }
+
+    public JLabel getLabelRegExcel() {
+        return labelRegExcel;
+    }
 
     private void limpiarPantallaImportacion(){
         labelArchivo.setText("");
