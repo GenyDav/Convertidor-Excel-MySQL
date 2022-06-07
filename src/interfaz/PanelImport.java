@@ -430,6 +430,17 @@ public class PanelImport extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    /** 
+     * Cuando el usuario selecciona una hoja nueva en el combo box se muestran
+     * sus datos en pantalla y se revisa cuál opción de importación está seleccionada.
+     * Si está marcada la opción para importar solo las hojas seleccionadas,
+     * se comprueba si la tabla actual está tambien en la lista de importación; 
+     * si lo está, el botón para modificar los tipos de datos de la hoja se 
+     * habilita (en caso contrario, se deshabilita).
+     * El botón que permite agregar hojas a la lista se habilita si la tabla no
+     * está seleccionada para su importación.
+     * @param evt Evento lanzado al cambiar la tabla seleccionada.
+     */
     private void comboHojasItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_comboHojasItemStateChanged
         if(evt.getStateChange()==ItemEvent.SELECTED){
             if(opcHojasSel.isSelected()){
@@ -441,7 +452,8 @@ public class PanelImport extends javax.swing.JPanel {
                     btnAgregarHoja.setEnabled(true);
                 }
             }
-            formatoExcel = new FormatoTablaExcel(comboHojas.getSelectedIndex(),lector,tablaExcel);
+            int indice = comboHojas.getSelectedIndex();
+            formatoExcel = new FormatoTablaExcel(lector.getHoja(indice),tablaExcel,labelRegExcel);
             formatoExcel.execute();
         }
     }//GEN-LAST:event_comboHojasItemStateChanged
