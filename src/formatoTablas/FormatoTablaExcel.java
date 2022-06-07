@@ -1,14 +1,9 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package formatoTablas;
 
-import excel.LectorExcel;
 import java.awt.Component;
 import java.util.ArrayList;
 import java.util.Iterator;
+import javax.swing.JLabel;
 import javax.swing.JTable;
 import javax.swing.SwingWorker;
 import javax.swing.table.DefaultTableModel;
@@ -19,27 +14,28 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 
 /**
- *
+ * Clase que permite mostrar el contenido de una hoja del archivo abierto mediante
+ * un proceso ejecutado en segundo plano.
  * @author Geny
+ * @version 1.1
  */
 public class FormatoTablaExcel extends SwingWorker<Void,Void>{
     private DefaultTableModel modelo; 
-    private LectorExcel lector;
     private JTable tabla;
+    private JLabel labelRegistros;
     private Sheet hoja;
     private int indiceColInicio;    // primer columna de la tabla en la hoja
-    private int indice;             // indice de la hoja que se muestra en pantalla
     private int numColumnas;        // columnas de la hoja actual
     
     /**
-     * Constructor. Condfigura y asigna el modelo a la tabla en donde se van a 
+     * Constructor. Configura y asigna el modelo a la tabla en donde se van a 
      * mostrar los datos y extrae la hoja del archivo de Excel según el índice 
      * que se pasó por parámetros.
-     * @param indiceHoja Índice de la hoja que se va a mostrar en la tabla.
-     * @param lector Obejto encargado de leer el archivo Excel.
+     * @param hoja Hoja del archivo que se va a mostrar en la tabla.
+     * @param etiqueta Label en el que se muestra el número de registros de la hoja.
      * @param tabla Tabla sobre la que se van a mostrar los datos.
      */
-    public FormatoTablaExcel(int indiceHoja, LectorExcel lector, JTable tabla){
+    public FormatoTablaExcel(Sheet hoja, JTable tabla, JLabel etiqueta){
         modelo = new DefaultTableModel(){
             @Override
             public boolean isCellEditable (int row, int column){
@@ -48,9 +44,8 @@ public class FormatoTablaExcel extends SwingWorker<Void,Void>{
         };
         this.tabla = tabla;
         this.tabla.setModel(modelo);
-        this.lector = lector;
-        this.indice = indiceHoja;
-        hoja = lector.getLibro().getSheetAt(indice);
+        labelRegistros = etiqueta;
+        this.hoja = hoja;
         numColumnas = 0;
         indiceColInicio = 0;
     }
@@ -64,7 +59,6 @@ public class FormatoTablaExcel extends SwingWorker<Void,Void>{
         ArrayList<Object> encabezadosTabla = new ArrayList<>();
         // Obtener el primer renglón con datos de la hoja, el conteo inicia en 0
         encabezado = hoja.getRow(hoja.getFirstRowNum());
-        System.out.println("renglon: "+hoja.getFirstRowNum());
         // Obtener el índice de la primer celda en el renglón, el conteo inicia en 0
         indiceColInicio = encabezado.getFirstCellNum();
         // Recorrer el renglón
@@ -87,15 +81,14 @@ public class FormatoTablaExcel extends SwingWorker<Void,Void>{
         Row renglonArch;
         if(hoja.getPhysicalNumberOfRows()>1){          
             Iterator<Row> iteradorRenglon = hoja.rowIterator();
-            renglonArch = iteradorRenglon.next(); // Saltar el renglón del encabezado
-            // Recorrer cada renglón del archivo
-            while(iteradorRenglon.hasNext()){
+            iteradorRenglon.next(); // Saltar el renglón del encabezado
+            while(iteradorRenglon.hasNext()){ // Recorrer cada renglón del archivo
                 renglonArch = iteradorRenglon.next();
                 // Obtener el valor de cada columna
                 for(int i=0;i<numColumnas;i++){
                     aux = renglonArch.getCell(i+indiceColInicio);
                     if(aux!=null)
-                        renglonTabla[i] = "  "+aux + "  ";
+                        renglonTabla[i] = "  " + aux + "  ";
                     else
                         renglonTabla[i] = "";
                 }           
@@ -137,11 +130,11 @@ public class FormatoTablaExcel extends SwingWorker<Void,Void>{
             asignarNombresColumnas();
             escribirCeldas();
             ajustarAnchoColumna();
-            lector.getLabel().setText(hoja.getPhysicalNumberOfRows()-1+ " renglones cargados");
+            labelRegistros.setText(hoja.getPhysicalNumberOfRows()-1+ " renglones cargados");
         }else{
-            lector.getLabel().setText("La hoja está vacía");
+            labelRegistros.setText("La hoja está vacía");
         }
-        lector.getLabel().setIcon(null);
+        labelRegistros.setIcon(null);
         return null;
     }
 }
