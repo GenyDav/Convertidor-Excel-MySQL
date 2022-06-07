@@ -482,6 +482,10 @@ public class PanelImport extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_btnBorrarActionPerformed
 
+    /**
+     * 
+     * @param evt 
+     */
     private void opcHojasSelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_opcHojasSelActionPerformed
         jListHojas.setEnabled(true);
         jScrollPaneSel1.getVerticalScrollBar().setEnabled(true);
@@ -503,6 +507,13 @@ public class PanelImport extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_opcHojasSelActionPerformed
 
+    /**
+     * Deshabilita los elementos que permiten agregar y eliminar hojas de la lista 
+     * de importación cuando el usuario selecciona la opción para utilizar todas 
+     * las hojas del archivo excel en la creación de la base de datos.
+     * @param evt Evento lanzado al seleccionar la opción que permite importar 
+     * todas las tablas del archivo.
+     */
     private void opcHojasCompletasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_opcHojasCompletasActionPerformed
         btnQuitar.setEnabled(false);
         btnBorrar.setEnabled(false);
