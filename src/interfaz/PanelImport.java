@@ -483,8 +483,11 @@ public class PanelImport extends javax.swing.JPanel {
     }//GEN-LAST:event_btnBorrarActionPerformed
 
     /**
-     * 
-     * @param evt 
+     * Método que actualiza el estado de los elementos que permiten agregar/eliminar
+     * elementos a la lista de importación cuando el usuario selecciona la opción
+     * que permite importar solo las tablas marcadas.
+     * @param evt Evento lanzado al seleccionar la opción que indica que se van 
+     * importar solo las hojas seleccionadas del archivo.
      */
     private void opcHojasSelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_opcHojasSelActionPerformed
         jListHojas.setEnabled(true);
