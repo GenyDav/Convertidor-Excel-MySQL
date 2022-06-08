@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package interfaz;
 
 import java.beans.PropertyChangeEvent;
@@ -14,14 +9,19 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 
 
 /**
- *
+ * Crea una ventana que permite seleccionar archivos para su apertura.
  * @author Geny
+ * @version 1.0
  */
 public class SelectorApertura extends JFileChooser{
     private String nomArch;
     private String rutaArch;    
     private String extension;
     
+    /**
+     * Crea una nueva ventana para seleccionar el archivo que se va a cargar.
+     * Permite seleccionar solo archivos con la extensión .xls o .xlsx
+     */
     public SelectorApertura(){
         setDialogTitle("Abrir archivo Excel");
         setAcceptAllFileFilterUsed(false);
@@ -40,12 +40,15 @@ public class SelectorApertura extends JFileChooser{
         });
     }
     
+    /**
+     * Cuando el usuario presiona el botón 'Aceptar' de la ventana, verifica si 
+     * el archivo que se quiere abrir existe en el directorio actual. Si no existe, 
+     * muestra un mensaje de notificación.
+     */
     @Override
     public void approveSelection(){
         nomArch = getSelectedFile().getName();
         rutaArch = getSelectedFile().getPath();  
-        //System.out.println(nomArch);
-        //System.out.println(rutaArch);
         // comprobar si el nombre del archivo tiene la extensión correspondiente
         if(!nomArch.endsWith(extension)){
             rutaArch += "." + extension;
@@ -55,7 +58,8 @@ public class SelectorApertura extends JFileChooser{
         if(!archivo.exists()){
             JOptionPane.showMessageDialog(
                 this, 
-                nomArch+"\nNo se encuentra el archivo.  \nCompruebe el nombre de archivo e intente de nuevo.  ",
+                nomArch + "\nNo se encuentra el archivo.  "
+                + "\nCompruebe el nombre del archivo e intentelo de nuevo.  ",
                 "No se puede abrir el archivo",
                 JOptionPane.INFORMATION_MESSAGE
             );
