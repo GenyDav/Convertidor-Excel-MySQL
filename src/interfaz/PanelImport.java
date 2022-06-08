@@ -52,11 +52,11 @@ public class PanelImport extends javax.swing.JPanel {
     /**
      * Creates new form PanelImport
      */
-    public PanelImport(JFrame frame, JPanel panel, Conexion conn) {
+    public PanelImport(JFrame frame, JPanel panel) {
         initComponents();
         ventana = frame;
         this.panel = panel;
-        this.conn = conn;
+        //this.conn = conn;
         listaHojas = new ArrayList<>();
         lector = null;
         formatoExcel = null;
@@ -68,6 +68,10 @@ public class PanelImport extends javax.swing.JPanel {
         rep = new Reporte(ventana,true); 
     }
 
+    public void definirConexion(Conexion c){
+        conn = c;
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -458,9 +462,15 @@ public class PanelImport extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_comboHojasItemStateChanged
 
+    /**
+     * Método que elimina las tablas seleccionadas de la lista de importación y
+     * actualiza los elementos de la interfaz según el contenido de la lista.
+     * @param evt Evento lanzado al presionar el botón que elimina las tablas
+     * seleccionadas de la lista de importación.
+     */
     private void btnQuitarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnQuitarActionPerformed
         InterfazGrafica.borrarElemento(jListHojas,modeloListaExcel,listaHojas);
-        //mostrarListaElementos(listaHojas);
+        //InterfazGrafica.mostrarListaElementos(listaHojas);
         if(!listaHojas.get(comboHojas.getSelectedIndex()).estaSeleccionado()){
             btnTipos.setEnabled(false);
             btnAgregarHoja.setEnabled(true);
@@ -472,6 +482,12 @@ public class PanelImport extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_btnQuitarActionPerformed
 
+    /**
+     * Método que permite eliminar todos los elementos seleccionados para 
+     * importarse al hacer clic sobre el botón.
+     * @param evt Evento lanzado al hacer clic sobre el botón que permite borrar
+     * todos los elementos de la lista de importación.
+     */
     private void btnBorrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBorrarActionPerformed
         if(InterfazGrafica.limpiarSeleccion(panel,"hojas",modeloListaExcel,listaHojas)==JOptionPane.OK_OPTION){
             btnTipos.setEnabled(false);
@@ -581,18 +597,27 @@ public class PanelImport extends javax.swing.JPanel {
                 .collect(Collectors.toList());
         }
         try{
-            genBD =  new GeneradorBD(conn,lector,nombre,listaHojasImportar,infoImport,btnImportar,barraProgreso,rep.getTextArea());
+            Conexion con2 = new Conexion(conn.getServidor(),conn.getUsr(),conn.getPasswd());
+            genBD =  new GeneradorBD(con2,lector,nombre,listaHojasImportar,infoImport,btnImportar,barraProgreso,rep.getTextArea());
             genBD.execute();           
         }catch(Exception e){
             e.printStackTrace();
         }
     }  
     
+     /**
+     * Método que agrega una hoja a lista de importación al hacer clic sobre el
+     * botón correspondiente. Habilita los botones que permiten eliminar 
+     * elementos de la lista y habilita también el botón que permite configurar
+     * los tipos de datos de las columnas de la hoja.
+     * @param evt Evento lanzado al presionar el botón que agrega hojas a la lista
+     * de importación.
+     */
     private void btnAgregarHojaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarHojaActionPerformed
         modeloListaExcel.addElement(new ElementoLista(comboHojas.getSelectedItem().toString(),comboHojas.getSelectedIndex()));
         jListHojas.setSelectedIndex(modeloListaExcel.getSize()-1);
         listaHojas.get(comboHojas.getSelectedIndex()).setSeleccionado(true);
-        //mostrarListaElementos(listaHojas);
+        //InterfazGrafica.mostrarListaElementos(listaHojas);
         btnQuitar.setEnabled(true);
         btnBorrar.setEnabled(true);
         btnTipos.setEnabled(true);
@@ -630,21 +655,20 @@ public class PanelImport extends javax.swing.JPanel {
         // Si el usuario selecciona un archivo y presiona el botón 'Aceptar' se
         // comprueba que el tamaño del archivo sea mayor a cero. Si no lo es, se
         // muestra un mensaje informando el error. Si el tamaño es mayor a cero,
-        // se procede a cargar el archivo.
+        // se procede a cargarlo.
         if(selUsuario == JFileChooser.APPROVE_OPTION){
             try{
                 nomArch = sa.getSelectedFile().getName();
                 rutaArch = sa.getSelectedFile().getPath();
                 File archivo = new File(rutaArch);
                 if(archivo.length()==0){
-                    reiniciarElementosImportacion();
+                    limpiarPantallaImportacion(true);
                     JOptionPane.showMessageDialog(
                         this, nomArch+"\nEl archivo no tiene información.  ",
                         "No se puede leer el archivo", JOptionPane.WARNING_MESSAGE
                     );
                 }else{
-                    limpiarPantallaImportacion();
-                    //lector = new LectorExcel(ventana,comboHojas,labelRegExcel,labelArchivo,btnAbrir,rutaArch,nomArch,btnTipos,listaHojas,btnImportar,opcHojasCompletas,opcHojasSel);
+                    limpiarPantallaImportacion(false);
                     lector = new LectorExcel(ventana, this);
                     lector.execute();
                 }
@@ -655,6 +679,38 @@ public class PanelImport extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_btnAbrirActionPerformed
 
+    /**
+     * Reinicia los estados de los botones y los demás elementos de la interfaz
+     * a su estado predefinido.
+     * @param estadoBtnAbrir Booleano que indica si el botón para cargar un
+     * archivo nuevo debe permanecer habilitado o deshabilitado.
+     */
+    private void limpiarPantallaImportacion(boolean estadoBtnAbrir){
+        btnAbrir.setEnabled(estadoBtnAbrir);
+        labelArchivo.setText("");
+        comboHojas.removeAllItems();
+        comboHojas.setEnabled(false);
+        btnTipos.setEnabled(false);
+        opcHojasCompletas.setSelected(true);
+        opcHojasCompletas.setEnabled(false);
+        opcHojasSel.setEnabled(false);
+        tablaExcel.setModel(new DefaultTableModel());
+        btnAgregarHoja.setEnabled(false);
+        labelRegExcel.setText("Seleccione un archivo"); 
+        //modeloListaExcel.clear();
+        btnBorrar.setEnabled(false);
+        btnQuitar.setEnabled(false);
+        btnImportar.setEnabled(false);
+        barraProgreso.setValue(0);
+        btnReporte.setEnabled(false);  
+        infoImport.setText("Progreso de importación");
+        listaHojas.clear();
+        if(lector!=null && lector.getLibro()!=null){
+            lector.cerrarArchivo();
+        }                  
+        lector = null;
+    }
+    
     public ArrayList<TablaLista> getListaHojas() {
         return listaHojas;
     }
@@ -699,58 +755,6 @@ public class PanelImport extends javax.swing.JPanel {
         return labelRegExcel;
     }
 
-    private void limpiarPantallaImportacion(){
-        labelArchivo.setText("");
-        tablaExcel.setModel(new DefaultTableModel());
-        comboHojas.removeAllItems();
-        comboHojas.setEnabled(false);
-        btnAbrir.setEnabled(false);
-        btnTipos.setEnabled(false);
-        btnAgregarHoja.setEnabled(false);
-        btnImportar.setEnabled(false);
-        opcHojasCompletas.setSelected(true);
-        opcHojasCompletas.setEnabled(false);
-        opcHojasSel.setEnabled(false);
-        infoImport.setText("Progreso de importación");
-        barraProgreso.setValue(0);
-        btnReporte.setEnabled(false);    
-        listaHojas.clear();
-        if(lector!=null && lector.getLibro()!=null){
-            lector.cerrarArchivo();
-        }                  
-        //rep.getTextArea().setText("");
-    }
-    
-    private void reiniciarElementosImportacion(){                                                   
-        labelArchivo.setText("");
-        comboHojas.removeAllItems(); //
-        comboHojas.setEnabled(false);//
-        btnTipos.setEnabled(false);//
-        opcHojasCompletas.setSelected(true);//
-        opcHojasCompletas.setEnabled(false);//
-        opcHojasSel.setEnabled(false);//
-        modeloListaExcel.clear();
-        tablaExcel.setModel(new DefaultTableModel());// 
-        btnAgregarHoja.setEnabled(false);//
-        //labelSelTablaExcel.setText("");
-        labelRegExcel.setText("Seleccione un archivo");
-        btnBorrar.setEnabled(false);
-        btnQuitar.setEnabled(false);
-        btnImportar.setEnabled(false);//
-        barraProgreso.setValue(0);
-        btnReporte.setEnabled(false);
-        
-        nomArch = "";
-        rutaArch = "";
-        listaHojas.clear();//
-        //rep.getTextArea().setText("");
-        if(lector!=null && lector.getLibro()!=null){
-            lector.cerrarArchivo();
-            lector = null;
-        }  
-        infoImport.setText("Progreso de importación");
-    }
-    
     private void btnTiposActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTiposActionPerformed
         TablaLista tabla;
         /*System.out.println("Información - número de hojas: " +listaHojas.size());
