@@ -249,7 +249,7 @@ public class GeneradorExcel extends SwingWorker<Void,Integer>{
                 Object dato = resultados.getObject(i+1); // leer cada columna del registro
                 if(dato!=null && !dato.toString().equals("")){
                     Cell celda = reng.createCell(i);
-                    // Cuando se agrega una celda, hacer la distición de su tipo de dato
+                    // Cuando se agrega una celda, hacer la distición de su tipo de dato (como está definido en la base)
                     if(dato.getClass().getSuperclass().getSimpleName().equals("Number")){
                         Number n = (Number)dato;
                         celda.setCellValue(n.doubleValue());
