@@ -12,6 +12,7 @@ import excel.LectorExcel;
 import formatoTablas.FormatoTablaExcel;
 import java.awt.event.ItemEvent;
 import java.io.File;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -25,6 +26,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JProgressBar;
 import javax.swing.JRadioButton;
 import javax.swing.table.DefaultTableModel;
 
@@ -44,8 +46,8 @@ public class PanelImport extends javax.swing.JPanel {
     private GeneradorBD genBD;
     private String nomArch;
     private String rutaArch;
-    private String expNombre = "(_+|[a-zA-Z]+|(\\d*[a-zA-Z]+))(\\w*)"; // verificar que se introduce un nombre válido para la BD
-    private Pattern patron = Pattern.compile(expNombre);
+    private String expNombre; // Expresión regular para el nombre de la BD nueva
+    private Pattern patron;
     private Matcher mat;
     private Reporte rep;
     
@@ -56,7 +58,6 @@ public class PanelImport extends javax.swing.JPanel {
         initComponents();
         ventana = frame;
         this.panel = panel;
-        //this.conn = conn;
         listaHojas = new ArrayList<>();
         lector = null;
         formatoExcel = null;
@@ -65,6 +66,8 @@ public class PanelImport extends javax.swing.JPanel {
         genBD = new GeneradorBD();
         nomArch = "";
         rutaArch = "";
+        expNombre = "(_+|[a-zA-Z]+|(\\d*[a-zA-Z]+))(\\w*)";
+        patron = Pattern.compile(expNombre);
         rep = new Reporte(ventana,true); 
     }
 
@@ -543,12 +546,20 @@ public class PanelImport extends javax.swing.JPanel {
         btnImportar.setEnabled(true);
     }//GEN-LAST:event_opcHojasCompletasActionPerformed
 
+    /**
+     * Método que permite que el usuario escriba un nombre para la base de datos
+     * nueva. Si el nombre es válido, se comienza con la creación de la base, si 
+     * no lo es, se muestra un mensaje de advertencia.
+     * @param evt Evento lanzado al presionar el botón 'Importar'  
+     */
     private void btnImportarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnImportarActionPerformed
         if(btnImportar.getText().equals("Cancelar importación")){
             genBD.cancel(true);
         }else{
-            String nombreBase = "";
+            String nombreBase;
             try{
+                // Mostrar un cuadro de diálogo con un campo para introducir el nombre
+                // de la base de datos nueva
                 nombreBase = (String)JOptionPane.showInputDialog(
                     this,
                     "Escribe el nombre de la nueva base de datos:\n",
@@ -558,21 +569,16 @@ public class PanelImport extends javax.swing.JPanel {
                     null,           // opciones del combo box
                     "Nombre nuevo"  // texto dentro del campo
                 );
-                //System.out.println("Nombre de la base de datos: "+nombreBase);
-                if(nombreBase.length()>0){ // comprobar que el usuario escriba algo
+                if(nombreBase.length()>0){ // comprobar que el usuario escribió algo
                     mat = patron.matcher(nombreBase);
-                    if(mat.matches()){
-                        // crear la base de datos
+                    if(mat.matches())                     
                         importarArchivo(nombreBase);
-                    }else{
+                    else
                         throw new Exception();
-                    }
                 }else{
                     throw new Exception();
                 }
-            }catch(NullPointerException e){
-            }
-            catch(Exception e){
+            }catch(Exception e){
                 //e.printStackTrace();
                 JOptionPane.showMessageDialog(
                     this,
@@ -586,10 +592,13 @@ public class PanelImport extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_btnImportarActionPerformed
 
+    /**
+     * Método que inicia la creación de la base de datos.
+     * @param nombre Nombre de la base de datos que se va a crear.
+     */
     public void importarArchivo(String nombre){
-        List<TablaLista> listaHojasImportar;
-        btnReporte.setEnabled(true);
-        if(opcHojasCompletas.isSelected()){
+        List<TablaLista> listaHojasImportar; // Lista definitiva de hojas que se van a importar
+        if(opcHojasCompletas.isSelected()){ 
             listaHojasImportar = listaHojas; 
         }else{
             listaHojasImportar = listaHojas.stream()
@@ -598,10 +607,13 @@ public class PanelImport extends javax.swing.JPanel {
         }
         try{
             Conexion con2 = new Conexion(conn.getServidor(),conn.getUsr(),conn.getPasswd());
-            genBD =  new GeneradorBD(con2,lector,nombre,listaHojasImportar,infoImport,btnImportar,barraProgreso,rep.getTextArea());
-            genBD.execute();           
-        }catch(Exception e){
-            e.printStackTrace();
+            //genBD =  new GeneradorBD(con2,lector,nombre,listaHojasImportar,infoImport,btnImportar,barraProgreso,rep.getTextArea());
+            genBD =  new GeneradorBD(con2,nombre,listaHojasImportar,this);
+            genBD.execute();      
+            btnReporte.setEnabled(true);
+        }catch(ClassNotFoundException | SQLException e){
+            //e.printStackTrace();
+            infoImport.setText(e.getMessage());
         }
     }  
     
@@ -715,6 +727,14 @@ public class PanelImport extends javax.swing.JPanel {
         return listaHojas;
     }
 
+    public Reporte getRep() {
+        return rep;
+    }
+
+    public JLabel getInfoImport() {
+        return infoImport;
+    }
+
     public JButton getBtnImportar() {
         return btnImportar;
     }
@@ -755,19 +775,34 @@ public class PanelImport extends javax.swing.JPanel {
         return labelRegExcel;
     }
 
+    public LectorExcel getLector() {
+        return lector;
+    }
+
+    public JProgressBar getBarraProgreso() {
+        return barraProgreso;
+    }
+
+    /**
+     * 
+     * @param evt Envento lanzado al presionar el botón que permite cambiar los
+     * tipos de datos de las columnas.
+     */
     private void btnTiposActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTiposActionPerformed
-        TablaLista tabla;
-        /*System.out.println("Información - número de hojas: " +listaHojas.size());
-        for(int i=0;i<listaHojas.size();i++){
-            tabla = listaHojas.get(i);
-            tabla.mostrarColumnas();
+        System.out.println("Información - número de hojas: " +listaHojas.size());
+        for (TablaLista hoja : listaHojas) {
+            hoja.mostrarColumnas();
             System.out.println();
-        }*/
+        }
         String nomTabla = listaHojas.get(comboHojas.getSelectedIndex()).getNombre();
         ArrayList<InfoColumna> columnas = listaHojas.get(comboHojas.getSelectedIndex()).obtenerColumnas();
         new ConfiguracionTipos(ventana,true,nomTabla,columnas).setVisible(true);
     }//GEN-LAST:event_btnTiposActionPerformed
 
+    /**
+     * Hace visible la ventana que muestra el reporte de la importación.
+     * @param evt Evento lanzado al presionar el botón de Reporte.
+     */
     private void btnReporteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReporteActionPerformed
         rep.setVisible(true);
     }//GEN-LAST:event_btnReporteActionPerformed
