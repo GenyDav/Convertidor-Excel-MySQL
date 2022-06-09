@@ -1,11 +1,8 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package interfaz;
 
-import conexion.Conexion;
+import bd.GeneradorBD;
+import datos.HojaLista;
+import bd.Conexion;
 import datos.ElementoLista;
 import datos.InfoColumna;
 import excel.LectorExcel;
@@ -31,28 +28,31 @@ import javax.swing.JRadioButton;
 import javax.swing.table.DefaultTableModel;
 
 /**
- *
+ * Clase que crea un panel nuevo con todos los elementos necesarios para crear
+ * una base de datos utilizando un archivo de Excel.
  * @author Geny
  * @version 1.0
  */
 public class PanelImport extends javax.swing.JPanel {
-    private JFrame ventana;
-    private JPanel panel;
-    private ArrayList<TablaLista> listaHojas;
-    private LectorExcel lector;
-    private Conexion conn;  
-    private FormatoTablaExcel formatoExcel;
-    private DefaultListModel modeloListaExcel;
-    private GeneradorBD genBD;
-    private String nomArch;
-    private String rutaArch;
-    private String expNombre; // Expresión regular para el nombre de la BD nueva
-    private Pattern patron;
-    private Matcher mat;
-    private Reporte rep;
+    private JFrame ventana;                     // Contenedor padre del programa
+    private JPanel panel;                       // Panel sobre el que se muestra el panel de importación
+    private ArrayList<HojaLista> listaHojas;   // Estructura con la información de las hojas
+    private LectorExcel lector;                 // Objeto que abre el archivo de Excel
+    private Conexion conn;                      // Conexión a la base de datos
+    private FormatoTablaExcel formatoTabla;     // Formato de la tabla donde se muestran los datos de la hoja 
+    private DefaultListModel modeloLista;       // Modelo de la lista de importación
+    private GeneradorBD genBD;                  // Objeto que crea la base de datos
+    private String nomArch;                     // Nombre del archivo
+    private String rutaArch;                    // Ruta del archivo
+    private String expNombre;                   // Cadena con la exp. regular para el nombre de la BD
+    private Pattern patron;                     // Objeto que compila la expresión regular
+    private Matcher mat;                        // Busca coincidencias en el nombre de la BD con el patrón
+    private Reporte rep;                        // Ventana donde se muestra el detalle de la importación
     
     /**
-     * Creates new form PanelImport
+     * Crea una nueva forma PanelImport
+     * @param frame Ventana padre sobre la que se muestra el programa
+     * @param panel Panel sobre el que se muestra el panel de importación
      */
     public PanelImport(JFrame frame, JPanel panel) {
         initComponents();
@@ -60,9 +60,10 @@ public class PanelImport extends javax.swing.JPanel {
         this.panel = panel;
         listaHojas = new ArrayList<>();
         lector = null;
-        formatoExcel = null;
-        modeloListaExcel = new DefaultListModel();
-        jListHojas.setModel(modeloListaExcel);
+        conn = null;
+        formatoTabla = null;
+        modeloLista = new DefaultListModel();
+        jListHojas.setModel(modeloLista);
         genBD = new GeneradorBD();
         nomArch = "";
         rutaArch = "";
@@ -71,6 +72,11 @@ public class PanelImport extends javax.swing.JPanel {
         rep = new Reporte(ventana,true); 
     }
 
+    /**
+     * Método que establece la referencia entre la conexión con el servidor y
+     * el panel utilzado para importar una base de datos.
+     * @param c Conexión con el servidor de bases de datos.
+     */
     public void definirConexion(Conexion c){
         conn = c;
     }
@@ -460,8 +466,8 @@ public class PanelImport extends javax.swing.JPanel {
                 }
             }
             int indice = comboHojas.getSelectedIndex();
-            formatoExcel = new FormatoTablaExcel(lector.getHoja(indice),tablaExcel,labelRegExcel);
-            formatoExcel.execute();
+            formatoTabla = new FormatoTablaExcel(lector.getHoja(indice),tablaExcel,labelRegExcel);
+            formatoTabla.execute();
         }
     }//GEN-LAST:event_comboHojasItemStateChanged
 
@@ -472,13 +478,13 @@ public class PanelImport extends javax.swing.JPanel {
      * seleccionadas de la lista de importación.
      */
     private void btnQuitarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnQuitarActionPerformed
-        InterfazGrafica.borrarElemento(jListHojas,modeloListaExcel,listaHojas);
+        InterfazGrafica.borrarElemento(jListHojas,modeloLista,listaHojas);
         //InterfazGrafica.mostrarListaElementos(listaHojas);
         if(!listaHojas.get(comboHojas.getSelectedIndex()).estaSeleccionado()){
             btnTipos.setEnabled(false);
             btnAgregarHoja.setEnabled(true);
         }
-        if(modeloListaExcel.isEmpty()){
+        if(modeloLista.isEmpty()){
             btnQuitar.setEnabled(false);
             btnBorrar.setEnabled(false);
             btnImportar.setEnabled(false);
@@ -492,7 +498,7 @@ public class PanelImport extends javax.swing.JPanel {
      * todos los elementos de la lista de importación.
      */
     private void btnBorrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBorrarActionPerformed
-        if(InterfazGrafica.limpiarSeleccion(panel,"hojas",modeloListaExcel,listaHojas)==JOptionPane.OK_OPTION){
+        if(InterfazGrafica.limpiarSeleccion(panel,"hojas",modeloLista,listaHojas)==JOptionPane.OK_OPTION){
             btnTipos.setEnabled(false);
             btnAgregarHoja.setEnabled(true);
             btnImportar.setEnabled(false);
@@ -520,7 +526,7 @@ public class PanelImport extends javax.swing.JPanel {
             btnAgregarHoja.setEnabled(true);
         }
         // Habilitar los botones según el contenido del jList
-        if(!modeloListaExcel.isEmpty()){
+        if(!modeloLista.isEmpty()){
             btnQuitar.setEnabled(true);
             btnBorrar.setEnabled(true);
             btnImportar.setEnabled(true);
@@ -597,7 +603,7 @@ public class PanelImport extends javax.swing.JPanel {
      * @param nombre Nombre de la base de datos que se va a crear.
      */
     public void importarArchivo(String nombre){
-        List<TablaLista> listaHojasImportar; // Lista definitiva de hojas que se van a importar
+        List<HojaLista> listaHojasImportar; // Lista definitiva de hojas que se van a importar
         if(opcHojasCompletas.isSelected()){ 
             listaHojasImportar = listaHojas; 
         }else{
@@ -606,8 +612,7 @@ public class PanelImport extends javax.swing.JPanel {
                 .collect(Collectors.toList());
         }
         try{
-            Conexion con2 = new Conexion(conn.getServidor(),conn.getUsr(),conn.getPasswd());
-            //genBD =  new GeneradorBD(con2,lector,nombre,listaHojasImportar,infoImport,btnImportar,barraProgreso,rep.getTextArea());
+            Conexion con2 = new Conexion(conn.getServidor(),conn.getUsr(),conn.getPasswd());            
             genBD =  new GeneradorBD(con2,nombre,listaHojasImportar,this);
             genBD.execute();      
             btnReporte.setEnabled(true);
@@ -626,8 +631,8 @@ public class PanelImport extends javax.swing.JPanel {
      * de importación.
      */
     private void btnAgregarHojaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarHojaActionPerformed
-        modeloListaExcel.addElement(new ElementoLista(comboHojas.getSelectedItem().toString(),comboHojas.getSelectedIndex()));
-        jListHojas.setSelectedIndex(modeloListaExcel.getSize()-1);
+        modeloLista.addElement(new ElementoLista(comboHojas.getSelectedItem().toString(),comboHojas.getSelectedIndex()));
+        jListHojas.setSelectedIndex(modeloLista.getSize()-1);
         listaHojas.get(comboHojas.getSelectedIndex()).setSeleccionado(true);
         //InterfazGrafica.mostrarListaElementos(listaHojas);
         btnQuitar.setEnabled(true);
@@ -649,12 +654,12 @@ public class PanelImport extends javax.swing.JPanel {
         // Revisar si hay tablas seleccionadas en la lista de importación
         // Si la lista está vacía, la ventana para seleccionar el archivo nuevo
         // se muestra inmediatamente.
-        if(modeloListaExcel.isEmpty())
+        if(modeloLista.isEmpty())
             selUsuario = sa.showOpenDialog(panel);
         // Si la lista no está vacía, se muestra un cuadro de diálogo donde se
         // le solicita al usuario la confirmación para eliminar las tablas de la
         // lista antes de abrir el nuevo archivo.
-        if(!modeloListaExcel.isEmpty()&&InterfazGrafica.limpiarSeleccion(panel,"hojas",modeloListaExcel,listaHojas)==JOptionPane.OK_OPTION){
+        if(!modeloLista.isEmpty()&&InterfazGrafica.limpiarSeleccion(panel,"hojas",modeloLista,listaHojas)==JOptionPane.OK_OPTION){
             btnBorrar.setEnabled(false);
             btnQuitar.setEnabled(false);
             if(opcHojasSel.isSelected()){
@@ -723,80 +728,154 @@ public class PanelImport extends javax.swing.JPanel {
         lector = null;
     }
     
-    public ArrayList<TablaLista> getListaHojas() {
+    /**
+     * Devuelve la lista que contiene la información de las hojas en el archivo
+     * abierto. 
+     * @return Lista con la información de las hojas.
+     * abierto.
+     */
+    public ArrayList<HojaLista> getListaHojas() {
         return listaHojas;
     }
 
+    /**
+     * Devuelve el objeto que representa a la ventana donde se muestra con
+     * detalle los eventos del proceso de importación.
+     * @return Ventana de progreso de importación.
+     */
     public Reporte getRep() {
         return rep;
     }
 
+    /**
+     * Devuelve la etiqueta utilizada para mostrar los mensajes con información 
+     * sobre el proceso de importación.
+     * @return jLabel donde se muestra el progreso de importación.
+     */
     public JLabel getInfoImport() {
         return infoImport;
     }
 
+    /**
+     * Devuelve el botón para importar que se encuentra en el panel.
+     * @return Botón 'Importar' 
+     */
     public JButton getBtnImportar() {
         return btnImportar;
     }
 
+    /**
+     * Devuelve el radio button que se utiliza para indicar que la base de datos
+     * será creada con la información de todas las hojas del archivo.
+     * @return JRadioButton que representa la opción para importar todas las 
+     * hojas seleccionadas.
+     */
     public JRadioButton getOpcHojasCompletas() {
         return opcHojasCompletas;
     }
 
+    /**
+     * Devuelve el radio button que se utiliza para indicar que la base de datos
+     * solo será creada con la información de las hojas que el usuario seleccione.
+     * @return JRadioButton que representa la opción para importar solo las hojas
+     * seleccionadas.
+     */
     public JRadioButton getOpcHojasSel() {
         return opcHojasSel;
     }
 
+    /**
+     * Devuelve el nombre del archivo Excel que se va a abrir.
+     * @return Nombre del archivo. 
+     */
     public String getNomArch() {
         return nomArch;
     }
 
+    /**
+     * Devuelve la ruta del archivo Excel que se va a abrir.
+     * @return Ruta del archivo.
+     */
     public String getRutaArch() {
         return rutaArch;
     }
 
+    /**
+     * Devuelve el botón que permite abrir un archivo de Excel.
+     * @return Botón para abrir archivos.
+     */
     public JButton getBtnAbrir() {
         return btnAbrir;
     }
 
+    /**
+     * Devuelve el botón utilizado para modificar las características de las 
+     * columnas de una hoja.
+     * @return Botón para modificar las columnas.
+     */
     public JButton getBtnTipos() {
         return btnTipos;
     }
 
+    /**
+     * Devuelve el JComboBox que contiene los nombres de las hojas del archivo
+     * de Excel abierto.
+     * @return Combo con los nombres de las hojas.
+     */
     public JComboBox getComboHojas() {
         return comboHojas;
     }
 
+    /**
+     * Devuelve el JLabel utilizado para mostrar el nombre del archivo de Excel
+     * que se encuentra abierto.
+     * @return JLabel que contiene el nombre del archivo abierto.
+     */
     public JLabel getLabelArchivo() {
         return labelArchivo;
     }
 
+    /**
+     * Devuelve el label utilizado para mostrar el números de registros que 
+     * contiene una tabla.
+     * @return JLabel para el número de registros de la tabla.
+     */
     public JLabel getLabelRegExcel() {
         return labelRegExcel;
     }
 
+    /**
+     * Devuelve el objeto que representa al archivo de Excel abierto.
+     * @return objeto LectorExcel.
+     */
     public LectorExcel getLector() {
         return lector;
     }
 
+    /**
+     * Devuelve la barra de progreso que se encuentra en el panel.
+     * @return Barra de progreso en el panel.
+     */
     public JProgressBar getBarraProgreso() {
         return barraProgreso;
     }
 
     /**
-     * 
+     * Muestra una ventana donde se listan todos los nombres de las columnas de
+     * la hoja, permitiendo especificar su tipo de dato, sus parámetros y los
+     * modificadores de llave primaria, valor no nulo, valor único, valor sin
+     * signo y de auto incremento.
      * @param evt Envento lanzado al presionar el botón que permite cambiar los
      * tipos de datos de las columnas.
      */
     private void btnTiposActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTiposActionPerformed
-        System.out.println("Información - número de hojas: " +listaHojas.size());
-        for (TablaLista hoja : listaHojas) {
-            hoja.mostrarColumnas();
-            System.out.println();
-        }
         String nomTabla = listaHojas.get(comboHojas.getSelectedIndex()).getNombre();
         ArrayList<InfoColumna> columnas = listaHojas.get(comboHojas.getSelectedIndex()).obtenerColumnas();
         new ConfiguracionTipos(ventana,true,nomTabla,columnas).setVisible(true);
+        /*for (TablaLista hoja : listaHojas) {
+            hoja.mostrarColumnas();
+            System.out.println();
+        }*/
     }//GEN-LAST:event_btnTiposActionPerformed
 
     /**
