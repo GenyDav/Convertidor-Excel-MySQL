@@ -3,10 +3,14 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package interfaz;
+package bd;
 
-import conexion.Conexion;
+import datos.HojaLista;
+import datos.InfoColumna;
+import datos.Tiempo;
+import datos.Tipo;
 import excel.LectorExcel;
+import interfaz.PanelImport;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -28,99 +32,106 @@ public class GeneradorBD extends SwingWorker<Void,Integer>{
     private Conexion conn;
     private String nombreBase;
     private LectorExcel lector;
-    private List<TablaLista> listaHojas;
+    private Sheet hojaActual;
+    private List<HojaLista> listaHojas;
     
     private JLabel etiqueta;
     private JButton btnImportar;
     private JProgressBar barra;
     private JTextArea areaRep;
     
-    private String reporte;    
+    private String evento;    
     private Tiempo temp;
-    
-    private boolean generandoBase;
     
     public GeneradorBD(){
         conn = null;
         nombreBase = null;
         lector = null;
+        hojaActual = null;
         listaHojas = null;
         etiqueta = null;
         barra = null;
         temp = null;
         areaRep = null;
-        generandoBase = false;
     }
     
-    public GeneradorBD(Conexion conn,LectorExcel lector,String nomBase,List<TablaLista> listaHojas,JLabel etiqueta,JButton btn,JProgressBar barra,JTextArea areaTexto){
+    public GeneradorBD(Conexion conn,String nomBase,List<HojaLista> listaHojas,PanelImport panel){
         this.conn = conn;
         nombreBase = nomBase;
-        this.lector = lector;
+        lector = panel.getLector();
+        hojaActual = null;
         this.listaHojas = listaHojas;
-        this.etiqueta = etiqueta;
-        btnImportar = btn;
-        this.barra = barra;
+        etiqueta = panel.getInfoImport();
+        btnImportar = panel.getBtnImportar();
+        barra = panel.getBarraProgreso();
         temp = new Tiempo();
-        areaRep = areaTexto;
-        generandoBase = false;
+        areaRep = panel.getRep().getTextArea();
     }
     
-    private String crearScriptTabla(String nombreBase,TablaLista hoja) throws SQLException{
-        System.out.println("Indice de la hoja: "+hoja.getPosicion());
+    /**
+     * Elabora el script para crear una tabla nueva utilizando la información de
+     * la hoja pasada como parámetro.
+     * @param hoja Información de la hoja que se va a utilizar para crear la tabla.
+     * @return Instrucción MySQL para crear la nueva tabla.
+     * @throws SQLException Error al ejecutar scripts en el servidor de bases de datos.
+     */
+    private String crearScriptTabla(HojaLista hoja) throws SQLException{
         String script;
-        ArrayList<String> llavePrimaria = new ArrayList<>();
+        ArrayList<String> camposLlave = new ArrayList<>();
         int numCol = hoja.obtenerColumnas().size();
+        
         script = "CREATE TABLE " + nombreBase + "." + hoja.getNombre() + "(\n";
+        // Definir el nombre de las columnas, sus tipos de datos y sus modificadores
         for(int j=0;j<numCol;j++){
-            InfoColumna col = hoja.obtenerColumna(j);
-            script += col.getNombre()+" "+Tipo.TIPO[col.getTipo()];
-            if(!col.getParametros().equals(""))
-                script+="("+col.getParametros()+")";
-            if(col.getPK())
-                llavePrimaria.add(col.getNombre());
-            if(col.getUN())
-                script+=" UNSIGNED";
-            if(col.getNN()){
-                script+=" NOT NULL";
+            InfoColumna columna = hoja.obtenerColumna(j);
+            script += columna.getNombre()+" "+Tipo.NOMBRES[columna.getTipo()];
+            if(!columna.getParametros().equals(""))
+                script += "("+columna.getParametros()+")";
+            if(columna.getPK())
+                camposLlave.add(columna.getNombre());
+            if(columna.getUN())
+                script += " UNSIGNED";
+            if(columna.getNN()){
+                script += " NOT NULL";
             }else{
-                script+=" NULL";
+                script += " NULL";
             }
-            if(col.getUQ())
-                script+=" UNIQUE";
-            if(col.getAI())
-                script+=" AUTO_INCREMENT"; 
-            if(j<numCol-1)
+            if(columna.getUQ())
+                script += " UNIQUE";
+            if(columna.getAI())
+                script += " AUTO_INCREMENT"; 
+            if(j!=numCol-1)
                 script += ",\n";
         }
-        if(!llavePrimaria.isEmpty()){
+        // Definir que columnas forman la llave primaria
+        if(!camposLlave.isEmpty()){
             script += ",\nPRIMARY KEY (";
-            for(int k=0;k<llavePrimaria.size();k++){
-                script += llavePrimaria.get(k);
-                if(k!=llavePrimaria.size()-1){
+            for(int k=0;k<camposLlave.size();k++){
+                script += camposLlave.get(k);
+                if(k!=camposLlave.size()-1){
                     script += ", ";
                 }
             }           
             script += ")";
         }    
         script += ");";
+        System.out.println(script);
         return script;
     }
     
-    private void crearTabla(String nombreBase,TablaLista hoja) throws SQLException{
+    /**
+     * Método que utiliza un objeto de tipo HojaLista para crear una nueva tabla
+     * en la base de datos.
+     * @param hoja Información de la hoja que se va a utilizar para crear la tabla.
+     * @throws SQLException Error al ejecutar scripts en el servidor de bases de datos.
+     */
+    private void crearTabla(HojaLista hoja) throws SQLException{
         if(isCancelled()){
-            etiqueta.setText("Importación de la base '"+nombreBase+"' cancelada.");
-            //etiqueta.setText("Cerrando la conexión...");
-            //System.out.println("Cerrando la conexión...");
-            /*try{
-                Thread.sleep(100);
-            }catch(Exception e){
-
-            }*/
+            etiqueta.setText("Importación de la base '" + nombreBase + "' cancelada.");
             return;
         }
-        String scriptTabla = crearScriptTabla(nombreBase,hoja); 
+        String scriptTabla = crearScriptTabla(hoja); 
         conn.modificarBase(scriptTabla); // crear la tabla
-        //System.out.println(scriptTabla);
     }
     
     private String crearScriptRegistro(String nomBase,String nomHoja,Row renglonAct,int numColumnas, int indiceColInicio){
@@ -143,8 +154,8 @@ public class GeneradorBD extends SwingWorker<Void,Integer>{
         return scriptInsertar;
     }
     
-    private void insertarRegistros(String nomBase,TablaLista hoja) throws SQLException{
-        Sheet hojaActual = lector.getLibro().getSheetAt(hoja.getPosicion());
+    private void insertarRegistros(String nomBase,HojaLista hoja) throws SQLException{
+        //Sheet hojaActual = lector.getLibro().getSheetAt(hoja.getPosicion());
         Row encabezado = hojaActual.getRow(hojaActual.getFirstRowNum());
         int numColumnas = encabezado.getPhysicalNumberOfCells();
         int numRenglones = hojaActual.getPhysicalNumberOfRows();
@@ -171,6 +182,7 @@ public class GeneradorBD extends SwingWorker<Void,Integer>{
                 }
                 renglonArch = iteradorRenglon.next();
                 scriptInsertar = crearScriptRegistro(nomBase,hoja.getNombre(),renglonArch,numColumnas,indiceColInicio);
+                System.out.println(scriptInsertar);
                 try{
                     conn.modificarBase(scriptInsertar);
                 }catch(SQLException ex){ // errores al insertar registros
@@ -179,10 +191,10 @@ public class GeneradorBD extends SwingWorker<Void,Integer>{
                     System.out.println(ex.getSQLState());
                     identificarFallo(ex);
                     ex.printStackTrace();
-                    reporte = "[" + temp.obtenerTiempo() + "] Error en la línea " + (renglon+1) + ", código " + ex.getErrorCode() 
+                    evento = "[" + temp.obtenerTiempo() + "] Error en la línea " + (renglon+1) + ", código " + ex.getErrorCode() 
                         +" \n\t("+ ex.getMessage()+ ")\n";
                     //System.out.println(reporte);
-                    areaRep.append(reporte);
+                    areaRep.append(evento);
                     //Error 1406
                 }finally{
                     progreso = renglon*incremento;
@@ -194,9 +206,9 @@ public class GeneradorBD extends SwingWorker<Void,Integer>{
                     }catch(Exception e){}
                 }
             }      
-            reporte = "[" + temp.obtenerTiempo() + "] Inserción de registros terminada.\n";
+            evento = "[" + temp.obtenerTiempo() + "] Inserción de registros terminada.\n";
             //System.out.println(reporte);
-            areaRep.append(reporte);
+            areaRep.append(evento);
         }
     }
     
@@ -226,46 +238,48 @@ public class GeneradorBD extends SwingWorker<Void,Integer>{
         }  
     }
     
-    public boolean estaActivo(){
-        return generandoBase;
-    }
-    
     @Override 
     protected Void doInBackground(){
-        //btnImportar.setEnabled(false);
-        btnImportar.setText("Cancelar importación");
-        generandoBase = true;
         String nomTabla;
         int numTablas = listaHojas.size();
+        
         try{
+            // Crear la base de datos
+            btnImportar.setText("Cancelar importación");
             areaRep.setText("");
             etiqueta.setText("Iniciando la creación de la base de datos...");
             conn.crearBase(nombreBase);
-            reporte = "["+temp.obtenerTiempo()+"] Esquema '"+nombreBase+"' creado.\n";
-            areaRep.append(reporte);
+            evento = "["+temp.obtenerTiempo()+"] Esquema '"+nombreBase+"' creado.\n";
+            areaRep.append(evento);
             
+            // Crear las tablas e insertar los registros en cada una
             for(int i=0;i<listaHojas.size();i++){
+                // Comprobar si el usuario canceló el proceso
                 if(isCancelled()){
-                    etiqueta.setText("Importación de la base '"+nombreBase+"' cancelada.");
-                    reporte = "["+temp.obtenerTiempo()+"] Se canceló la importación del esquema '"+nombreBase+"'.\n";
-                    areaRep.append(reporte);
+                    etiqueta.setText("Importación de la base '" + nombreBase + "' cancelada.");
+                    evento = "[" + temp.obtenerTiempo() + "] Se canceló la importación del esquema '" + nombreBase + "'.\n";
+                    areaRep.append(evento);
                     btnImportar.setText("Crear base de datos");
                     return null;
                 }
                 try{
-                    nomTabla = listaHojas.get(i).getNombre();
-                    etiqueta.setText("Creando la base '"+nombreBase+"': Definiendo la estructura de la tabla '"+nomTabla+"'");              
-                    crearTabla(nombreBase,listaHojas.get(i));
-                    reporte = "[" +temp.obtenerTiempo()+"] Estructura de la tabla '"+nomTabla+"' creada.\n";
-                    areaRep.append(reporte);
-                    
-                    etiqueta.setText("Creando la base '"+nombreBase+"': Insertando datos en la tabla '"+nomTabla+"' (Tabla "+(i+1)+" de "+numTablas+")");
-                    reporte = "[" +temp.obtenerTiempo()+"] Iniciando la inserción de registros en la tabla '"+nomTabla+"'.\n";
-                    //System.out.println(reporte);
-                    areaRep.append(reporte);
-                    
-                    insertarRegistros(nombreBase,listaHojas.get(i));
-                    System.out.println("=========================================");
+                    hojaActual = lector.getLibro().getSheetAt(i);
+                    // Comprobar que la hoja que va a ser convertida en tabla tiene información
+                    if(hojaActual.getPhysicalNumberOfRows()>0){
+                        nomTabla = listaHojas.get(i).getNombre();
+                        etiqueta.setText("Creando la base '"+nombreBase+"': Definiendo la estructura de la tabla '"+nomTabla+"'");              
+                        crearTabla(listaHojas.get(i));
+                        evento = "[" +temp.obtenerTiempo()+"] Estructura de la tabla '"+nomTabla+"' creada.\n";
+                        areaRep.append(evento);
+
+                        etiqueta.setText("Creando la base '"+nombreBase+"': Insertando datos en la tabla '"+nomTabla+"' (Tabla "+(i+1)+" de "+numTablas+")");
+                        evento = "[" +temp.obtenerTiempo()+"] Iniciando la inserción de registros en la tabla '"+nomTabla+"'.\n";
+                        //System.out.println(reporte);
+                        areaRep.append(evento);
+
+                        insertarRegistros(nombreBase,listaHojas.get(i));
+                        System.out.println("=========================================");
+                    }
                 }catch(SQLException ex){ // las excepciones de insertarRegitros caen aqui
                     //Errores al crear tablas
                     System.out.println("Mensaje: "+ex.getMessage());
@@ -273,17 +287,17 @@ public class GeneradorBD extends SwingWorker<Void,Integer>{
                     System.out.println("Estado:"+ex.getSQLState());
                    
                     identificarFallo(ex);
-                    reporte = "[" +temp.obtenerTiempo()+ "] Error al crear la tabla '" + listaHojas.get(i).getNombre() + "', código " + ex.getErrorCode() 
+                    evento = "[" +temp.obtenerTiempo()+ "] Error al crear la tabla '" + listaHojas.get(i).getNombre() + "', código " + ex.getErrorCode() 
                         +" \n\t("+ ex.getMessage()+ ")\n";                  
                     //System.out.println(reporte);
-                    areaRep.append(reporte);
+                    areaRep.append(evento);
                     ex.printStackTrace();
                 }                     
             }
             etiqueta.setText("Creación de la base de datos '"+nombreBase+"' terminada.");
-            reporte = "[" +temp.obtenerTiempo()+"] Importación de datos terminada.\n";
+            evento = "[" +temp.obtenerTiempo()+"] Importación de datos terminada.\n";
             //System.out.println(reporte);
-            areaRep.append(reporte);
+            areaRep.append(evento);
             //publish(100);
             barra.setValue(0);
         }catch(SQLException ex){
@@ -291,11 +305,11 @@ public class GeneradorBD extends SwingWorker<Void,Integer>{
             /*System.out.println(ex.getMessage());
             System.out.println(ex.getErrorCode());
             System.out.println(ex.getSQLState());*/
-            reporte = "[" +temp.obtenerTiempo()+"] No se pudo continuar con la creación del "
+            evento = "[" +temp.obtenerTiempo()+"] No se pudo continuar con la creación del "
                     + "esquema '"+nombreBase+"'.\n"
                     + "\tError "+ex.getErrorCode() +"\n"
                     + "\t"+ ex.getMessage()+ "\n";
-            areaRep.append(reporte);
+            areaRep.append(evento);
             ex.printStackTrace();
             etiqueta.setText("Falló el intento para importar los datos en '"+nombreBase+"'");
             barra.setValue(0);
@@ -326,8 +340,6 @@ public class GeneradorBD extends SwingWorker<Void,Integer>{
                 );
             }*/
         }
-        generandoBase = false;
-        //btnImportar.setEnabled(true);
         //btnImportar.setText("Crear base de datos");
         return null;
     }
