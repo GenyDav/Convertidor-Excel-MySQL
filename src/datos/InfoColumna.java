@@ -54,6 +54,14 @@ public class InfoColumna{
     }
     
     /**
+     * Método que permite obtener el nombre del tipo de dato de la columna. 
+     * @return Cadena de caracteres con el nombre del tipo de dato.
+     */
+    public String getNombreTipo(){
+        return Tipo.NOMBRES[tipo];
+    }
+    
+    /**
      * Método que permite obtener los parámetros del tipo de dato de la columna.
      * @return parámetros de la columna
      */
