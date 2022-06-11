@@ -69,6 +69,21 @@ public class GeneradorBD extends SwingWorker<Void,Integer>{
     }
     
     /**
+     * Método que utiliza un objeto de tipo HojaLista para crear una nueva tabla
+     * en la base de datos.
+     * @param hoja Información de la hoja que se va a utilizar para crear la tabla.
+     * @throws SQLException Error al ejecutar scripts en el servidor de bases de datos.
+     */
+    private void crearTabla(HojaLista hoja) throws SQLException{
+        if(isCancelled()){
+            etiqueta.setText("Importación de la base '" + nombreBase + "' cancelada.");
+            return;
+        }
+        String scriptTabla = crearScriptTabla(hoja); 
+        conn.modificarBase(scriptTabla); // crear la tabla
+    }
+    
+    /**
      * Elabora el script para crear una tabla nueva utilizando la información de
      * la hoja pasada como parámetro.
      * @param hoja Información de la hoja que se va a utilizar para crear la tabla.
@@ -84,7 +99,7 @@ public class GeneradorBD extends SwingWorker<Void,Integer>{
         // Definir el nombre de las columnas, sus tipos de datos y sus modificadores
         for(int j=0;j<numCol;j++){
             InfoColumna columna = hoja.obtenerColumna(j);
-            script += columna.getNombre()+" "+Tipo.NOMBRES[columna.getTipo()];
+            script += columna.getNombre() + " " + columna.getNombreTipo();
             if(!columna.getParametros().equals(""))
                 script += "("+columna.getParametros()+")";
             if(columna.getPK())
@@ -100,6 +115,7 @@ public class GeneradorBD extends SwingWorker<Void,Integer>{
                 script += " UNIQUE";
             if(columna.getAI())
                 script += " AUTO_INCREMENT"; 
+            // Añadir una coma a cada columna, excepto a la última
             if(j!=numCol-1)
                 script += ",\n";
         }
@@ -120,100 +136,96 @@ public class GeneradorBD extends SwingWorker<Void,Integer>{
     }
     
     /**
-     * Método que utiliza un objeto de tipo HojaLista para crear una nueva tabla
-     * en la base de datos.
-     * @param hoja Información de la hoja que se va a utilizar para crear la tabla.
-     * @throws SQLException Error al ejecutar scripts en el servidor de bases de datos.
+     * Método que permite insertar nuevos registros en una tabla.
+     * @param hoja Hoja de la que se va a extraer la información.
+     * @throws SQLException Error al intentar insertar el nuevo registro.
      */
-    private void crearTabla(HojaLista hoja) throws SQLException{
-        if(isCancelled()){
-            etiqueta.setText("Importación de la base '" + nombreBase + "' cancelada.");
-            return;
-        }
-        String scriptTabla = crearScriptTabla(hoja); 
-        conn.modificarBase(scriptTabla); // crear la tabla
-    }
-    
-    private String crearScriptRegistro(String nomBase,String nomHoja,Row renglonAct,int numColumnas, int indiceColInicio){
-        String scriptInsertar = "INSERT INTO " + nomBase + "." + nomHoja + " VALUES (";
-        Object []celdas = new Object[numColumnas];
-        for(int i=0;i<numColumnas;i++){   
-            celdas[i] = renglonAct.getCell(i+indiceColInicio);
-            //System.out.print("["+celdas[i]+"]");
-            if(celdas[i]==null){              
-                scriptInsertar += "null";
-            }else{
-                scriptInsertar += "'"+celdas[i]+"'"; // texto o ''
-            }
-            if(i!=numColumnas-1){
-                scriptInsertar += ",";
-            }
-        }  
-        scriptInsertar += ");";
-        //System.out.println(scriptInsertar);
-        return scriptInsertar;
-    }
-    
-    private void insertarRegistros(String nomBase,HojaLista hoja) throws SQLException{
-        //Sheet hojaActual = lector.getLibro().getSheetAt(hoja.getPosicion());
+    private void insertarRegistros(HojaLista hoja) throws SQLException{
+        float incremento;    // porcentaje de progreso que le corresponde a cada renglón
+        float progreso;      // porcentaje de importación de la hoja 
+        int renglon = 1;     // número de renglón desde el que se empiezan a insertar los registros
+        String scriptInsertar;
+        
         Row encabezado = hojaActual.getRow(hojaActual.getFirstRowNum());
         int numColumnas = encabezado.getPhysicalNumberOfCells();
         int numRenglones = hojaActual.getPhysicalNumberOfRows();
         int indiceColInicio = encabezado.getFirstCellNum();
         
-        float incremento;
-        float progreso = 0F;
-        int renglon = 1;
-        
         incremento = 100F/(hojaActual.getPhysicalNumberOfRows()-1);
-        //System.out.println("Incremento: "+incremento);
-        //System.out.println("Número de registros: "+hojaActual.getPhysicalNumberOfRows()); // contando el encabezado
-        String scriptInsertar = "";
         
         if(numRenglones>1){
-            Row renglonArch;
+            Row renglonActual;
             Iterator<Row> iteradorRenglon = hojaActual.rowIterator();
-            
-            renglonArch = iteradorRenglon.next(); // saltar el encabezado
+            iteradorRenglon.next(); // saltar el encabezado
             while(iteradorRenglon.hasNext()){
                 if(isCancelled()){
                     etiqueta.setText("Importación de la base '"+nombreBase+"' cancelada.");
                     return;
                 }
-                renglonArch = iteradorRenglon.next();
-                scriptInsertar = crearScriptRegistro(nomBase,hoja.getNombre(),renglonArch,numColumnas,indiceColInicio);
-                System.out.println(scriptInsertar);
+                renglonActual = iteradorRenglon.next();
+                scriptInsertar = crearScriptRegistro(hoja.getNombre(),renglonActual,numColumnas,indiceColInicio);
                 try{
                     conn.modificarBase(scriptInsertar);
-                }catch(SQLException ex){ // errores al insertar registros
-                    System.out.println(ex.getMessage());
-                    System.out.println(ex.getErrorCode());
-                    System.out.println(ex.getSQLState());
+                }catch(SQLException ex){
                     identificarFallo(ex);
-                    ex.printStackTrace();
-                    evento = "[" + temp.obtenerTiempo() + "] Error en la línea " + (renglon+1) + ", código " + ex.getErrorCode() 
-                        +" \n\t("+ ex.getMessage()+ ")\n";
-                    //System.out.println(reporte);
+                    evento = "["+temp.obtenerTiempo()+"] Error en el renglón "+(renglon)+", código "+ex.getErrorCode() 
+                        +" \n\t("+ex.getMessage()+")\n";
                     areaRep.append(evento);
-                    //Error 1406
+                    //ex.printStackTrace();
                 }finally{
                     progreso = renglon*incremento;
                     renglon++;
-                    //System.out.println(progreso+"%");
                     try{
                         Thread.sleep(1);
-                        publish(Math.round(progreso));
+                        publish(Math.round(progreso)); // Mostrar el porcentaje en la barra de progreso
                     }catch(Exception e){}
                 }
             }      
             evento = "[" + temp.obtenerTiempo() + "] Inserción de registros terminada.\n";
-            //System.out.println(reporte);
             areaRep.append(evento);
         }
     }
     
+    /**
+     * Crea una instrucción para insertar un registro en la tabla especificada.
+     * @param nomTabla Nombre de la tabla nueva.
+     * @param renglonAct Renglón (del archivo de Excel) del que se van a leer 
+     * los datos.
+     * @param numColumnas Número de campos en el renglón.
+     * @param indiceColInicio Índice de la primer columna con datos de la hoja.
+     * @return Instrucción MySQL para insertar un nuevo registro.
+     */
+    private String crearScriptRegistro(String nomTabla, Row renglonAct, int numColumnas, int indiceColInicio){
+        String scriptInsertar = "INSERT INTO " + nombreBase + "." + nomTabla + " VALUES (";
+        Object []celdas = new Object[numColumnas];
+        for(int i=0;i<numColumnas;i++){   
+            celdas[i] = renglonAct.getCell(i+indiceColInicio);
+            if(celdas[i]==null) // Comprobar si la celda existe en el archivo              
+                scriptInsertar += "null";
+            else
+                scriptInsertar += "'"+celdas[i]+"'"; // EL campo contiene texto o ''
+            
+            if(i!=numColumnas-1)
+                scriptInsertar += ",";
+        }  
+        scriptInsertar += ");";
+        System.out.println(scriptInsertar);
+        return scriptInsertar;
+    }
+    
+    /**
+     * Método que identifica las excepciones ocurridas al importar una base de
+     * datos que pueden hacer que el proceso se detenga completamente. Si ocurre 
+     * una excepción de esa clase, esta se vuelve a lanzar para que sea 'atrapada' 
+     * por un bloque try-catch superior en donde se decide si el proceso continua
+     * o ya se detiene. Si la excepción no es de tipo crítico, el proceso de 
+     * importación continúa.
+     * @param ex Error ocurrido al intentar modificar la base de datos.
+     * @throws SQLException Excepción que hace que el proceso de importación se
+     * detenga completamente.
+     */
     private void identificarFallo(SQLException ex) throws SQLException{
-        switch(ex.getErrorCode()){//1366
+        switch(ex.getErrorCode()){
             case 1236:
             case 2002:
             case 2003: 
@@ -227,14 +239,6 @@ public class GeneradorBD extends SwingWorker<Void,Integer>{
             case 24:
             case 0:
                 throw new SQLException(ex.getMessage(),ex.getSQLState(),ex.getErrorCode());   
-            default:
-                /*ex.printStackTrace();
-                reporte = "[" + temp.obtenerTiempo() + "] Error en la línea " + (renglon+1) + ", código " + ex.getErrorCode() 
-                    +" \n\t("+ ex.getMessage()+ ")\n";
-                //System.out.println(reporte);
-                areaRep.append(reporte);
-                //Error 1406
-                break;*/
         }  
     }
     
@@ -266,18 +270,17 @@ public class GeneradorBD extends SwingWorker<Void,Integer>{
                     hojaActual = lector.getLibro().getSheetAt(i);
                     // Comprobar que la hoja que va a ser convertida en tabla tiene información
                     if(hojaActual.getPhysicalNumberOfRows()>0){
+                        // Crear la tabla
                         nomTabla = listaHojas.get(i).getNombre();
                         etiqueta.setText("Creando la base '"+nombreBase+"': Definiendo la estructura de la tabla '"+nomTabla+"'");              
                         crearTabla(listaHojas.get(i));
-                        evento = "[" +temp.obtenerTiempo()+"] Estructura de la tabla '"+nomTabla+"' creada.\n";
+                        evento = "["+temp.obtenerTiempo()+"] Estructura de la tabla '"+nomTabla+"' creada.\n";
                         areaRep.append(evento);
-
+                        // Insertar los datos en la tabla
                         etiqueta.setText("Creando la base '"+nombreBase+"': Insertando datos en la tabla '"+nomTabla+"' (Tabla "+(i+1)+" de "+numTablas+")");
-                        evento = "[" +temp.obtenerTiempo()+"] Iniciando la inserción de registros en la tabla '"+nomTabla+"'.\n";
-                        //System.out.println(reporte);
+                        evento = "["+temp.obtenerTiempo()+"] Iniciando la inserción de registros en la tabla '"+nomTabla+"'.\n";
                         areaRep.append(evento);
-
-                        insertarRegistros(nombreBase,listaHojas.get(i));
+                        insertarRegistros(listaHojas.get(i));
                         System.out.println("=========================================");
                     }
                 }catch(SQLException ex){ // las excepciones de insertarRegitros caen aqui
@@ -296,7 +299,6 @@ public class GeneradorBD extends SwingWorker<Void,Integer>{
             }
             etiqueta.setText("Creación de la base de datos '"+nombreBase+"' terminada.");
             evento = "[" +temp.obtenerTiempo()+"] Importación de datos terminada.\n";
-            //System.out.println(reporte);
             areaRep.append(evento);
             //publish(100);
             barra.setValue(0);
@@ -340,7 +342,7 @@ public class GeneradorBD extends SwingWorker<Void,Integer>{
                 );
             }*/
         }
-        //btnImportar.setText("Crear base de datos");
+        btnImportar.setText("Crear base de datos");
         return null;
     }
     
