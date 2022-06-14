@@ -25,6 +25,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.JRadioButton;
+import javax.swing.SwingWorker.StateValue;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -559,9 +560,10 @@ public class PanelImport extends javax.swing.JPanel {
      * @param evt Evento lanzado al presionar el botón 'Importar'  
      */
     private void btnImportarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnImportarActionPerformed
-        if(btnImportar.getText().equals("Cancelar importación")){
-            genBD.cancel(true);
-        }else{
+        if(genBD.getState() == StateValue.STARTED){
+            infoImport.setText("Cancelando la importación de la base de datos...");
+            genBD.cancel(true); // cancelar la ejecución del swingWorker
+        }else{ // StateValue.PENDING || StateValue.DONE
             String nombreBase;
             try{
                 // Mostrar un cuadro de diálogo con un campo para introducir el nombre
@@ -574,16 +576,18 @@ public class PanelImport extends javax.swing.JPanel {
                     null,           // ícono
                     null,           // opciones del combo box
                     "Nombre nuevo"  // texto dentro del campo
-                );
-                if(nombreBase.length()>0){ // comprobar que el usuario escribió algo
-                    mat = patron.matcher(nombreBase);
-                    if(mat.matches())                     
-                        importarArchivo(nombreBase);
-                    else
+                );  
+                if(nombreBase!=null){ // Si el usuario presionó el botón 'Aceptar'
+                    if(nombreBase.length()>0){
+                        mat = patron.matcher(nombreBase);
+                        if(mat.matches())                     
+                            importarArchivo(nombreBase);
+                        else
+                            throw new Exception();
+                    }else{
                         throw new Exception();
-                }else{
-                    throw new Exception();
-                }
+                    }
+                }               
             }catch(Exception e){
                 //e.printStackTrace();
                 JOptionPane.showMessageDialog(
@@ -616,8 +620,18 @@ public class PanelImport extends javax.swing.JPanel {
             genBD =  new GeneradorBD(con2,nombre,listaHojasImportar,this);
             genBD.execute();      
             btnReporte.setEnabled(true);
-        }catch(ClassNotFoundException | SQLException e){
+        }catch(SQLException e){
+            infoImport.setText("Falló el intento para importar los datos en '" + nombre 
+                + "' (Error MySQL " + e.getErrorCode() + ")");
+            JOptionPane.showMessageDialog(
+                this, 
+                "No se puede continuar con la creación de la base de \n"
+                    + "datos debido al error MySQL de código " + e.getErrorCode() + ".  ",
+                "Error", 
+                JOptionPane.ERROR_MESSAGE
+            );
             //e.printStackTrace();
+        }catch(ClassNotFoundException e){
             infoImport.setText(e.getMessage());
         }
     }  
