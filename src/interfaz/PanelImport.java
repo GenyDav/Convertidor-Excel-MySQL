@@ -616,7 +616,8 @@ public class PanelImport extends javax.swing.JPanel {
                 .collect(Collectors.toList());
         }
         try{
-            Conexion con2 = new Conexion(conn.getServidor(),conn.getUsr(),conn.getPasswd());            
+            //Conexion con2 = new Conexion(conn.getServidor(),conn.getUsr(),conn.getPasswd());            
+            Conexion con2 = conn.crearNuevaConexion();            
             genBD =  new GeneradorBD(con2,nombre,listaHojasImportar,this);
             genBD.execute();      
             btnReporte.setEnabled(true);
@@ -740,6 +741,16 @@ public class PanelImport extends javax.swing.JPanel {
             lector.cerrarArchivo();
         }                  
         lector = null;
+    }
+    
+    /**
+     * Método que permite conocer el estado del proceso encargado de crear la
+     * base de datos.
+     * @return Estado del proceso (StateValue.PENDING, StateValue.STARTED, 
+     * StateValue.DONE).
+     */
+    public StateValue consultarEstadoProceso(){
+        return genBD.getState();
     }
     
     /**
