@@ -1,6 +1,5 @@
 package interfaz;
 
-import bd.GeneradorBD;
 import datos.ElementoLista;
 import bd.Conexion;
 import java.awt.CardLayout;
@@ -16,10 +15,10 @@ import javax.swing.SwingWorker;
 import javax.swing.SwingWorker.StateValue;
 import javax.swing.UIManager;
 
-
 /**
  *
  * @author Geny
+ * @version 2.0
  */
 public class InterfazGrafica extends javax.swing.JFrame {
     private CardLayout cardLayout;
@@ -31,11 +30,12 @@ public class InterfazGrafica extends javax.swing.JFrame {
     private int modo;               // 
     private final int EXP;
     private final int IMP; 
-    private GeneradorBD genBD;
-       
     private PanelExport panelExp;
     private PanelImport panelImp;
     
+    /**
+     * 
+     */
     public InterfazGrafica() {
         UIManager.put("ProgressBar.selectionForeground", Color.white);
         UIManager.put("ProgressBar.foreground", new Color(2,97,140));//255,148,0
@@ -47,7 +47,7 @@ public class InterfazGrafica extends javax.swing.JFrame {
         setSize(1000,600);
         setLocationRelativeTo(null);
         
-        cardLayout = (CardLayout)jPanel1.getLayout();
+        cardLayout = (CardLayout)contenedor.getLayout();
         
         servidor = "";
         usuario = "";
@@ -57,14 +57,9 @@ public class InterfazGrafica extends javax.swing.JFrame {
         EXP = 1;
         IMP = 2;
         modo = EXP;
-        
-        genBD = new GeneradorBD();   
-        // Inicialización de variables para leer archivoExcel
-        panelExp = null;
-        panelImp = null;
-        
-        panelExp = new PanelExport(this,jPanel1);
-        panelImp = new PanelImport(this,jPanel1);
+
+        panelExp = new PanelExport(this,contenedor);
+        panelImp = new PanelImport(this,contenedor);
     }
     
     public static <T extends ElementoLista> void mostrarListaElementos(ArrayList<T> lista){
@@ -83,29 +78,26 @@ public class InterfazGrafica extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jPanel1 = new javax.swing.JPanel();
-        jPanel3 = new javax.swing.JPanel();
-        jPanel2 = new javax.swing.JPanel();
-        jLabel5 = new javax.swing.JLabel();
-        jLabel6 = new javax.swing.JLabel();
-        jLabel8 = new javax.swing.JLabel();
+        contenedor = new javax.swing.JPanel();
+        panelLogIn = new javax.swing.JPanel();
+        panelSesion = new javax.swing.JPanel();
+        labelUsuario = new javax.swing.JLabel();
+        labelServidor = new javax.swing.JLabel();
+        labelClave = new javax.swing.JLabel();
         txtUsuario = new javax.swing.JTextField();
         txtServidor = new javax.swing.JTextField();
         txtClave = new javax.swing.JPasswordField();
         btnConectar = new javax.swing.JButton();
-        jLabel1 = new javax.swing.JLabel();
+        tituloLogIn = new javax.swing.JLabel();
         jScrollPane3 = new javax.swing.JScrollPane();
         msj = new javax.swing.JTextArea();
-        jLabel13 = new javax.swing.JLabel();
-        jPanel4 = new javax.swing.JPanel();
-        jPanel5 = new javax.swing.JPanel();
+        imagenInicio = new javax.swing.JLabel();
+        panelSecundario = new javax.swing.JPanel();
+        menuLateral = new javax.swing.JPanel();
         modoExport = new javax.swing.JButton();
         modoImport = new javax.swing.JButton();
         btnSalir = new javax.swing.JButton();
-        jPanel7 = new javax.swing.JPanel();
-        panelExport = new javax.swing.JPanel();
-        jLabel7 = new javax.swing.JLabel();
-        panelImport = new javax.swing.JPanel();
+        panelContenido = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         addWindowListener(new java.awt.event.WindowAdapter() {
@@ -114,28 +106,28 @@ public class InterfazGrafica extends javax.swing.JFrame {
             }
         });
 
-        jPanel1.setLayout(new java.awt.CardLayout());
+        contenedor.setLayout(new java.awt.CardLayout());
 
-        jPanel3.setBackground(new java.awt.Color(255, 255, 255));
-        jPanel3.setForeground(new java.awt.Color(102, 102, 102));
+        panelLogIn.setBackground(new java.awt.Color(255, 255, 255));
+        panelLogIn.setForeground(new java.awt.Color(102, 102, 102));
 
-        jPanel2.setBackground(new java.awt.Color(51, 51, 51));
-        jPanel2.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 102, 102)));
-        jPanel2.setForeground(new java.awt.Color(255, 255, 255));
-        jPanel2.setMaximumSize(new java.awt.Dimension(265, 364));
-        jPanel2.setName(""); // NOI18N
+        panelSesion.setBackground(new java.awt.Color(51, 51, 51));
+        panelSesion.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 102, 102)));
+        panelSesion.setForeground(new java.awt.Color(255, 255, 255));
+        panelSesion.setMaximumSize(new java.awt.Dimension(265, 364));
+        panelSesion.setName(""); // NOI18N
 
-        jLabel5.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        jLabel5.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel5.setText("Nombre de usuario");
+        labelUsuario.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        labelUsuario.setForeground(new java.awt.Color(255, 255, 255));
+        labelUsuario.setText("Nombre de usuario");
 
-        jLabel6.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        jLabel6.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel6.setText("Dirección del servidor");
+        labelServidor.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        labelServidor.setForeground(new java.awt.Color(255, 255, 255));
+        labelServidor.setText("Dirección del servidor");
 
-        jLabel8.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        jLabel8.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel8.setText("Contraseña");
+        labelClave.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        labelClave.setForeground(new java.awt.Color(255, 255, 255));
+        labelClave.setText("Contraseña");
 
         txtUsuario.setText("root");
         txtUsuario.setAutoscrolls(false);
@@ -155,45 +147,45 @@ public class InterfazGrafica extends javax.swing.JFrame {
             }
         });
 
-        jLabel1.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
-        jLabel1.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel1.setText("Datos de conexión");
+        tituloLogIn.setFont(new java.awt.Font("Dialog", 1, 17)); // NOI18N
+        tituloLogIn.setForeground(new java.awt.Color(255, 255, 255));
+        tituloLogIn.setText("Datos de conexión");
 
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
+        javax.swing.GroupLayout panelSesionLayout = new javax.swing.GroupLayout(panelSesion);
+        panelSesion.setLayout(panelSesionLayout);
+        panelSesionLayout.setHorizontalGroup(
+            panelSesionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelSesionLayout.createSequentialGroup()
                 .addGap(25, 25, 25)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel6)
+                .addGroup(panelSesionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(labelClave, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(labelServidor)
                     .addComponent(btnConectar, javax.swing.GroupLayout.DEFAULT_SIZE, 210, Short.MAX_VALUE)
                     .addComponent(txtClave)
-                    .addComponent(jLabel5)
+                    .addComponent(labelUsuario)
                     .addComponent(txtServidor)
                     .addComponent(txtUsuario)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(tituloLogIn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap(28, Short.MAX_VALUE))
         );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
+        panelSesionLayout.setVerticalGroup(
+            panelSesionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelSesionLayout.createSequentialGroup()
                 .addGap(25, 25, 25)
-                .addComponent(jLabel1)
+                .addComponent(tituloLogIn)
                 .addGap(18, 18, 18)
-                .addComponent(jLabel6)
+                .addComponent(labelServidor)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(txtServidor, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(jLabel5)
+                .addComponent(labelUsuario)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(txtUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(jLabel8)
+                .addComponent(labelClave)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(txtClave, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 377, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 375, Short.MAX_VALUE)
                 .addComponent(btnConectar, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(25, 25, 25))
         );
@@ -210,40 +202,40 @@ public class InterfazGrafica extends javax.swing.JFrame {
         msj.setRequestFocusEnabled(false);
         jScrollPane3.setViewportView(msj);
 
-        jLabel13.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/panel.png"))); // NOI18N
+        imagenInicio.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/panel.png"))); // NOI18N
 
-        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
-        jPanel3.setLayout(jPanel3Layout);
-        jPanel3Layout.setHorizontalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel3Layout.createSequentialGroup()
-                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel3Layout.createSequentialGroup()
+        javax.swing.GroupLayout panelLogInLayout = new javax.swing.GroupLayout(panelLogIn);
+        panelLogIn.setLayout(panelLogInLayout);
+        panelLogInLayout.setHorizontalGroup(
+            panelLogInLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelLogInLayout.createSequentialGroup()
+                .addComponent(panelSesion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(panelLogInLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(panelLogInLayout.createSequentialGroup()
                         .addGap(12, 12, 12)
                         .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 732, Short.MAX_VALUE)
                         .addContainerGap())
-                    .addGroup(jPanel3Layout.createSequentialGroup()
+                    .addGroup(panelLogInLayout.createSequentialGroup()
                         .addGap(37, 37, 37)
-                        .addComponent(jLabel13))))
+                        .addComponent(imagenInicio))))
         );
-        jPanel3Layout.setVerticalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
+        panelLogInLayout.setVerticalGroup(
+            panelLogInLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(panelSesion, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelLogInLayout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jLabel13)
+                .addComponent(imagenInicio)
                 .addGap(47, 47, 47)
                 .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18))
+                .addGap(12, 12, 12))
         );
 
-        jPanel1.add(jPanel3, "card2");
+        contenedor.add(panelLogIn, "panelInicio");
 
-        jPanel4.setBackground(new java.awt.Color(152, 152, 152));
+        panelSecundario.setBackground(new java.awt.Color(152, 152, 152));
 
-        jPanel5.setBackground(new java.awt.Color(51, 51, 51));
-        jPanel5.setForeground(new java.awt.Color(255, 255, 255));
+        menuLateral.setBackground(new java.awt.Color(51, 51, 51));
+        menuLateral.setForeground(new java.awt.Color(255, 255, 255));
 
         modoExport.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/btn1.png"))); // NOI18N
         modoExport.setToolTipText("Convertir una base de datos en un archivo de Excel");
@@ -303,20 +295,20 @@ public class InterfazGrafica extends javax.swing.JFrame {
             }
         });
 
-        javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
-        jPanel5.setLayout(jPanel5Layout);
-        jPanel5Layout.setHorizontalGroup(
-            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
+        javax.swing.GroupLayout menuLateralLayout = new javax.swing.GroupLayout(menuLateral);
+        menuLateral.setLayout(menuLateralLayout);
+        menuLateralLayout.setHorizontalGroup(
+            menuLateralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, menuLateralLayout.createSequentialGroup()
                 .addGap(0, 6, Short.MAX_VALUE)
-                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addGroup(menuLateralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(modoImport, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(modoExport, javax.swing.GroupLayout.PREFERRED_SIZE, 66, javax.swing.GroupLayout.PREFERRED_SIZE)))
             .addComponent(btnSalir, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
         );
-        jPanel5Layout.setVerticalGroup(
-            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel5Layout.createSequentialGroup()
+        menuLateralLayout.setVerticalGroup(
+            menuLateralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(menuLateralLayout.createSequentialGroup()
                 .addGap(6, 6, 6)
                 .addComponent(modoExport)
                 .addGap(0, 0, 0)
@@ -326,88 +318,52 @@ public class InterfazGrafica extends javax.swing.JFrame {
                 .addGap(5, 5, 5))
         );
 
-        jPanel7.setBackground(new java.awt.Color(255, 255, 255));
-        jPanel7.setMaximumSize(new java.awt.Dimension(944, 600));
-        jPanel7.setLayout(new java.awt.CardLayout());
+        panelContenido.setBackground(new java.awt.Color(255, 255, 255));
+        panelContenido.setMaximumSize(new java.awt.Dimension(944, 600));
+        panelContenido.setLayout(new java.awt.CardLayout());
 
-        panelExport.setBackground(new java.awt.Color(255, 255, 255));
-
-        jLabel7.setFont(new java.awt.Font("Arial", 1, 18)); // NOI18N
-        jLabel7.setText("Exportar tablas de MySQL a Excel");
-
-        javax.swing.GroupLayout panelExportLayout = new javax.swing.GroupLayout(panelExport);
-        panelExport.setLayout(panelExportLayout);
-        panelExportLayout.setHorizontalGroup(
-            panelExportLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panelExportLayout.createSequentialGroup()
-                .addGap(36, 36, 36)
-                .addComponent(jLabel7)
-                .addContainerGap(605, Short.MAX_VALUE))
-        );
-        panelExportLayout.setVerticalGroup(
-            panelExportLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panelExportLayout.createSequentialGroup()
-                .addGap(30, 30, 30)
-                .addComponent(jLabel7)
-                .addGap(528, 528, 528))
-        );
-
-        jPanel7.add(panelExport, "cardExport");
-
-        panelImport.setBackground(new java.awt.Color(255, 255, 255));
-
-        javax.swing.GroupLayout panelImportLayout = new javax.swing.GroupLayout(panelImport);
-        panelImport.setLayout(panelImportLayout);
-        panelImportLayout.setHorizontalGroup(
-            panelImportLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 937, Short.MAX_VALUE)
-        );
-        panelImportLayout.setVerticalGroup(
-            panelImportLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 695, Short.MAX_VALUE)
-        );
-
-        jPanel7.add(panelImport, "cardImport");
-
-        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
-        jPanel4.setLayout(jPanel4Layout);
-        jPanel4Layout.setHorizontalGroup(
-            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel4Layout.createSequentialGroup()
-                .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+        javax.swing.GroupLayout panelSecundarioLayout = new javax.swing.GroupLayout(panelSecundario);
+        panelSecundario.setLayout(panelSecundarioLayout);
+        panelSecundarioLayout.setHorizontalGroup(
+            panelSecundarioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelSecundarioLayout.createSequentialGroup()
+                .addComponent(menuLateral, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jPanel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(panelContenido, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
-        jPanel4Layout.setVerticalGroup(
-            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-            .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        panelSecundarioLayout.setVerticalGroup(
+            panelSecundarioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(panelContenido, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(menuLateral, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
-        jPanel1.add(jPanel4, "pantallaSecundaria");
+        contenedor.add(panelSecundario, "pantallaSecundaria");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(contenedor, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(contenedor, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    /**
+     * 
+     * @param evt 
+     */
     private void btnSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalirActionPerformed
         Object []opciones = {"Aceptar","Cancelar"};
         new SwingWorker<Void,Void>(){
             @Override
             protected Void doInBackground() throws Exception { 
                 System.out.println(panelExp.consultarEstadoProceso());
-                if((panelExp.consultarEstadoProceso()==StateValue.STARTED)||(genBD.getState()==StateValue.STARTED)){
-                    System.out.println("========");
+                if((panelExp.consultarEstadoProceso()==StateValue.STARTED)||(panelImp.consultarEstadoProceso()==StateValue.STARTED)){
                     int eleccion = JOptionPane.showOptionDialog(
                         null,
                         "Hay procesos ejecutándose, ¿desea cerrar la conexión?  ",
@@ -416,13 +372,11 @@ public class InterfazGrafica extends javax.swing.JFrame {
                         JOptionPane.QUESTION_MESSAGE,null,opciones,"Aceptar"
                     );
                     if (eleccion == JOptionPane.YES_OPTION){ 
-                        //generadorArch.cancel(true);
                         panelExp.cancelarProceso();
-                        genBD.cancel(true);
+                        panelImp.cancelarProceso();
                         terminarConexion();             
                     }
                 }else{
-                    System.out.println("........");
                     terminarConexion();
                 }
                 return null;
@@ -431,16 +385,16 @@ public class InterfazGrafica extends javax.swing.JFrame {
     }//GEN-LAST:event_btnSalirActionPerformed
     
     private void terminarConexion(){
-        cardLayout.show(jPanel1, "card2");  
+        cardLayout.show(contenedor, "panelInicio");  
         conn.terminarConexion();
         reiniciarCamposInicio();
         modo = 1;
         modoExport.setIcon(new ImageIcon(getClass().getResource("/imagenes/btn1.png")));
         modoImport.setIcon(new ImageIcon(getClass().getResource("/imagenes/btn2.png")));
         //panelExp.reiniciarElementosExportacion();
-        panelExp = null;
-        //reiniciarElementosImportacion();
-        panelImp = null;
+        //panelExp = null;
+        panelImp.reiniciarPantalla(true);
+        //panelImp = null;
     }
     
     /**
@@ -512,12 +466,11 @@ public class InterfazGrafica extends javax.swing.JFrame {
      */
     private void modoExportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_modoExportActionPerformed
         modo = EXP;
-        //cardLayout2.show(jPanel7, "cardExport");
-        jPanel7.removeAll();
-        jPanel7.add(panelExp);
-        jPanel7.revalidate();
-        jPanel7.repaint();
-        jPanel4.setBackground(new Color(153,153,153));
+        panelSecundario.setBackground(new Color(153,153,153));
+        panelContenido.removeAll();
+        panelContenido.add(panelExp);
+        panelContenido.revalidate();
+        panelContenido.repaint();
     }//GEN-LAST:event_modoExportActionPerformed
 
     /**
@@ -528,12 +481,11 @@ public class InterfazGrafica extends javax.swing.JFrame {
      */
     private void modoImportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_modoImportActionPerformed
         modo = IMP;
-        //cardLayout2.show(jPanel7, "cardImport");
-        jPanel4.setBackground(new Color(104,104,104));
-        jPanel7.removeAll();
-        jPanel7.add(panelImp);
-        jPanel7.revalidate();
-        jPanel7.repaint();
+        panelSecundario.setBackground(new Color(104,104,104));
+        panelContenido.removeAll();
+        panelContenido.add(panelImp);
+        panelContenido.revalidate();
+        panelContenido.repaint();
     }//GEN-LAST:event_modoImportActionPerformed
 
     /**
@@ -608,11 +560,11 @@ public class InterfazGrafica extends javax.swing.JFrame {
                     conn = new Conexion(servidor,usuario,clave); // Conectar con el servidor
                     panelImp.definirConexion(conn);
                     panelExp.cargarListaDeBases(conn);
-                    jPanel7.removeAll();
-                    jPanel7.add(panelExp);
-                    jPanel7.revalidate();
-                    jPanel7.repaint();
-                    cardLayout.show(jPanel1, "pantallaSecundaria"); // cambiar a la pantalla de exportación
+                    panelContenido.removeAll();
+                    panelContenido.add(panelExp);
+                    panelContenido.revalidate();
+                    panelContenido.repaint();
+                    cardLayout.show(contenedor, "pantallaSecundaria"); // cambiar a la pantalla de exportación
                 }catch(SQLException sqle){
                     mensaje += "\nFalló el intento de conexión. "
                     + "\nError MySQL " + sqle.getErrorCode()+": "+sqle.getMessage()+".";
@@ -639,7 +591,7 @@ public class InterfazGrafica extends javax.swing.JFrame {
      * programa.
      */
     private void cerrarVentana(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_cerrarVentana
-        Object [] opciones ={"Aceptar","Cancelar"};
+        Object []opciones ={"Aceptar","Cancelar"};
         if((panelExp.consultarEstadoProceso()==StateValue.STARTED)||(panelImp.consultarEstadoProceso()==StateValue.STARTED)){    
             int eleccion = JOptionPane.showOptionDialog(
                 this,
@@ -687,24 +639,21 @@ public class InterfazGrafica extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnConectar;
     private javax.swing.JButton btnSalir;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel13;
-    private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel7;
-    private javax.swing.JLabel jLabel8;
-    private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel2;
-    private javax.swing.JPanel jPanel3;
-    private javax.swing.JPanel jPanel4;
-    private javax.swing.JPanel jPanel5;
-    private javax.swing.JPanel jPanel7;
+    private javax.swing.JPanel contenedor;
+    private javax.swing.JLabel imagenInicio;
     private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JLabel labelClave;
+    private javax.swing.JLabel labelServidor;
+    private javax.swing.JLabel labelUsuario;
+    private javax.swing.JPanel menuLateral;
     private javax.swing.JButton modoExport;
     private javax.swing.JButton modoImport;
     private javax.swing.JTextArea msj;
-    private javax.swing.JPanel panelExport;
-    private javax.swing.JPanel panelImport;
+    private javax.swing.JPanel panelContenido;
+    private javax.swing.JPanel panelLogIn;
+    private javax.swing.JPanel panelSecundario;
+    private javax.swing.JPanel panelSesion;
+    private javax.swing.JLabel tituloLogIn;
     private javax.swing.JPasswordField txtClave;
     private javax.swing.JTextField txtServidor;
     private javax.swing.JTextField txtUsuario;
