@@ -1,6 +1,6 @@
 package interfaz;
 
-import conexion.Conexion;
+import bd.Conexion;
 import datos.ElementoLista;
 import excel.GeneradorExcel;
 import formatoTablas.FormatoTabla;
@@ -70,11 +70,11 @@ public class PanelExport extends javax.swing.JPanel {
         comboBases = new javax.swing.JComboBox();
         jScrollPane1 = new javax.swing.JScrollPane();
         tabla = new javax.swing.JTable();
-        jLabel2 = new javax.swing.JLabel();
+        tituloBase = new javax.swing.JLabel();
         comboTablas = new javax.swing.JComboBox();
-        jLabel3 = new javax.swing.JLabel();
-        jPanel10 = new javax.swing.JPanel();
-        jPanel11 = new javax.swing.JPanel();
+        tituloTabla = new javax.swing.JLabel();
+        panelOpciones = new javax.swing.JPanel();
+        contenedorLista = new javax.swing.JPanel();
         jScrollPaneSel = new javax.swing.JScrollPane();
         jListTablas = new javax.swing.JList();
         btnQuitar = new javax.swing.JButton();
@@ -84,13 +84,13 @@ public class PanelExport extends javax.swing.JPanel {
         btnExportar = new javax.swing.JButton();
         barraProgreso = new javax.swing.JProgressBar();
         labelInfo = new javax.swing.JLabel();
-        jLabel7 = new javax.swing.JLabel();
-        jPanel8 = new javax.swing.JPanel();
+        titulo = new javax.swing.JLabel();
+        panelBtnAgregar = new javax.swing.JPanel();
         btnAgregarTabla = new javax.swing.JButton();
-        jLabel4 = new javax.swing.JLabel();
-        jPanel14 = new javax.swing.JPanel();
+        tituloOpciones = new javax.swing.JLabel();
+        panelRegistros = new javax.swing.JPanel();
         labelRegistros = new javax.swing.JLabel();
-        jSeparator1 = new javax.swing.JSeparator();
+        separador = new javax.swing.JSeparator();
 
         panelExport.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -124,8 +124,8 @@ public class PanelExport extends javax.swing.JPanel {
         tabla.getTableHeader().setReorderingAllowed(false);
         jScrollPane1.setViewportView(tabla);
 
-        jLabel2.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
-        jLabel2.setText("Base de datos");
+        tituloBase.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        tituloBase.setText("Base de datos");
 
         comboTablas.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
@@ -133,10 +133,10 @@ public class PanelExport extends javax.swing.JPanel {
             }
         });
 
-        jLabel3.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
-        jLabel3.setText("Tablas");
+        tituloTabla.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        tituloTabla.setText("Tablas");
 
-        jPanel10.setBackground(new java.awt.Color(255, 255, 255));
+        panelOpciones.setBackground(new java.awt.Color(255, 255, 255));
 
         jScrollPaneSel.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         jScrollPaneSel.setEnabled(false);
@@ -147,17 +147,17 @@ public class PanelExport extends javax.swing.JPanel {
         jListTablas.setSelectionForeground(new java.awt.Color(255, 255, 255));
         jScrollPaneSel.setViewportView(jListTablas);
 
-        javax.swing.GroupLayout jPanel11Layout = new javax.swing.GroupLayout(jPanel11);
-        jPanel11.setLayout(jPanel11Layout);
-        jPanel11Layout.setHorizontalGroup(
-            jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel11Layout.createSequentialGroup()
+        javax.swing.GroupLayout contenedorListaLayout = new javax.swing.GroupLayout(contenedorLista);
+        contenedorLista.setLayout(contenedorListaLayout);
+        contenedorListaLayout.setHorizontalGroup(
+            contenedorListaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(contenedorListaLayout.createSequentialGroup()
                 .addGap(0, 0, 0)
                 .addComponent(jScrollPaneSel)
                 .addGap(0, 0, 0))
         );
-        jPanel11Layout.setVerticalGroup(
-            jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        contenedorListaLayout.setVerticalGroup(
+            contenedorListaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jScrollPaneSel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 282, Short.MAX_VALUE)
         );
 
@@ -196,34 +196,34 @@ public class PanelExport extends javax.swing.JPanel {
             }
         });
 
-        javax.swing.GroupLayout jPanel10Layout = new javax.swing.GroupLayout(jPanel10);
-        jPanel10.setLayout(jPanel10Layout);
-        jPanel10Layout.setHorizontalGroup(
-            jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel10Layout.createSequentialGroup()
+        javax.swing.GroupLayout panelOpcionesLayout = new javax.swing.GroupLayout(panelOpciones);
+        panelOpciones.setLayout(panelOpcionesLayout);
+        panelOpcionesLayout.setHorizontalGroup(
+            panelOpcionesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelOpcionesLayout.createSequentialGroup()
                 .addGap(0, 0, 0)
-                .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel11, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(jPanel10Layout.createSequentialGroup()
+                .addGroup(panelOpcionesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(contenedorLista, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(panelOpcionesLayout.createSequentialGroup()
                         .addComponent(btnBorrar, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(btnQuitar, javax.swing.GroupLayout.DEFAULT_SIZE, 134, Short.MAX_VALUE))
-                    .addGroup(jPanel10Layout.createSequentialGroup()
-                        .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(panelOpcionesLayout.createSequentialGroup()
+                        .addGroup(panelOpcionesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(opcTablasCompletas)
                             .addComponent(opTablasSel))
                         .addGap(0, 0, Short.MAX_VALUE))))
         );
-        jPanel10Layout.setVerticalGroup(
-            jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel10Layout.createSequentialGroup()
+        panelOpcionesLayout.setVerticalGroup(
+            panelOpcionesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelOpcionesLayout.createSequentialGroup()
                 .addComponent(opcTablasCompletas)
                 .addGap(0, 0, 0)
                 .addComponent(opTablasSel)
                 .addGap(0, 0, 0)
-                .addComponent(jPanel11, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(contenedorLista, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(panelOpcionesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnQuitar)
                     .addComponent(btnBorrar))
                 .addGap(0, 0, 0))
@@ -244,8 +244,8 @@ public class PanelExport extends javax.swing.JPanel {
         labelInfo.setBackground(new java.awt.Color(255, 255, 255));
         labelInfo.setText("Progreso de exportación");
 
-        jLabel7.setFont(new java.awt.Font("Arial", 1, 18)); // NOI18N
-        jLabel7.setText("Exportar tablas de MySQL a Excel");
+        titulo.setFont(new java.awt.Font("Arial", 1, 18)); // NOI18N
+        titulo.setText("Exportar tablas de MySQL a Excel");
 
         btnAgregarTabla.setText("Seleccionar tabla");
         btnAgregarTabla.setEnabled(false);
@@ -255,37 +255,37 @@ public class PanelExport extends javax.swing.JPanel {
             }
         });
 
-        javax.swing.GroupLayout jPanel8Layout = new javax.swing.GroupLayout(jPanel8);
-        jPanel8.setLayout(jPanel8Layout);
-        jPanel8Layout.setHorizontalGroup(
-            jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel8Layout.createSequentialGroup()
+        javax.swing.GroupLayout panelBtnAgregarLayout = new javax.swing.GroupLayout(panelBtnAgregar);
+        panelBtnAgregar.setLayout(panelBtnAgregarLayout);
+        panelBtnAgregarLayout.setHorizontalGroup(
+            panelBtnAgregarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelBtnAgregarLayout.createSequentialGroup()
                 .addComponent(btnAgregarTabla)
                 .addContainerGap(243, Short.MAX_VALUE))
         );
-        jPanel8Layout.setVerticalGroup(
-            jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        panelBtnAgregarLayout.setVerticalGroup(
+            panelBtnAgregarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(btnAgregarTabla)
         );
 
-        jLabel4.setFont(new java.awt.Font("Dialog", 1, 13)); // NOI18N
-        jLabel4.setText("Opciones de exportación");
+        tituloOpciones.setFont(new java.awt.Font("Dialog", 1, 13)); // NOI18N
+        tituloOpciones.setText("Opciones de exportación");
 
         labelRegistros.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         labelRegistros.setText("Buscando registros...");
 
-        javax.swing.GroupLayout jPanel14Layout = new javax.swing.GroupLayout(jPanel14);
-        jPanel14.setLayout(jPanel14Layout);
-        jPanel14Layout.setHorizontalGroup(
-            jPanel14Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel14Layout.createSequentialGroup()
+        javax.swing.GroupLayout panelRegistrosLayout = new javax.swing.GroupLayout(panelRegistros);
+        panelRegistros.setLayout(panelRegistrosLayout);
+        panelRegistrosLayout.setHorizontalGroup(
+            panelRegistrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelRegistrosLayout.createSequentialGroup()
                 .addContainerGap(28, Short.MAX_VALUE)
                 .addComponent(labelRegistros, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
-        jPanel14Layout.setVerticalGroup(
-            jPanel14Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel14Layout.createSequentialGroup()
+        panelRegistrosLayout.setVerticalGroup(
+            panelRegistrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelRegistrosLayout.createSequentialGroup()
                 .addGap(0, 0, Short.MAX_VALUE)
                 .addComponent(labelRegistros, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
@@ -295,7 +295,7 @@ public class PanelExport extends javax.swing.JPanel {
         panelExportLayout.setHorizontalGroup(
             panelExportLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelExportLayout.createSequentialGroup()
-                .addGap(36, 36, 36)
+                .addGap(34, 34, 34)
                 .addGroup(panelExportLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(panelExportLayout.createSequentialGroup()
                         .addGroup(panelExportLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -303,23 +303,23 @@ public class PanelExport extends javax.swing.JPanel {
                                 .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING)
                                 .addGroup(panelExportLayout.createSequentialGroup()
                                     .addGroup(panelExportLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(jLabel2)
-                                        .addComponent(jLabel3))
+                                        .addComponent(tituloBase)
+                                        .addComponent(tituloTabla))
                                     .addGap(61, 61, 61)
                                     .addGroup(panelExportLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                         .addComponent(comboBases, 0, 357, Short.MAX_VALUE)
                                         .addComponent(comboTablas, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                                 .addGroup(panelExportLayout.createSequentialGroup()
-                                    .addComponent(jPanel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(panelBtnAgregar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                     .addGap(0, 0, 0)
-                                    .addComponent(jPanel14, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                            .addComponent(jLabel7))
+                                    .addComponent(panelRegistros, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(titulo))
                         .addGap(24, 24, 24)
                         .addGroup(panelExportLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jLabel4)
+                            .addComponent(tituloOpciones)
                             .addComponent(btnExportar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jPanel10, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                    .addComponent(jSeparator1, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(panelOpciones, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addComponent(separador, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(barraProgreso, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(panelExportLayout.createSequentialGroup()
                         .addGap(2, 2, 2)
@@ -331,28 +331,28 @@ public class PanelExport extends javax.swing.JPanel {
             .addGroup(panelExportLayout.createSequentialGroup()
                 .addGap(30, 30, 30)
                 .addGroup(panelExportLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel7)
-                    .addComponent(jLabel4))
+                    .addComponent(titulo)
+                    .addComponent(tituloOpciones))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelExportLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(panelExportLayout.createSequentialGroup()
                         .addGroup(panelExportLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(comboBases, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel2))
+                            .addComponent(tituloBase))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(panelExportLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel3)
+                            .addComponent(tituloTabla)
                             .addComponent(comboTablas, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 294, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jPanel10, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(panelOpciones, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelExportLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(panelBtnAgregar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnExportar)
-                    .addComponent(jPanel14, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(panelRegistros, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(26, 26, 26)
-                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 4, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(separador, javax.swing.GroupLayout.PREFERRED_SIZE, 4, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, 0)
                 .addComponent(labelInfo, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, 0)
@@ -618,7 +618,6 @@ public class PanelExport extends javax.swing.JPanel {
      */
     private void btnExportarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExportarActionPerformed
         if(generadorArch.getState()==StateValue.STARTED){
-            btnExportar.setEnabled(false);
             generadorArch.cancel(true); // cancelar la ejecución del swingWorker
             labelInfo.setText("Cancelando la exportación de la base de datos...");
         }else{ // StateValue.PENDING || StateValue.DONE
@@ -661,7 +660,8 @@ public class PanelExport extends javax.swing.JPanel {
         try {
             String nombreBD = comboBases.getSelectedItem().toString(); 
             // Crear una nueva conexión que se encargará de obtener los datos de la BD
-            Conexion con2 = new Conexion(conn.getServidor(),conn.getUsr(),conn.getPasswd());
+            //Conexion con2 = new Conexion(conn.getServidor(),conn.getUsr(),conn.getPasswd());
+            Conexion con2 = conn.crearNuevaConexion();
             if(opcTablasCompletas.isSelected()){
                 lista = listaElementos; 
             }else{
@@ -676,7 +676,7 @@ public class PanelExport extends javax.swing.JPanel {
             SelectorGuarda sg = new SelectorGuarda(new File(directorio+"\\"+nombreBD+".xlsx"),generadorArch);
             sg.showSaveDialog(panel);
         } catch (ClassNotFoundException ex) {
-            labelInfo.setText("nNo se pudo encontar la librería mysql-conector-java...");
+            labelInfo.setText("No se pudo encontar la librería mysql-conector-java...");
         } catch (SQLException ex) {
             labelInfo.setText("No se pudo cargar la información del servidor "
             + "(Error MySQL " + ex.getErrorCode() + ": " + ex.getMessage() + ".");
@@ -716,7 +716,7 @@ public class PanelExport extends javax.swing.JPanel {
      * @return valor booleano que indica si el proceso puede ser cancelado o no.
      */
     public boolean cancelarProceso(){
-        return generadorArch.cancel(cambioCancelado);
+        return generadorArch.cancel(true);
     }
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -727,24 +727,24 @@ public class PanelExport extends javax.swing.JPanel {
     private javax.swing.JButton btnQuitar;
     private javax.swing.JComboBox comboBases;
     private javax.swing.JComboBox comboTablas;
+    private javax.swing.JPanel contenedorLista;
     private javax.swing.ButtonGroup grupoOpc;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel7;
     private javax.swing.JList jListTablas;
-    private javax.swing.JPanel jPanel10;
-    private javax.swing.JPanel jPanel11;
-    private javax.swing.JPanel jPanel14;
-    private javax.swing.JPanel jPanel8;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPaneSel;
-    private javax.swing.JSeparator jSeparator1;
     private javax.swing.JLabel labelInfo;
     private javax.swing.JLabel labelRegistros;
     private javax.swing.JRadioButton opTablasSel;
     private javax.swing.JRadioButton opcTablasCompletas;
+    private javax.swing.JPanel panelBtnAgregar;
     private javax.swing.JPanel panelExport;
+    private javax.swing.JPanel panelOpciones;
+    private javax.swing.JPanel panelRegistros;
+    private javax.swing.JSeparator separador;
     private javax.swing.JTable tabla;
+    private javax.swing.JLabel titulo;
+    private javax.swing.JLabel tituloBase;
+    private javax.swing.JLabel tituloOpciones;
+    private javax.swing.JLabel tituloTabla;
     // End of variables declaration//GEN-END:variables
 }
