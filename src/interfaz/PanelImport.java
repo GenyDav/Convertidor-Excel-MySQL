@@ -95,11 +95,11 @@ public class PanelImport extends javax.swing.JPanel {
         panelImport = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
         tablaExcel = new javax.swing.JTable();
-        jLabel9 = new javax.swing.JLabel();
+        tituloArchivo = new javax.swing.JLabel();
         comboHojas = new javax.swing.JComboBox();
-        jLabel10 = new javax.swing.JLabel();
-        jPanel12 = new javax.swing.JPanel();
-        jPanel13 = new javax.swing.JPanel();
+        tituloHojas = new javax.swing.JLabel();
+        panelOpciones = new javax.swing.JPanel();
+        panelContenedorLista = new javax.swing.JPanel();
         jScrollPaneSel1 = new javax.swing.JScrollPane();
         jListHojas = new javax.swing.JList();
         btnQuitar = new javax.swing.JButton();
@@ -109,13 +109,12 @@ public class PanelImport extends javax.swing.JPanel {
         btnImportar = new javax.swing.JButton();
         barraProgreso = new javax.swing.JProgressBar();
         infoImport = new javax.swing.JLabel();
-        jLabel11 = new javax.swing.JLabel();
-        jPanel9 = new javax.swing.JPanel();
-        btnAgregarHoja = new javax.swing.JButton();
-        jLabel12 = new javax.swing.JLabel();
-        jPanel15 = new javax.swing.JPanel();
+        titulo = new javax.swing.JLabel();
+        tituloOpciones = new javax.swing.JLabel();
+        panelnferiorTabla = new javax.swing.JPanel();
         labelRegExcel = new javax.swing.JLabel();
-        jSeparator2 = new javax.swing.JSeparator();
+        btnAgregarHoja = new javax.swing.JButton();
+        separador = new javax.swing.JSeparator();
         btnAbrir = new javax.swing.JButton();
         btnTipos = new javax.swing.JButton();
         labelArchivo = new javax.swing.JLabel();
@@ -139,8 +138,8 @@ public class PanelImport extends javax.swing.JPanel {
         tablaExcel.getTableHeader().setReorderingAllowed(false);
         jScrollPane2.setViewportView(tablaExcel);
 
-        jLabel9.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
-        jLabel9.setText("Archivo seleccionado");
+        tituloArchivo.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        tituloArchivo.setText("Archivo seleccionado");
 
         comboHojas.setEnabled(false);
         comboHojas.addItemListener(new java.awt.event.ItemListener() {
@@ -149,10 +148,10 @@ public class PanelImport extends javax.swing.JPanel {
             }
         });
 
-        jLabel10.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
-        jLabel10.setText("Hojas");
+        tituloHojas.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        tituloHojas.setText("Hojas");
 
-        jPanel12.setBackground(new java.awt.Color(255, 255, 255));
+        panelOpciones.setBackground(new java.awt.Color(255, 255, 255));
 
         jScrollPaneSel1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         jScrollPaneSel1.setEnabled(false);
@@ -164,17 +163,17 @@ public class PanelImport extends javax.swing.JPanel {
         jListHojas.setSelectionForeground(new java.awt.Color(255, 255, 255));
         jScrollPaneSel1.setViewportView(jListHojas);
 
-        javax.swing.GroupLayout jPanel13Layout = new javax.swing.GroupLayout(jPanel13);
-        jPanel13.setLayout(jPanel13Layout);
-        jPanel13Layout.setHorizontalGroup(
-            jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel13Layout.createSequentialGroup()
+        javax.swing.GroupLayout panelContenedorListaLayout = new javax.swing.GroupLayout(panelContenedorLista);
+        panelContenedorLista.setLayout(panelContenedorListaLayout);
+        panelContenedorListaLayout.setHorizontalGroup(
+            panelContenedorListaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelContenedorListaLayout.createSequentialGroup()
                 .addGap(0, 0, 0)
                 .addComponent(jScrollPaneSel1)
                 .addGap(0, 0, 0))
         );
-        jPanel13Layout.setVerticalGroup(
-            jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        panelContenedorListaLayout.setVerticalGroup(
+            panelContenedorListaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jScrollPaneSel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 282, Short.MAX_VALUE)
         );
 
@@ -215,34 +214,34 @@ public class PanelImport extends javax.swing.JPanel {
             }
         });
 
-        javax.swing.GroupLayout jPanel12Layout = new javax.swing.GroupLayout(jPanel12);
-        jPanel12.setLayout(jPanel12Layout);
-        jPanel12Layout.setHorizontalGroup(
-            jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel12Layout.createSequentialGroup()
+        javax.swing.GroupLayout panelOpcionesLayout = new javax.swing.GroupLayout(panelOpciones);
+        panelOpciones.setLayout(panelOpcionesLayout);
+        panelOpcionesLayout.setHorizontalGroup(
+            panelOpcionesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelOpcionesLayout.createSequentialGroup()
                 .addGap(0, 0, 0)
-                .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel13, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(jPanel12Layout.createSequentialGroup()
+                .addGroup(panelOpcionesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(panelContenedorLista, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(panelOpcionesLayout.createSequentialGroup()
                         .addComponent(btnBorrar, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(btnQuitar, javax.swing.GroupLayout.DEFAULT_SIZE, 134, Short.MAX_VALUE))
-                    .addGroup(jPanel12Layout.createSequentialGroup()
-                        .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(panelOpcionesLayout.createSequentialGroup()
+                        .addGroup(panelOpcionesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(opcHojasCompletas)
                             .addComponent(opcHojasSel))
                         .addGap(0, 0, Short.MAX_VALUE))))
         );
-        jPanel12Layout.setVerticalGroup(
-            jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel12Layout.createSequentialGroup()
+        panelOpcionesLayout.setVerticalGroup(
+            panelOpcionesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelOpcionesLayout.createSequentialGroup()
                 .addComponent(opcHojasCompletas)
                 .addGap(0, 0, 0)
                 .addComponent(opcHojasSel)
                 .addGap(0, 0, 0)
-                .addComponent(jPanel13, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(panelContenedorLista, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(panelOpcionesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnQuitar)
                     .addComponent(btnBorrar))
                 .addGap(0, 0, 0))
@@ -264,8 +263,14 @@ public class PanelImport extends javax.swing.JPanel {
         infoImport.setBackground(new java.awt.Color(255, 255, 255));
         infoImport.setText("Progreso de importación");
 
-        jLabel11.setFont(new java.awt.Font("Arial", 1, 18)); // NOI18N
-        jLabel11.setText("Crear base de datos a partir de archivo Excel");
+        titulo.setFont(new java.awt.Font("Arial", 1, 18)); // NOI18N
+        titulo.setText("Crear base de datos a partir de archivo Excel");
+
+        tituloOpciones.setFont(new java.awt.Font("Dialog", 1, 13)); // NOI18N
+        tituloOpciones.setText("Opciones de importación");
+
+        labelRegExcel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        labelRegExcel.setText("Seleccione un archivo");
 
         btnAgregarHoja.setText("Seleccionar hoja");
         btnAgregarHoja.setEnabled(false);
@@ -275,38 +280,24 @@ public class PanelImport extends javax.swing.JPanel {
             }
         });
 
-        javax.swing.GroupLayout jPanel9Layout = new javax.swing.GroupLayout(jPanel9);
-        jPanel9.setLayout(jPanel9Layout);
-        jPanel9Layout.setHorizontalGroup(
-            jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel9Layout.createSequentialGroup()
+        javax.swing.GroupLayout panelnferiorTablaLayout = new javax.swing.GroupLayout(panelnferiorTabla);
+        panelnferiorTabla.setLayout(panelnferiorTablaLayout);
+        panelnferiorTablaLayout.setHorizontalGroup(
+            panelnferiorTablaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelnferiorTablaLayout.createSequentialGroup()
+                .addContainerGap()
                 .addComponent(btnAgregarHoja)
-                .addContainerGap(243, Short.MAX_VALUE))
-        );
-        jPanel9Layout.setVerticalGroup(
-            jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(btnAgregarHoja)
-        );
-
-        jLabel12.setFont(new java.awt.Font("Dialog", 1, 13)); // NOI18N
-        jLabel12.setText("Opciones de importación");
-
-        labelRegExcel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        labelRegExcel.setText("Seleccione un archivo");
-
-        javax.swing.GroupLayout jPanel15Layout = new javax.swing.GroupLayout(jPanel15);
-        jPanel15.setLayout(jPanel15Layout);
-        jPanel15Layout.setHorizontalGroup(
-            jPanel15Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel15Layout.createSequentialGroup()
-                .addComponent(labelRegExcel, javax.swing.GroupLayout.DEFAULT_SIZE, 161, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(labelRegExcel, javax.swing.GroupLayout.PREFERRED_SIZE, 384, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
-        jPanel15Layout.setVerticalGroup(
-            jPanel15Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel15Layout.createSequentialGroup()
+        panelnferiorTablaLayout.setVerticalGroup(
+            panelnferiorTablaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelnferiorTablaLayout.createSequentialGroup()
                 .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(labelRegExcel, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(panelnferiorTablaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(labelRegExcel, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnAgregarHoja)))
         );
 
         btnAbrir.setText("Abrir archivo");
@@ -345,15 +336,12 @@ public class PanelImport extends javax.swing.JPanel {
                 .addGroup(panelImportLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(panelImportLayout.createSequentialGroup()
                         .addGroup(panelImportLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addGroup(panelImportLayout.createSequentialGroup()
-                                .addComponent(jPanel9, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addGap(0, 0, 0)
-                                .addComponent(jPanel15, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(jLabel11)
+                            .addComponent(panelnferiorTabla, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(titulo)
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelImportLayout.createSequentialGroup()
                                 .addGroup(panelImportLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel9)
-                                    .addComponent(jLabel10))
+                                    .addComponent(tituloArchivo)
+                                    .addComponent(tituloHojas))
                                 .addGap(10, 10, 10)
                                 .addGroup(panelImportLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(comboHojas, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -365,10 +353,10 @@ public class PanelImport extends javax.swing.JPanel {
                             .addComponent(jScrollPane2))
                         .addGap(27, 27, 27)
                         .addGroup(panelImportLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jLabel12)
+                            .addComponent(tituloOpciones)
                             .addComponent(btnImportar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jPanel12, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                    .addComponent(jSeparator2, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(panelOpciones, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addComponent(separador, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(panelImportLayout.createSequentialGroup()
                         .addGap(2, 2, 2)
                         .addComponent(infoImport, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -383,13 +371,13 @@ public class PanelImport extends javax.swing.JPanel {
             .addGroup(panelImportLayout.createSequentialGroup()
                 .addGap(30, 30, 30)
                 .addGroup(panelImportLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel11)
-                    .addComponent(jLabel12))
+                    .addComponent(titulo)
+                    .addComponent(tituloOpciones))
                 .addGap(6, 6, 6)
                 .addGroup(panelImportLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(panelImportLayout.createSequentialGroup()
                         .addGroup(panelImportLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel9)
+                            .addComponent(tituloArchivo)
                             .addComponent(labelArchivo, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(btnAbrir, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -399,20 +387,19 @@ public class PanelImport extends javax.swing.JPanel {
                                 .addGap(9, 9, 9))
                             .addGroup(panelImportLayout.createSequentialGroup()
                                 .addGroup(panelImportLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel10)
+                                    .addComponent(tituloHojas)
                                     .addGroup(panelImportLayout.createSequentialGroup()
                                         .addGap(1, 1, 1)
                                         .addComponent(comboHojas, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
                         .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 294, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jPanel12, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(panelOpciones, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelImportLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel9, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnImportar)
-                    .addComponent(jPanel15, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(panelnferiorTabla, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(24, 24, 24)
-                .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 4, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(separador, javax.swing.GroupLayout.PREFERRED_SIZE, 4, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, 0)
                 .addComponent(infoImport, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, 0)
@@ -426,7 +413,7 @@ public class PanelImport extends javax.swing.JPanel {
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 937, Short.MAX_VALUE)
+            .addGap(0, 941, Short.MAX_VALUE)
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(layout.createSequentialGroup()
                     .addGap(0, 0, Short.MAX_VALUE)
@@ -694,13 +681,13 @@ public class PanelImport extends javax.swing.JPanel {
                 rutaArch = sa.getSelectedFile().getPath();
                 File archivo = new File(rutaArch);
                 if(archivo.length()==0){
-                    limpiarPantallaImportacion(true);
+                    reiniciarPantalla(true);
                     JOptionPane.showMessageDialog(
                         this, nomArch+"\nEl archivo no tiene información.  ",
                         "No se puede leer el archivo", JOptionPane.WARNING_MESSAGE
                     );
                 }else{
-                    limpiarPantallaImportacion(false);
+                    reiniciarPantalla(false);
                     lector = new LectorExcel(ventana, this);
                     lector.execute();
                 }
@@ -717,7 +704,7 @@ public class PanelImport extends javax.swing.JPanel {
      * @param estadoBtnAbrir Booleano que indica si el botón para cargar un
      * archivo nuevo debe permanecer habilitado o deshabilitado.
      */
-    private void limpiarPantallaImportacion(boolean estadoBtnAbrir){
+    public void reiniciarPantalla(boolean estadoBtnAbrir){
         btnAbrir.setEnabled(estadoBtnAbrir);
         labelArchivo.setText("");
         comboHojas.removeAllItems();
@@ -729,7 +716,7 @@ public class PanelImport extends javax.swing.JPanel {
         tablaExcel.setModel(new DefaultTableModel());
         btnAgregarHoja.setEnabled(false);
         labelRegExcel.setText("Seleccione un archivo"); 
-        //modeloListaExcel.clear();
+        modeloLista.clear();
         btnBorrar.setEnabled(false);
         btnQuitar.setEnabled(false);
         btnImportar.setEnabled(false);
@@ -751,6 +738,14 @@ public class PanelImport extends javax.swing.JPanel {
      */
     public StateValue consultarEstadoProceso(){
         return genBD.getState();
+    }
+    
+    /**
+     * Método que interrumpe la creación de la base de datos.
+     * @return valor booleano que indica si el proceso puede ser cancelado o no.
+     */
+    public boolean cancelarProceso(){
+        return genBD.cancel(true);
     }
     
     /**
@@ -924,23 +919,22 @@ public class PanelImport extends javax.swing.JPanel {
     private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JComboBox comboHojas;
     private javax.swing.JLabel infoImport;
-    private javax.swing.JLabel jLabel10;
-    private javax.swing.JLabel jLabel11;
-    private javax.swing.JLabel jLabel12;
-    private javax.swing.JLabel jLabel9;
     private javax.swing.JList jListHojas;
-    private javax.swing.JPanel jPanel12;
-    private javax.swing.JPanel jPanel13;
-    private javax.swing.JPanel jPanel15;
-    private javax.swing.JPanel jPanel9;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPaneSel1;
-    private javax.swing.JSeparator jSeparator2;
     private javax.swing.JLabel labelArchivo;
     private javax.swing.JLabel labelRegExcel;
     private javax.swing.JRadioButton opcHojasCompletas;
     private javax.swing.JRadioButton opcHojasSel;
+    private javax.swing.JPanel panelContenedorLista;
     private javax.swing.JPanel panelImport;
+    private javax.swing.JPanel panelOpciones;
+    private javax.swing.JPanel panelnferiorTabla;
+    private javax.swing.JSeparator separador;
     private javax.swing.JTable tablaExcel;
+    private javax.swing.JLabel titulo;
+    private javax.swing.JLabel tituloArchivo;
+    private javax.swing.JLabel tituloHojas;
+    private javax.swing.JLabel tituloOpciones;
     // End of variables declaration//GEN-END:variables
 }
