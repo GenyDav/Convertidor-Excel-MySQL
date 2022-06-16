@@ -12,9 +12,12 @@ import java.util.List;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import javax.swing.DefaultListModel;
+import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JProgressBar;
 import javax.swing.SwingWorker.StateValue;
 import javax.swing.filechooser.FileSystemView;
 import javax.swing.table.DefaultTableModel;
@@ -36,6 +39,7 @@ public class PanelExport extends javax.swing.JPanel {
     private GeneradorExcel generadorArch;
     private Conexion conn;
     private FormatoTabla formato;   // formato de la tabla en donde se muestran los datos
+    private Reporte reporte;
     
     /**
      * Crea una nueva forma PanelExport.
@@ -54,6 +58,7 @@ public class PanelExport extends javax.swing.JPanel {
         generadorArch = new GeneradorExcel();
         conn = null;
         formato = null;
+        reporte = new Reporte(ventana,true); 
     }
 
     /**
@@ -91,6 +96,7 @@ public class PanelExport extends javax.swing.JPanel {
         panelRegistros = new javax.swing.JPanel();
         labelRegistros = new javax.swing.JLabel();
         separador = new javax.swing.JSeparator();
+        btnReporte = new javax.swing.JButton();
 
         panelExport.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -153,7 +159,7 @@ public class PanelExport extends javax.swing.JPanel {
             contenedorListaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(contenedorListaLayout.createSequentialGroup()
                 .addGap(0, 0, 0)
-                .addComponent(jScrollPaneSel)
+                .addComponent(jScrollPaneSel, javax.swing.GroupLayout.DEFAULT_SIZE, 293, Short.MAX_VALUE)
                 .addGap(0, 0, 0))
         );
         contenedorListaLayout.setVerticalGroup(
@@ -290,6 +296,15 @@ public class PanelExport extends javax.swing.JPanel {
                 .addComponent(labelRegistros, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
+        btnReporte.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/reporte.png"))); // NOI18N
+        btnReporte.setToolTipText("Reporte de importación");
+        btnReporte.setEnabled(false);
+        btnReporte.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnReporteActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout panelExportLayout = new javax.swing.GroupLayout(panelExport);
         panelExport.setLayout(panelExportLayout);
         panelExportLayout.setHorizontalGroup(
@@ -320,10 +335,14 @@ public class PanelExport extends javax.swing.JPanel {
                             .addComponent(btnExportar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(panelOpciones, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                     .addComponent(separador, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(barraProgreso, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(panelExportLayout.createSequentialGroup()
-                        .addGap(2, 2, 2)
-                        .addComponent(labelInfo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addGroup(panelExportLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(panelExportLayout.createSequentialGroup()
+                                .addGap(2, 2, 2)
+                                .addComponent(labelInfo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(barraProgreso, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(6, 6, 6)
+                        .addComponent(btnReporte, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(35, Short.MAX_VALUE))
         );
         panelExportLayout.setVerticalGroup(
@@ -353,10 +372,12 @@ public class PanelExport extends javax.swing.JPanel {
                     .addComponent(panelRegistros, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(26, 26, 26)
                 .addComponent(separador, javax.swing.GroupLayout.PREFERRED_SIZE, 4, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, 0)
-                .addComponent(labelInfo, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, 0)
-                .addComponent(barraProgreso, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(panelExportLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(panelExportLayout.createSequentialGroup()
+                        .addComponent(labelInfo, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, 0)
+                        .addComponent(barraProgreso, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btnReporte))
                 .addGap(50, 50, 50))
         );
 
@@ -367,9 +388,9 @@ public class PanelExport extends javax.swing.JPanel {
             .addGap(0, 937, Short.MAX_VALUE)
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(layout.createSequentialGroup()
-                    .addGap(0, 0, Short.MAX_VALUE)
+                    .addGap(0, 1, Short.MAX_VALUE)
                     .addComponent(panelExport, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGap(0, 0, Short.MAX_VALUE)))
+                    .addGap(0, 1, Short.MAX_VALUE)))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -381,6 +402,180 @@ public class PanelExport extends javax.swing.JPanel {
                     .addGap(0, 0, Short.MAX_VALUE)))
         );
     }// </editor-fold>//GEN-END:initComponents
+
+    public JButton getBtnExportar() {
+        return btnExportar;
+    }
+
+    public JButton getBtnReporte() {
+        return btnReporte;
+    }
+
+    public Reporte getReporte() {
+        return reporte;
+    }
+
+    public JLabel getLabelInfo() {
+        return labelInfo;
+    }
+
+    public JProgressBar getBarraProgreso() {
+        return barraProgreso;
+    }
+
+    public JFrame getVentana() {
+        return ventana;
+    }
+
+    
+    /**
+     * Método que comprueba si la tabla seleccionada está agregada a la lista de
+     * exportación. Si no lo está, la agrega y habilita los botones para eliminar
+     * elementos y realizar la exportación. Si la tabla ya está en la lista, no
+     * se realiza ninguna acción.
+     * @param evt Evento lanzado al hacer clic sobre el botón que permite agregar
+     * una tabla a lista de exportación.
+     */
+    private void btnAgregarTablaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarTablaActionPerformed
+        if(!listaElementos.get(comboTablas.getSelectedIndex()).estaSeleccionado()){
+            // añadir el nuevo elemento al jList
+            modeloLista.addElement(new ElementoLista(comboTablas.getSelectedItem().toString(),comboTablas.getSelectedIndex()));
+            // seleccionar el último elemento del jList
+            jListTablas.setSelectedIndex(modeloLista.getSize()-1);
+            // marcar la tabla como seleccionada en la estructura de datos
+            listaElementos.get(comboTablas.getSelectedIndex()).setSeleccionado(true);
+            // InterfazGrafica.mostrarListaElementos();
+            btnQuitar.setEnabled(true);
+            btnBorrar.setEnabled(true);
+            btnAgregarTabla.setEnabled(false);
+            btnExportar.setEnabled(true);
+        }
+    }//GEN-LAST:event_btnAgregarTablaActionPerformed
+
+    /**
+     * Método que permite iniciar o detener la creación de un archivo de Excel
+     * dependiendo del estado del proceso (si se está ejecutando o no) al 
+     * presionar el botón correspondiente.
+     * @param evt Evento lanzado al prsionar el boton 'Exportar'
+     */
+    private void btnExportarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExportarActionPerformed
+        if(generadorArch.getState()==StateValue.STARTED){
+            generadorArch.cancel(true); // cancelar la ejecución del swingWorker
+            labelInfo.setText("Cancelando la exportación de la base de datos...");
+        }else{ // StateValue.PENDING || StateValue.DONE
+            guardarArchivo();
+        }
+    }//GEN-LAST:event_btnExportarActionPerformed
+
+    /**
+     * Configura los elementos de la interfaz cuando el usuario selecciona la
+     * opción que permite exportar todas las tablas de la base de datos.
+     * Deshabilita el uso de la lista de selección y los botones que permiten 
+     * agregar y eliminar elementos a la misma.
+     * @param evt Evento lanzado al seleccionar la opción que permite exportar
+     * todas las tablas.
+     */
+    private void opcTablasCompletasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_opcTablasCompletasActionPerformed
+        btnQuitar.setEnabled(false);
+        btnBorrar.setEnabled(false);
+        btnAgregarTabla.setEnabled(false);
+        jListTablas.setEnabled(false);
+        jScrollPaneSel.getVerticalScrollBar().setEnabled(false);
+        btnExportar.setEnabled(true);
+    }//GEN-LAST:event_opcTablasCompletasActionPerformed
+
+    /**
+     * Configura los elementos de la interfaz cuando el usuario selecciona la
+     * opción que permite exportar solo las tablas seleccionadas.
+     * Habilita el uso de la lista de selección y los botones que permiten 
+     * agregar y eliminar elementos a la misma.
+     * @param evt Evento lanzado al seleccionar la opción que permite exportar
+     * solo las tablas que se encuentren en la lista de exportación.  
+     */
+    private void opTablasSelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_opTablasSelActionPerformed
+        jListTablas.setEnabled(true);
+        jScrollPaneSel.getVerticalScrollBar().setEnabled(true);
+        // Verificar si la tabla que se está mostrando está seleccionada en la lista
+        if(listaElementos.get(comboTablas.getSelectedIndex()).estaSeleccionado())
+            btnAgregarTabla.setEnabled(false);
+        else
+            btnAgregarTabla.setEnabled(true);
+        // Verificar si la lista de exportación contiene elementos
+        if(modeloLista.isEmpty()){
+            btnQuitar.setEnabled(false);
+            btnBorrar.setEnabled(false);
+            btnExportar.setEnabled(false);
+        }else{
+            btnQuitar.setEnabled(true);
+            btnBorrar.setEnabled(true);
+            btnExportar.setEnabled(true);
+        }
+    }//GEN-LAST:event_opTablasSelActionPerformed
+
+    /**
+     * Método que permite eliminar todos los elementos seleccionados para 
+     * exportarse al hacer clic sobre el botón.
+     * @param evt Evento lanzado al hacer clic sobre el botón que permite borrar
+     * todos los elementos de la lista de exportación.
+     */
+    private void btnBorrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBorrarActionPerformed
+        if(InterfazGrafica.limpiarSeleccion(panel,"tablas",modeloLista,listaElementos) == JOptionPane.OK_OPTION){
+            //InterfazGrafica.mostrarListaElementos(listaElementos);
+            btnAgregarTabla.setEnabled(true);
+            btnExportar.setEnabled(false);
+            btnBorrar.setEnabled(false);
+            btnQuitar.setEnabled(false);
+        }
+    }//GEN-LAST:event_btnBorrarActionPerformed
+
+    /**
+     * Método que permite eliminar los elementos seleccionados por el usuario 
+     * en la lista de exportación al hacer clic en el botón.
+     * @param evt Evento lanzado al hacer clic sobre el botón que permite borrar
+     * los elementos.
+     */
+    private void btnQuitarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnQuitarActionPerformed
+        InterfazGrafica.borrarElemento(jListTablas,modeloLista,listaElementos);
+        //InterfazGrafica.mostrarListaElementos(listaElementos);
+        // Revisar si la tabla que se se está mostrando está en la lista de exportación
+        if(!listaElementos.get(comboTablas.getSelectedIndex()).estaSeleccionado())
+            btnAgregarTabla.setEnabled(true);
+        // Deshabilitar botones si la lista está vacía
+        if(modeloLista.isEmpty()){
+            btnQuitar.setEnabled(false);
+            btnBorrar.setEnabled(false);
+            btnExportar.setEnabled(false);
+        }
+    }//GEN-LAST:event_btnQuitarActionPerformed
+
+    /**
+     * Detecta el evento cuando se cambia el item en la lista de tablas. Al
+     * cambiar de tabla, se actualizan los datos en pantalla y se comprueba si 
+     * el botón que permite añadir elementos a la lista debe habilitarse o no.
+     * @param evt Evento lanzado al seleccionar un nuevo elemento de la lista de
+     * tablas.
+     */
+    private void comboTablasItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_comboTablasItemStateChanged
+        if(evt.getStateChange()==ItemEvent.SELECTED){
+            cargarDatos(comboBases.getSelectedItem().toString(),comboTablas.getSelectedItem().toString());
+            if(opTablasSel.isSelected()){
+                if(listaElementos.get(comboTablas.getSelectedIndex()).estaSeleccionado())
+                btnAgregarTabla.setEnabled(false); // deshabilitar el boton si la tabla actual está en la lista
+                else
+                btnAgregarTabla.setEnabled(true);
+            }
+        }
+    }//GEN-LAST:event_comboTablasItemStateChanged
+
+    /**
+     * Reinicia el valor de la variable auxiliar cuando el usuario quiere cambiar 
+     * de base de datos pero canceló otro cambio antes.
+     * @param evt evento lanzado al hacer clic sobre el combo con los nombres
+     * de las bases de datos
+     */
+    private void comboBasesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_comboBasesMouseClicked
+        cambioCancelado = false;
+    }//GEN-LAST:event_comboBasesMouseClicked
 
     /**
      * Define el comportamiento de los elementos de la interfaz de exportación
@@ -429,6 +624,10 @@ public class PanelExport extends javax.swing.JPanel {
             }
         }
     }//GEN-LAST:event_comboBasesItemStateChanged
+
+    private void btnReporteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReporteActionPerformed
+        reporte.setVisible(true);
+    }//GEN-LAST:event_btnReporteActionPerformed
 
     /**
      * Método que obtiene los nombres de las bases de datos en el servidor y los
@@ -482,35 +681,6 @@ public class PanelExport extends javax.swing.JPanel {
     }
     
     /**
-     * Reinicia el valor de la variable auxiliar cuando el usuario quiere cambiar 
-     * de base de datos pero canceló otro cambio antes.
-     * @param evt evento lanzado al hacer clic sobre el combo con los nombres
-     * de las bases de datos
-     */
-    private void comboBasesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_comboBasesMouseClicked
-        cambioCancelado = false;
-    }//GEN-LAST:event_comboBasesMouseClicked
-
-    /**
-     * Detecta el evento cuando se cambia el item en la lista de tablas. Al
-     * cambiar de tabla, se actualizan los datos en pantalla y se comprueba si 
-     * el botón que permite añadir elementos a la lista debe habilitarse o no.
-     * @param evt Evento lanzado al seleccionar un nuevo elemento de la lista de
-     * tablas.
-     */
-    private void comboTablasItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_comboTablasItemStateChanged
-        if(evt.getStateChange()==ItemEvent.SELECTED){
-            cargarDatos(comboBases.getSelectedItem().toString(),comboTablas.getSelectedItem().toString());
-            if(opTablasSel.isSelected()){
-                if(listaElementos.get(comboTablas.getSelectedIndex()).estaSeleccionado())
-                    btnAgregarTabla.setEnabled(false); // deshabilitar el boton si la tabla actual está en la lista
-                else
-                    btnAgregarTabla.setEnabled(true); 
-            }
-        }
-    }//GEN-LAST:event_comboTablasItemStateChanged
-
-    /**
      * Método que muestra en pantalla los datos de una tabla determinada.
      * @param nomBase Nombre de la base de datos en donde se encuentra la tabla.
      * @param nomTabla Nombre de la tabla.
@@ -530,126 +700,6 @@ public class PanelExport extends javax.swing.JPanel {
     }
     
     /**
-     * Método que permite eliminar los elementos seleccionados por el usuario 
-     * en la lista de exportación al hacer clic en el botón.
-     * @param evt Evento lanzado al hacer clic sobre el botón que permite borrar
-     * los elementos.
-     */
-    private void btnQuitarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnQuitarActionPerformed
-        InterfazGrafica.borrarElemento(jListTablas,modeloLista,listaElementos);
-        //InterfazGrafica.mostrarListaElementos(listaElementos);
-        // Revisar si la tabla que se se está mostrando está en la lista de exportación
-        if(!listaElementos.get(comboTablas.getSelectedIndex()).estaSeleccionado())
-            btnAgregarTabla.setEnabled(true);
-        // Deshabilitar botones si la lista está vacía
-        if(modeloLista.isEmpty()){
-            btnQuitar.setEnabled(false);
-            btnBorrar.setEnabled(false);
-            btnExportar.setEnabled(false);
-        }
-    }//GEN-LAST:event_btnQuitarActionPerformed
-
-    /**
-     * Método que permite eliminar todos los elementos seleccionados para 
-     * exportarse al hacer clic sobre el botón.
-     * @param evt Evento lanzado al hacer clic sobre el botón que permite borrar
-     * todos los elementos de la lista de exportación.
-     */
-    private void btnBorrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBorrarActionPerformed
-        if(InterfazGrafica.limpiarSeleccion(panel,"tablas",modeloLista,listaElementos) == JOptionPane.OK_OPTION){
-            //InterfazGrafica.mostrarListaElementos(listaElementos);
-            btnAgregarTabla.setEnabled(true);
-            btnExportar.setEnabled(false);
-            btnBorrar.setEnabled(false);
-            btnQuitar.setEnabled(false);
-        }
-    }//GEN-LAST:event_btnBorrarActionPerformed
-
-    /**
-     * Configura los elementos de la interfaz cuando el usuario selecciona la
-     * opción que permite exportar solo las tablas seleccionadas.
-     * Habilita el uso de la lista de selección y los botones que permiten 
-     * agregar y eliminar elementos a la misma.
-     * @param evt Evento lanzado al seleccionar la opción que permite exportar
-     * solo las tablas que se encuentren en la lista de exportación.  
-     */
-    private void opTablasSelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_opTablasSelActionPerformed
-        jListTablas.setEnabled(true);
-        jScrollPaneSel.getVerticalScrollBar().setEnabled(true);
-        // Verificar si la tabla que se está mostrando está seleccionada en la lista
-        if(listaElementos.get(comboTablas.getSelectedIndex()).estaSeleccionado())
-            btnAgregarTabla.setEnabled(false);
-        else
-            btnAgregarTabla.setEnabled(true);
-        // Verificar si la lista de exportación contiene elementos
-        if(modeloLista.isEmpty()){
-            btnQuitar.setEnabled(false);
-            btnBorrar.setEnabled(false);
-            btnExportar.setEnabled(false);
-        }else{
-            btnQuitar.setEnabled(true);
-            btnBorrar.setEnabled(true);
-            btnExportar.setEnabled(true);
-        }
-    }//GEN-LAST:event_opTablasSelActionPerformed
-
-    /**
-     * Configura los elementos de la interfaz cuando el usuario selecciona la
-     * opción que permite exportar todas las tablas de la base de datos.
-     * Deshabilita el uso de la lista de selección y los botones que permiten 
-     * agregar y eliminar elementos a la misma.
-     * @param evt Evento lanzado al seleccionar la opción que permite exportar
-     * todas las tablas.
-     */
-    private void opcTablasCompletasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_opcTablasCompletasActionPerformed
-        btnQuitar.setEnabled(false);
-        btnBorrar.setEnabled(false);
-        btnAgregarTabla.setEnabled(false);
-        jListTablas.setEnabled(false);
-        jScrollPaneSel.getVerticalScrollBar().setEnabled(false);
-        btnExportar.setEnabled(true);
-    }//GEN-LAST:event_opcTablasCompletasActionPerformed
-
-    /**
-     * Método que permite iniciar o detener la creación de un archivo de Excel
-     * dependiendo del estado del proceso (si se está ejecutando o no) al 
-     * presionar el botón correspondiente.
-     * @param evt Evento lanzado al prsionar el boton 'Exportar'
-     */
-    private void btnExportarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExportarActionPerformed
-        if(generadorArch.getState()==StateValue.STARTED){
-            generadorArch.cancel(true); // cancelar la ejecución del swingWorker
-            labelInfo.setText("Cancelando la exportación de la base de datos...");
-        }else{ // StateValue.PENDING || StateValue.DONE
-            guardarArchivo();
-        }
-    }//GEN-LAST:event_btnExportarActionPerformed
-
-    /**
-     * Método que comprueba si la tabla seleccionada está agregada a la lista de
-     * exportación. Si no lo está, la agrega y habilita los botones para eliminar
-     * elementos y realizar la exportación. Si la tabla ya está en la lista, no
-     * se realiza ninguna acción.
-     * @param evt Evento lanzado al hacer clic sobre el botón que permite agregar
-     * una tabla a lista de exportación.
-     */
-    private void btnAgregarTablaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarTablaActionPerformed
-        if(!listaElementos.get(comboTablas.getSelectedIndex()).estaSeleccionado()){
-            // añadir el nuevo elemento al jList
-            modeloLista.addElement(new ElementoLista(comboTablas.getSelectedItem().toString(),comboTablas.getSelectedIndex()));
-            // seleccionar el último elemento del jList
-            jListTablas.setSelectedIndex(modeloLista.getSize()-1);
-            // marcar la tabla como seleccionada en la estructura de datos
-            listaElementos.get(comboTablas.getSelectedIndex()).setSeleccionado(true);
-            // InterfazGrafica.mostrarListaElementos();
-            btnQuitar.setEnabled(true);
-            btnBorrar.setEnabled(true);
-            btnAgregarTabla.setEnabled(false);
-            btnExportar.setEnabled(true);
-        }
-    }//GEN-LAST:event_btnAgregarTablaActionPerformed
-
-    /**
      * Método encargado de inicializar todos los componentes necesarios para
      * crear el archivo de Excel utilizando la base de datos seleccionada y sus
      * tablas marcadas.
@@ -660,7 +710,6 @@ public class PanelExport extends javax.swing.JPanel {
         try {
             String nombreBD = comboBases.getSelectedItem().toString(); 
             // Crear una nueva conexión que se encargará de obtener los datos de la BD
-            //Conexion con2 = new Conexion(conn.getServidor(),conn.getUsr(),conn.getPasswd());
             Conexion con2 = conn.crearNuevaConexion();
             if(opcTablasCompletas.isSelected()){
                 lista = listaElementos; 
@@ -670,7 +719,8 @@ public class PanelExport extends javax.swing.JPanel {
                     .collect(Collectors.toList());
             }
             // Inicializar el objeto que va a crear el archivo de Excel
-            generadorArch = new GeneradorExcel(con2,nombreBD,lista,labelInfo,barraProgreso,ventana,btnExportar);
+            //generadorArch = new GeneradorExcel(con2,nombreBD,lista,labelInfo,barraProgreso,ventana,btnExportar,reporte);
+            generadorArch = new GeneradorExcel(con2,nombreBD,lista,this);
             directorio = FileSystemView.getFileSystemView().getDefaultDirectory().getPath();
             // Instanciar y mostrar la ventana de selección de archivos
             SelectorGuarda sg = new SelectorGuarda(new File(directorio+"\\"+nombreBD+".xlsx"),generadorArch);
@@ -683,8 +733,11 @@ public class PanelExport extends javax.swing.JPanel {
         }
     }
     
-    /*
-    public void reiniciarElementosExportacion(){
+    /**
+     * Reinicia los estados de los botones y los demás elementos de la interfaz
+     * de exportación a su estado predefinido.
+     */
+    public void reiniciarElementosExp(){
         comboBases.removeAllItems();
         comboTablas.removeAllItems();
         opcTablasCompletas.setSelected(true);
@@ -695,11 +748,12 @@ public class PanelExport extends javax.swing.JPanel {
         btnAgregarTabla.setEnabled(false);
         labelInfo.setText("Progreso de exportación");
         barraProgreso.setValue(0);
+        btnReporte.setEnabled(false);
         
         listaElementos.clear();
         cambioCancelado = false;
-        indiceBaseAct = 0;
-    }*/
+        indiceBaseAct = 0; 
+    }
     
     /**
      * Método que permite conocer el estado del proceso encargado de crear el 
@@ -725,6 +779,7 @@ public class PanelExport extends javax.swing.JPanel {
     private javax.swing.JButton btnBorrar;
     private javax.swing.JButton btnExportar;
     private javax.swing.JButton btnQuitar;
+    private javax.swing.JButton btnReporte;
     private javax.swing.JComboBox comboBases;
     private javax.swing.JComboBox comboTablas;
     private javax.swing.JPanel contenedorLista;
