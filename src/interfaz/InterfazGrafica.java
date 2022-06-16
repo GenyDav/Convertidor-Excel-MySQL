@@ -16,7 +16,7 @@ import javax.swing.SwingWorker.StateValue;
 import javax.swing.UIManager;
 
 /**
- *
+ * Clase principal que crea la ventana en donde se ejecuta el programa.
  * @author Geny
  * @version 2.0
  */
@@ -27,20 +27,21 @@ public class InterfazGrafica extends javax.swing.JFrame {
     private String clave;           // contraseña para acceder al servidor
     private Conexion conn;          // encargado de realizar la conexión y consultas a la base de datos
     private String mensaje;         // mensaje de la pantalla de inicio
-    private int modo;               // 
+    private int modo;               // tipo de panel que se está mostrando (importación o exportación)
     private final int EXP;
     private final int IMP; 
-    private PanelExport panelExp;
-    private PanelImport panelImp;
+    private PanelExport panelExp;   // interfaz para crear archivos de Excel
+    private PanelImport panelImp;   // interfaz para crear bases de datos
     
     /**
-     * 
+     * Crea el panel y las distintas interfaces del programa.
      */
     public InterfazGrafica() {
+        // Configurar el color de la barra de progreso
         UIManager.put("ProgressBar.selectionForeground", Color.white);
-        UIManager.put("ProgressBar.foreground", new Color(2,97,140));//255,148,0
+        UIManager.put("ProgressBar.foreground", new Color(2,97,140));
         
-        initComponents();
+        initComponents(); 
         setIconImage(new ImageIcon(getClass().getResource("/imagenes/icono_frame.png")).getImage());
         setResizable(false);
         setTitle("Convertidor MySQL/Excel");
@@ -48,20 +49,24 @@ public class InterfazGrafica extends javax.swing.JFrame {
         setLocationRelativeTo(null);
         
         cardLayout = (CardLayout)contenedor.getLayout();
-        
         servidor = "";
         usuario = "";
         clave = "";
         mensaje = "";
-       
+  
         EXP = 1;
         IMP = 2;
         modo = EXP;
-
         panelExp = new PanelExport(this,contenedor);
         panelImp = new PanelImport(this,contenedor);
     }
     
+    /**
+     * Muestra por consola el estado de selección de cada elemento en una lista
+     * (de tablas o de hojas.
+     * @param <T> Clases que heredan de ElementoLista.
+     * @param lista Lista de elementos a mostrar.
+     */
     public static <T extends ElementoLista> void mostrarListaElementos(ArrayList<T> lista){
         for(int i=0;i<lista.size();i++){
             System.out.print("["+lista.get(i).estaSeleccionado()+"]");
@@ -354,8 +359,10 @@ public class InterfazGrafica extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     /**
-     * 
-     * @param evt 
+     * Permite que el usuario cierre la conexión con el servidor despues de 
+     * verificar que no existen procesos ejecutándose. Si los hay, se pide que
+     * el usuario confirme que estos sean interrumpidos.
+     * @param evt Evento lanzado al presionar el botón para terminar la sesión.
      */
     private void btnSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalirActionPerformed
         Object []opciones = {"Aceptar","Cancelar"};
@@ -384,22 +391,24 @@ public class InterfazGrafica extends javax.swing.JFrame {
         }.execute();  
     }//GEN-LAST:event_btnSalirActionPerformed
     
+    /**
+     * Termina la sesión del usuario en el programa.
+     */
     private void terminarConexion(){
-        cardLayout.show(contenedor, "panelInicio");  
-        conn.terminarConexion();
         reiniciarCamposInicio();
-        modo = 1;
+        conn.terminarConexion();
+        modo = EXP;
         modoExport.setIcon(new ImageIcon(getClass().getResource("/imagenes/btn1.png")));
         modoImport.setIcon(new ImageIcon(getClass().getResource("/imagenes/btn2.png")));
-        //panelExp.reiniciarElementosExportacion();
-        //panelExp = null;
-        panelImp.reiniciarPantalla(true);
-        //panelImp = null;
+        panelExp.reiniciarElementosExp();
+        panelImp.reiniciarElementosImp(true);
+        cardLayout.show(contenedor, "panelInicio");  
     }
     
     /**
      * Método que elimina todos los elementos que están en la lista de exportación/importación.
      * @param <T> Objetos de la clase ElementoLista o que hereden de ella.
+     * @param panel Panel sobre el que se va a mostrar la intefaz de exportación o de importación.
      * @param elemento Tipo de elemento que va a ser eliminado (tabla u hoja).
      * @param modeloLista Modelo del jList donde están las tablas seleccionadas.
      * @param listaAux Estructura de datos con la información de las tablas.
@@ -524,7 +533,7 @@ public class InterfazGrafica extends javax.swing.JFrame {
     }//GEN-LAST:event_btnExportarMouseEntered
 
     /**
-     * Método que configurs la apariencia de los botones que cambian la interfaz
+     * Método que configura la apariencia de los botones que cambian la interfaz
      * cuando el usuario hace que el mouse salga del área del botón del modo Importar.
      * @param evt Evento lanzado cuando el puntero del mouse sale del área del 
      * botón que cambia el modo del programa a Importar.
@@ -608,6 +617,9 @@ public class InterfazGrafica extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_cerrarVentana
     
+    /**
+     * Limpia los valores de los campos de la pantalla de inicio de sesión.
+     */
     public void reiniciarCamposInicio(){
         txtServidor.setText("");
         txtUsuario.setText("");
@@ -618,7 +630,8 @@ public class InterfazGrafica extends javax.swing.JFrame {
     }
     
     /**
-     * @param args the command line arguments
+     * Método que inicia la ejecución del programa.
+     * @param args Argumentos de la línea de comandos.
      */
     public static void main(String args[]) {
         // LookAndFeel nativo
