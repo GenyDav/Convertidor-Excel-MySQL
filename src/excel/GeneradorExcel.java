@@ -1,7 +1,9 @@
 package excel;
 
-import conexion.Conexion;
+import bd.Conexion;
 import datos.ElementoLista;
+import interfaz.PanelExport;
+import interfaz.Reporte;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -15,7 +17,9 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JProgressBar;
+import javax.swing.JTextArea;
 import javax.swing.SwingWorker;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.BorderStyle;
@@ -31,8 +35,8 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 /**
- * Clase que crea un proceso ejecutado en segundo plano que genera un archivo de
- * Excel con la información obtenida de una base de datos.
+ * Clase que crea un proceso ejecutado en segundo plano para generar un archivo 
+ * de Excel con la información obtenida de una base de datos.
  * @author Geny
  * @version 1.0
  */
@@ -53,6 +57,9 @@ public class GeneradorExcel extends SwingWorker<Void,Integer>{
     private JFrame ventana;                 // contenedor sobre el que se muestran los cuadros de diálogo    
     private JButton botonExp;
     private OutputStream flujoSalida;
+    private JButton btnReporte;
+    private Reporte reporte;
+    private String evento;
     
     /**
      * Crea un nuevo objeto que inicializa los atributos a su valor por defecto.
@@ -71,6 +78,8 @@ public class GeneradorExcel extends SwingWorker<Void,Integer>{
         ventana = null;
         numRegistros = 0;
         flujoSalida = null;
+        btnReporte = null;
+        reporte = null;
     }
     
     /**
@@ -84,7 +93,7 @@ public class GeneradorExcel extends SwingWorker<Void,Integer>{
      * @param ventana Ventana sobre la que se muestra el programa
      * @param btn Botón que inicia/cancela el proceso de exportación
      */
-    public GeneradorExcel(Conexion c, String base, List<ElementoLista>tablas, JLabel label, JProgressBar barra, JFrame ventana, JButton btn){
+    public GeneradorExcel(Conexion c, String base, List<ElementoLista>tablas, JLabel label, JProgressBar barra, JFrame ventana, JButton btn, Reporte rep){
         conn = c;
         nombreBase = base;
         libro = null;
@@ -99,6 +108,26 @@ public class GeneradorExcel extends SwingWorker<Void,Integer>{
         botonExp = btn;
         numRegistros = 0;
         flujoSalida = null;
+        reporte = rep;
+    }
+    
+    public GeneradorExcel(Conexion c, String base, List<ElementoLista>tablas, PanelExport panelExp){
+        conn = c;
+        nombreBase = base;
+        libro = null;
+        indiceTablaAct = 0;
+        this.tablas = (ArrayList<ElementoLista>) tablas;
+        numTablas = tablas.size();
+        rutaArch = null;
+        tipoArch = null;
+        labelProgreso = panelExp.getLabelInfo();
+        barra = panelExp.getBarraProgreso();
+        ventana = panelExp.getVentana();
+        botonExp = panelExp.getBtnExportar();
+        numRegistros = 0;
+        flujoSalida = null;
+        btnReporte = panelExp.getBtnReporte();
+        reporte = panelExp.getReporte();
     }
     
     /**
@@ -136,6 +165,7 @@ public class GeneradorExcel extends SwingWorker<Void,Integer>{
      * seleccionadas por el usuario.
      */
     private void crearLibro(){    
+        
         labelProgreso.setText("Iniciando exportación de la base '" + nombreBase + "'...");
         try{
             flujoSalida = new FileOutputStream(rutaArch);
@@ -158,7 +188,7 @@ public class GeneradorExcel extends SwingWorker<Void,Integer>{
             publish(100);
             JOptionPane.showMessageDialog(
                 ventana, 
-                "La exportación finalizó con éxito",
+                "La exportación de la base finalizó.",
                 "Proceso terminado", 
                 JOptionPane.INFORMATION_MESSAGE
             );
@@ -197,8 +227,8 @@ public class GeneradorExcel extends SwingWorker<Void,Integer>{
             columnas = escribirEncabezados(hoja);
             escribirDatos(hoja, columnas);
         }catch(SQLException ex){
-            labelProgreso.setText("No se pudo cargar la información del servidor "
-            + "(Error MySQL " + ex.getErrorCode() + ": " + ex.getMessage() + ".");
+            labelProgreso.setText("No se pudo cargar la información de la tabla " + t
+            + " (Error MySQL " + ex.getErrorCode() + ": " + ex.getMessage() + ".");
             //ex.printStackTrace();
         }
     }
@@ -305,6 +335,7 @@ public class GeneradorExcel extends SwingWorker<Void,Integer>{
     @Override
     protected Void doInBackground() throws Exception {
         botonExp.setText("Cancelar exportación");
+        btnReporte.setEnabled(true);
         crearLibro();
         botonExp.setEnabled(true);
         botonExp.setText("Exportar");
@@ -319,8 +350,8 @@ public class GeneradorExcel extends SwingWorker<Void,Integer>{
     @Override
     protected void process(List<Integer> chunks){
         //barra.setValue(chunks.get(0));
-        chunks.stream().forEach((cad) -> {
-            barra.setValue(cad);
+        chunks.stream().forEach((valor) -> {
+            barra.setValue(valor);
         });
     }
 }
