@@ -17,9 +17,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
 import javax.swing.JProgressBar;
-import javax.swing.JTextArea;
 import javax.swing.SwingWorker;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.BorderStyle;
@@ -164,8 +162,9 @@ public class GeneradorExcel extends SwingWorker<Void,Integer>{
      * Cada hoja del archivo corresponde a una de las tablas de la base de datos
      * seleccionadas por el usuario.
      */
-    private void crearLibro(){    
-        
+    private void crearLibro(){ 
+        evento = "Iniciando la creación del archivo...\n";
+        reporte.agregarEvento(evento);
         labelProgreso.setText("Iniciando exportación de la base '" + nombreBase + "'...");
         try{
             flujoSalida = new FileOutputStream(rutaArch);
@@ -178,6 +177,8 @@ public class GeneradorExcel extends SwingWorker<Void,Integer>{
                     labelProgreso.setText("Cancelando la exportación de la base de datos...");
                     terminarEscritura();
                     labelProgreso.setText("Exportación de la base " + nombreBase + "' cancelada.");
+                    evento = "Exportación de la base " + nombreBase + "' cancelada.";
+                    reporte.agregarEvento(evento);
                     return;
                 }
                 indiceTablaAct = i;
@@ -185,6 +186,8 @@ public class GeneradorExcel extends SwingWorker<Void,Integer>{
             }
             terminarEscritura();
             labelProgreso.setText("Exportación de la base '" + nombreBase + "' terminada");
+            evento = "Exportación de la base '" + nombreBase + "' terminada";
+            reporte.agregarEvento(evento);
             publish(100);
             JOptionPane.showMessageDialog(
                 ventana, 
@@ -203,6 +206,9 @@ public class GeneradorExcel extends SwingWorker<Void,Integer>{
                 "No se puede escribir el archivo", 
                 JOptionPane.INFORMATION_MESSAGE
             );
+            labelProgreso.setText("No se puede escribir el archivo.");
+            evento = "No se puede escribir el archivo porque está siendo utilizado por otro programa.";
+            reporte.agregarEvento(evento);
             // ex.printStackTrace();
         }
     }
@@ -218,17 +224,24 @@ public class GeneradorExcel extends SwingWorker<Void,Integer>{
         try{
             publish(0); // reiniciar la barra de progreso
             labelProgreso.setText("Exportando la base '" + nombreBase + "': "
-                + "creando hoja '" + t + "', consultando la base de datos...");
+                + "Creando hoja '" + t + "', consultando la base de datos...");
+            evento = "Creando la hoja '" + t + "': \n           Consultando la base de datos...";
+            reporte.agregarEvento(evento);
             resultados = conn.obtenerRegistros(nombreBase,t);
             metaDatos = resultados.getMetaData();
             labelProgreso.setText("Exportando la base '" + nombreBase + "': "
                 + "creando hoja '"+ t + "'"
                 + " (tabla " + (indiceTablaAct+1) + " de " + numTablas + ")");
+            evento = "Escribiendo los datos...";
+            reporte.agregarEvento(evento);
             columnas = escribirEncabezados(hoja);
             escribirDatos(hoja, columnas);
         }catch(SQLException ex){
-            labelProgreso.setText("No se pudo cargar la información de la tabla " + t
-            + " (Error MySQL " + ex.getErrorCode() + ": " + ex.getMessage() + ".");
+            labelProgreso.setText("No se pudo obtener la información de la tabla '" + t
+            + "' (Error MySQL " + ex.getErrorCode() + ".");
+            evento = "No se pudo cargar la información de la tabla " + t
+                + " (Error MySQL " + ex.getErrorCode() + ": " + ex.getMessage() + ".\n";
+            reporte.agregarEvento(evento);
             //ex.printStackTrace();
         }
     }
@@ -299,6 +312,8 @@ public class GeneradorExcel extends SwingWorker<Void,Integer>{
         for(int j=0;j<numColumnas;j++){
             hoja.autoSizeColumn(j);
         }   
+        evento = "Escritura de la hoja '" + hoja.getSheetName() + "' completa.\n";
+        reporte.agregarEvento(evento);
     }
     
     /**
