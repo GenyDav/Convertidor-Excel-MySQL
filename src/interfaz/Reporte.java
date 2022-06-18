@@ -1,15 +1,17 @@
 package interfaz;
 
+import datos.Tiempo;
 import javax.swing.JTextArea;
 
 /**
- * Clas que crea la ventana utilizada para mostrar los eventos ocurridos durante 
+ * Clase que crea la ventana utilizada para mostrar los eventos ocurridos durante 
  * la creación de la base de datos desde un archivo de Excel.
  * @author Geny
  * @version 1.0
  */
 public class Reporte extends javax.swing.JDialog {
-
+    private Tiempo tiempo;
+    
     /**
      * Crea una nueva ventana con la información de la importación del archivo
      * @param parent Ventana padre desde la que se muestra la nueva ventana 
@@ -22,6 +24,7 @@ public class Reporte extends javax.swing.JDialog {
         setTitle("Reporte de importación"); 
         pack();
         setResizable(false); 
+        tiempo = new Tiempo();
     }
     
     /**
@@ -31,6 +34,24 @@ public class Reporte extends javax.swing.JDialog {
      */
     public JTextArea getTextArea(){
         return jTextArea1;
+    }
+    
+    /**
+     * Agrega un enunciado a la ventana de reporte describiendo un evento ocurrido
+     * durante un proceso de exportación o importación.
+     * @param evento Descripción de un evento ocurrido que se va a mostrar en la
+     * ventana de reporte.
+     */
+    public void agregarEvento(String evento){
+        String hora = "[" + tiempo.obtenerTiempo() + "] ";
+        jTextArea1.append(hora + evento + "\n");
+    }
+    
+    /**
+     * Limpiar el contenido de la ventana de reporte.
+     */
+    public void restablecer(){
+        jTextArea1.setText("");
     }
     
     /**
