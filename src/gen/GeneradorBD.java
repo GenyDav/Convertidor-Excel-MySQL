@@ -1,10 +1,11 @@
-package bd;
+package gen;
 
+import lectura.Conexion;
 import datos.HojaLista;
 import datos.InfoColumna;
-import datos.Tiempo;
-import excel.LectorExcel;
+import lectura.LectorExcel;
 import interfaz.PanelImport;
+import interfaz.Reporte;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -13,8 +14,6 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JProgressBar;
-import javax.swing.JTextArea;
-import javax.swing.SwingWorker;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 
@@ -24,7 +23,7 @@ import org.apache.poi.ss.usermodel.Sheet;
  * @author Geny
  * @version 1.0
  */
-public class GeneradorBD extends SwingWorker<Void,Integer>{
+public class GeneradorBD extends Generador{
     private Conexion conn;
     private String nombreBase;
     private LectorExcel lector;         // objeto encargado de leer el archivo
@@ -33,10 +32,8 @@ public class GeneradorBD extends SwingWorker<Void,Integer>{
     private JLabel etiquetaProgreso;
     private JButton btnImportar;
     private JProgressBar barra;
-    private JTextArea areaReporte;
+    private Reporte reporte;
     private String evento;              // Descripción de una actividad ocurrida en el proceso
-    private Tiempo temp;                // Para tener el tiempo cuando ocurra un evento
-    private boolean errorLanzado;       // Indica si ha occurrido una excepción que haga que el proceso se interrumpa
     
     /**
      * Crea un nuevo objeto con todos sus atributos inicializados en null.
@@ -49,8 +46,7 @@ public class GeneradorBD extends SwingWorker<Void,Integer>{
         listaHojas = null;
         etiquetaProgreso = null;
         barra = null;
-        temp = null;
-        areaReporte = null;
+        reporte = null;
     }
     
     /**
@@ -70,9 +66,7 @@ public class GeneradorBD extends SwingWorker<Void,Integer>{
         etiquetaProgreso = panel.getInfoImport();
         btnImportar = panel.getBtnImportar();
         barra = panel.getBarraProgreso();
-        temp = new Tiempo();
-        areaReporte = panel.getRep().getTextArea();
-        errorLanzado = false;
+        reporte = panel.getRep();
     }
     
     /**
@@ -175,9 +169,9 @@ public class GeneradorBD extends SwingWorker<Void,Integer>{
                     conn.modificarBase(scriptInsertar);
                 }catch(SQLException ex){
                     identificarFallo(ex);
-                    evento = "["+temp.obtenerTiempo()+"] Error en el renglón "+(renglon)+", código "+ex.getErrorCode() 
-                        +" \n\t("+ex.getMessage()+")\n";
-                    areaReporte.append(evento);
+                    evento = "Error en el renglón "+(renglon)+", código "+ex.getErrorCode() 
+                        +" \n\t("+ex.getMessage()+")";
+                    reporte.agregarEvento(evento);
                     //ex.printStackTrace();
                 }finally{
                     progreso = renglon*incremento;
@@ -188,8 +182,8 @@ public class GeneradorBD extends SwingWorker<Void,Integer>{
                     }catch(Exception e){}
                 }
             }      
-            evento = "[" + temp.obtenerTiempo() + "] Inserción de registros terminada.\n";
-            areaReporte.append(evento);
+            evento = "Inserción de registros terminada.\n";
+            reporte.agregarEvento(evento);
         }
     }
     
@@ -221,53 +215,19 @@ public class GeneradorBD extends SwingWorker<Void,Integer>{
     }
     
     /**
-     * Método que identifica las excepciones ocurridas al importar una base de
-     * datos que pueden hacer que el proceso se detenga completamente. Si ocurre 
-     * una excepción de esa clase, se llama al método cancel() para terminar la
-     * importación. Si la excepción no es de tipo crítico, el proceso de 
-     * importación continúa.
-     * @param ex Error ocurrido al intentar modificar la base de datos.
+     * Método que muestra un cuadro de diálogo indicando que ha ocurrido una
+     * excepción que causó que el proceso de importación se detuviera.
+     * @param codigo Número de identificación de la excepción MySQL.
      */
-    private void identificarFallo(SQLException ex){
-        switch(ex.getErrorCode()){
-            case 0:    // Comminication link failure
-            case 22:   // No se puede abrir el archivo (demasiados archivos abiertos)
-            case 24:   // No se puede abrir el archivo (demasiados archivos abiertos)
-            case 126:  // Index file is crashed
-            case 127:  // Record-file is crashed
-            case 134:  // Record was already deleted (or record file crashed)
-            case 144:  // Table is crashed and last repair failed
-            case 145:  // Table was marked as crashed and should be repaired
-            case 1021: // SQLSTATE: HY000 (ER_DISK_FULL) Disco lleno (%s). Esperando para que se libere algo de espacio...
-            case 1037: // SQLSTATE: HY001 (ER_OUTOFMEMORY) Mensaje: Memoria insuficiente. Reinicie el demonio e intentelo otra vez (necesita %d bytes)
-            case 1038: // SQLSTATE: HY001 (ER_OUT_OF_SORTMEMORY)Mensaje: Memoria de ordenacion insuficiente. Incremente el tamano del buffer de ordenacion
-            case 1040: // SQLSTATE: 08004 (ER_CON_COUNT_ERROR) Mensaje: Demasiadas conexiones
-            case 1041: // SQLSTATE: HY000 (ER_OUT_OF_RESOURCES) Mensaje: Memoria/espacio de tranpaso insuficiente
-            case 1053: // SQLSTATE: 08S01 (ER_SERVER_SHUTDOWN) Mensaje: Desconexion de servidor en proceso
-            case 1077: // SQLSTATE: HY000 (ER_NORMAL_SHUTDOWN) Mensaje: %s: Apagado normal
-            case 1078: // SQLSTATE: HY000 (ER_GOT_SIGNAL) Mensaje: %s: Recibiendo signal %d. Abortando!
-            case 1079: // SQLSTATE: HY000 (ER_SHUTDOWN_COMPLETE) Mensaje: %s: Apagado completado
-            case 1080: // SQLSTATE: 08S01 (ER_FORCING_CLOSE) Mensaje: %s: Forzando a cerrar el thread %ld usuario: '%s'
-            case 1105: // SQLSTATE: HY000 (ER_UNKNOWN_ERROR) Mensaje: Error desconocido
-            case 1146: // La actualizacion de MySQL no tuvo exito           
-            case 1152: // SQLSTATE: 08S01 (ER_ABORTING_CONNECTION) Mensaje: Conexión abortada %ld para db: '%s' usuario: '%s' (%s)
-            case 1184: // SQLSTATE: 08S01 (ER_NEW_ABORTING_CONNECTION) Mensaje: Abortada conexión %ld para db: '%s' usuario: '%s' servidor: '%s' (%s)
-            case 1236: // MySQL Replication
-            case 2000: // (CR_UNKNOWN_ERROR) Mensaje: Unknown MySQL error
-            case 2001: // (CR_SOCKET_CREATE_ERROR) Mensaje: Can't create UNIX socket (%d) 
-            case 2002: // (CR_CONNECTION_ERROR) Mensaje: Can't connect to local MySQL server through socket '%s' (%d)
-            case 2003: // (CR_CONN_HOST_ERROR) Mensaje: Can't connect to MySQL server on '%s' (%d)
-            case 2004: // (CR_IPSOCK_ERROR) Mensaje: Can't create TCP/IP socket (%d)
-            case 2005: // (CR_UNKNOWN_HOST) Mensaje: Unknown MySQL server host '%s' (%d)
-            case 2006: // (CR_SERVER_GONE_ERROR) Mensaje: MySQL server has gone away
-            case 2008: // (CR_OUT_OF_MEMORY) Mensaje: MySQL client ran out of memory
-            case 2013: // (CR_SERVER_LOST) Mensaje: Lost connection to MySQL server during query
-            case 2055: // (CR_SERVER_LOST_EXTENDED) Mensaje: Lost connection to MySQL server at '%s', system error: %d
-                cancel(true);
-                publish(0);
-                errorLanzado = true;
-                mostrarMsgError(ex.getErrorCode());
-        }  
+    @Override
+    public void mostrarMsgError(int codigo){
+        JOptionPane.showMessageDialog(
+            null, 
+            "No se puede continuar con la creación de la base de \n"
+                + "datos debido al error MySQL de código " + codigo + ".  ",
+            "Error", 
+            JOptionPane.ERROR_MESSAGE
+        );
     }
     
     /**
@@ -282,23 +242,21 @@ public class GeneradorBD extends SwingWorker<Void,Integer>{
         try{
             // Crear la base de datos
             btnImportar.setText("Cancelar importación");
-            areaReporte.setText("");
+            reporte.restablecer();
             etiquetaProgreso.setText("Iniciando la creación de la base de datos...");
             conn.crearBase(nombreBase);
-            evento = "["+temp.obtenerTiempo()+"] Esquema '"+nombreBase+"' creado.\n";
-            areaReporte.append(evento);
+            evento = "Esquema '"+nombreBase+"' creado.\n";
+            //areaReporte.append(evento);
+            reporte.agregarEvento(evento);
             
             // Crear las tablas e insertar los registros en cada una.
             for(int i=0;i<listaHojas.size();i++){
                 // Comprobar si el proceso sigue ejecutándose o tuvo que detenerse
-                if(isCancelled()){
-                    if(errorLanzado){
-                        etiquetaProgreso.setText("No se pudo continuar con la importación del esquema '" + nombreBase + "'.");
-                    }else{
-                        etiquetaProgreso.setText("Importación de la base '" + nombreBase + "' cancelada.");
-                    }
-                    evento = "[" + temp.obtenerTiempo() + "] Se canceló la importación del esquema '" + nombreBase + "'.\n";
-                    areaReporte.append(evento);
+                if(isCancelled()){               
+                    etiquetaProgreso.setText("Importación de la base '" + nombreBase + "' cancelada.");                  
+                    evento = "Se canceló la importación del esquema '" + nombreBase + "'.";
+                    //areaReporte.append(evento);
+                    reporte.agregarEvento(evento);
                     btnImportar.setText("Crear base de datos");
                     return null;
                 }
@@ -310,57 +268,46 @@ public class GeneradorBD extends SwingWorker<Void,Integer>{
                         nomTabla = listaHojas.get(i).getNombre();
                         etiquetaProgreso.setText("Creando la base '"+nombreBase+"': Definiendo la estructura de la tabla '"+nomTabla+"'");              
                         crearTabla(listaHojas.get(i));
-                        evento = "["+temp.obtenerTiempo()+"] Estructura de la tabla '"+nomTabla+"' creada.\n";
-                        areaReporte.append(evento);
+                        evento = "Estructura de la tabla '"+nomTabla+"' creada.";
+                        //areaReporte.append(evento);
+                        reporte.agregarEvento(evento);
                         
                         // Insertar los datos en la tabla
                         etiquetaProgreso.setText("Creando la base '"+nombreBase+"': Insertando datos en la tabla '"+nomTabla+"' (Tabla "+(i+1)+" de "+numTablas+")");
-                        evento = "["+temp.obtenerTiempo()+"] Iniciando la inserción de registros en la tabla '"+nomTabla+"'.\n";
-                        areaReporte.append(evento);
+                        evento = "Iniciando la inserción de registros en la tabla '"+nomTabla+"'.";
+                        //areaReporte.append(evento);
+                        reporte.agregarEvento(evento);
                         insertarRegistros(listaHojas.get(i));
                     }
                 }catch(SQLException ex){ // Errores al crear tablas
                     identificarFallo(ex);
-                    evento = "[" +temp.obtenerTiempo()+ "] Error al crear la tabla '" 
+                    evento = "Error al crear la tabla '" 
                             + listaHojas.get(i).getNombre() 
                             + "', código " + ex.getErrorCode() 
                             + " \n\t("+ ex.getMessage()+ ")\n";                  
-                    areaReporte.append(evento);
+                    //areaReporte.append(evento);
+                    reporte.agregarEvento(evento);
                     //ex.printStackTrace();
                 }                     
             }
             etiquetaProgreso.setText("Creación de la base de datos '"+nombreBase+"' terminada.");
-            evento = "[" +temp.obtenerTiempo()+"] Importación de datos terminada.\n";
-            areaReporte.append(evento);
+            evento = "Importación de datos terminada.\n";
+            //areaReporte.append(evento);
+            reporte.agregarEvento(evento);
             publish(100);
         }catch(SQLException ex){ // Errores al crear la base de datos                
-            evento = "[" +temp.obtenerTiempo()+"] No se pudo continuar con la creación del "
+            evento = "[No se pudo continuar con la creación del "
                     + "esquema '" + nombreBase + "'.\n"
                     + "\tError MySQL " + ex.getErrorCode() + "\n"
                     + "\t" + ex.getMessage() + "\n";
-            areaReporte.append(evento);
+            reporte.agregarEvento(evento);
             //ex.printStackTrace();
             etiquetaProgreso.setText("Falló el intento para importar los datos en '"+nombreBase+"'");
             publish(0);
-            mostrarMsgError(ex.getErrorCode());
+            //mostrarMsgError(ex.getErrorCode());
         }
         btnImportar.setText("Crear base de datos");
         return null;
-    }
-    
-    /**
-     * Método que muestra un cuadro de diálogo indicando que ha ocurrido una
-     * excepción que causó que el proceso de importación se detuviera.
-     * @param codigo Número de identificación de la excepción MySQL.
-     */
-    public void mostrarMsgError(int codigo){
-        JOptionPane.showMessageDialog(
-            null, 
-            "No se puede continuar con la creación de la base de \n"
-                + "datos debido al error MySQL de código " + codigo + ".  ",
-            "Error", 
-            JOptionPane.ERROR_MESSAGE
-        );
     }
     
     /**
