@@ -1,6 +1,6 @@
-package excel;
+package gen;
 
-import bd.Conexion;
+import lectura.Conexion;
 import datos.ElementoLista;
 import interfaz.PanelExport;
 import interfaz.Reporte;
@@ -18,7 +18,6 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JProgressBar;
-import javax.swing.SwingWorker;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.BorderStyle;
 import org.apache.poi.ss.usermodel.Cell;
@@ -38,7 +37,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
  * @author Geny
  * @version 1.0
  */
-public class GeneradorExcel extends SwingWorker<Void,Integer>{
+public class GeneradorExcel extends Generador{
     private String nombreBase;                  
     private ArrayList<ElementoLista> tablas;// lista de tablas que se van a exportar
     private int numTablas;
@@ -86,29 +85,8 @@ public class GeneradorExcel extends SwingWorker<Void,Integer>{
      * @param c Conexión con el servidor de bases de datos
      * @param base Nombre de la base de datos a exportar
      * @param tablas Lista de tablas que se van a exportar
-     * @param label Etiqueta en la que se muestra información del proceso
-     * @param barra Barra de progreso de la interfaz
-     * @param ventana Ventana sobre la que se muestra el programa
-     * @param btn Botón que inicia/cancela el proceso de exportación
+     * @param panelExp Panel sobre el que se realiza la exportación de bases.
      */
-    public GeneradorExcel(Conexion c, String base, List<ElementoLista>tablas, JLabel label, JProgressBar barra, JFrame ventana, JButton btn, Reporte rep){
-        conn = c;
-        nombreBase = base;
-        libro = null;
-        indiceTablaAct = 0;
-        this.tablas = (ArrayList<ElementoLista>) tablas;
-        numTablas = tablas.size();
-        rutaArch = null;
-        tipoArch = null;
-        labelProgreso = label;
-        this.barra = barra;
-        this.ventana = ventana;
-        botonExp = btn;
-        numRegistros = 0;
-        flujoSalida = null;
-        reporte = rep;
-    }
-    
     public GeneradorExcel(Conexion c, String base, List<ElementoLista>tablas, PanelExport panelExp){
         conn = c;
         nombreBase = base;
@@ -163,6 +141,7 @@ public class GeneradorExcel extends SwingWorker<Void,Integer>{
      * seleccionadas por el usuario.
      */
     private void crearLibro(){ 
+        reporte.restablecer();
         evento = "Iniciando la creación del archivo...\n";
         reporte.agregarEvento(evento);
         labelProgreso.setText("Iniciando exportación de la base '" + nombreBase + "'...");
@@ -175,6 +154,8 @@ public class GeneradorExcel extends SwingWorker<Void,Integer>{
             for(int i=0;i<numTablas;i++){
                 if(isCancelled()){  // Verificar si el usuario no ha cancelado la exportación
                     labelProgreso.setText("Cancelando la exportación de la base de datos...");
+                    evento = "Cancelando la exportación de la base de datos...";
+                    reporte.agregarEvento(evento);
                     terminarEscritura();
                     labelProgreso.setText("Exportación de la base " + nombreBase + "' cancelada.");
                     evento = "Exportación de la base " + nombreBase + "' cancelada.";
@@ -222,6 +203,8 @@ public class GeneradorExcel extends SwingWorker<Void,Integer>{
         int columnas;   // número de columnas en la hoja
         Sheet hoja = libro.createSheet(t);
         try{
+            if(isCancelled())
+                return;
             publish(0); // reiniciar la barra de progreso
             labelProgreso.setText("Exportando la base '" + nombreBase + "': "
                 + "Creando hoja '" + t + "', consultando la base de datos...");
@@ -237,6 +220,7 @@ public class GeneradorExcel extends SwingWorker<Void,Integer>{
             columnas = escribirEncabezados(hoja);
             escribirDatos(hoja, columnas);
         }catch(SQLException ex){
+            identificarFallo(ex);
             labelProgreso.setText("No se pudo obtener la información de la tabla '" + t
             + "' (Error MySQL " + ex.getErrorCode() + ".");
             evento = "No se pudo cargar la información de la tabla " + t
@@ -246,6 +230,17 @@ public class GeneradorExcel extends SwingWorker<Void,Integer>{
         }
     }
     
+    @Override
+    public void mostrarMsgError(int codigo){
+        JOptionPane.showMessageDialog(
+            null, 
+            "No se puede continuar con la escritura del archivo \n"
+                + "debido al error MySQL de código " + codigo + ".  ",
+            "Error", 
+            JOptionPane.ERROR_MESSAGE
+        );    
+    }
+
     /**
      * Escribe los nombres de las columnas en la hoja.
      * @param hoja Hoja en la que se van a escribir los datos.
