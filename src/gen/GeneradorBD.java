@@ -48,7 +48,7 @@ public class GeneradorBD extends Generador{
         barra = null;
         reporte = null;
     }
-    
+
     /**
      * Crea un nuevo objeto para generar una base de datos que ya tiene definido 
      * un nombre para esta y tambien define la estructura que van a tener las tablas.
@@ -246,7 +246,6 @@ public class GeneradorBD extends Generador{
             etiquetaProgreso.setText("Iniciando la creación de la base de datos...");
             conn.crearBase(nombreBase);
             evento = "Esquema '"+nombreBase+"' creado.\n";
-            //areaReporte.append(evento);
             reporte.agregarEvento(evento);
             
             // Crear las tablas e insertar los registros en cada una.
@@ -255,7 +254,7 @@ public class GeneradorBD extends Generador{
                 if(isCancelled()){               
                     etiquetaProgreso.setText("Importación de la base '" + nombreBase + "' cancelada.");                  
                     evento = "Se canceló la importación del esquema '" + nombreBase + "'.";
-                    //areaReporte.append(evento);
+                    conn.terminarConexion();
                     reporte.agregarEvento(evento);
                     btnImportar.setText("Crear base de datos");
                     return null;
@@ -295,6 +294,7 @@ public class GeneradorBD extends Generador{
             //areaReporte.append(evento);
             reporte.agregarEvento(evento);
             publish(100);
+            conn.terminarConexion();
         }catch(SQLException ex){ // Errores al crear la base de datos                
             evento = "[No se pudo continuar con la creación del "
                     + "esquema '" + nombreBase + "'.\n"
