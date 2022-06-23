@@ -1,25 +1,24 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package gen;
 
 import java.sql.SQLException;
 import javax.swing.SwingWorker;
 
 /**
- *
+ * Clase abstracta de la que se pueden definir nuevos procesos ejecutados en 
+ * segundo plano para exportar o importar una base de datos. Define el método 
+ * que permite identificar las excepciones que pueden hacer que un proceso se 
+ * interrumpa.
  * @author Geny
+ * @version 1.0
  */
 public abstract class Generador extends SwingWorker<Void,Integer> {
     /**
-     * Método que identifica las excepciones ocurridas al importar una base de
-     * datos que pueden hacer que el proceso se detenga completamente. Si ocurre 
-     * una excepción de esa clase, se llama al método cancel() para terminar la
-     * importación. Si la excepción no es de tipo crítico, el proceso de 
-     * importación continúa.
-     * @param ex Error ocurrido al intentar modificar la base de datos.
+     * Método que identifica las excepciones ocurridas que pueden hacer que el 
+     * proceso se detenga completamente. Si ocurre una excepción de esa clase, 
+     * se llama al método cancel() del proceso en segundo plano para terminalo. 
+     * Si la excepción no es de tipo crítico, el proceso continúa.
+     * @param ex Error ocurrido al intentar realizar consultas o modificar la 
+     * base de datos.
      */
     protected void identificarFallo(SQLException ex){
         switch(ex.getErrorCode()){
@@ -63,8 +62,9 @@ public abstract class Generador extends SwingWorker<Void,Integer> {
     }
     
     /**
-     *
-     * @param codigo
+     * Muestra un mensaje cuando ocurre una excepción que hace que el proceso
+     * se detenga completamente.
+     * @param codigo Código de la excepción MySQL.
      */
     public abstract void mostrarMsgError(int codigo);
 }
