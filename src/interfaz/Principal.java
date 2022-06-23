@@ -1,7 +1,7 @@
 package interfaz;
 
 import datos.ElementoLista;
-import bd.Conexion;
+import lectura.Conexion;
 import java.awt.CardLayout;
 import java.awt.Color;
 import java.sql.SQLException;
@@ -20,7 +20,7 @@ import javax.swing.UIManager;
  * @author Geny
  * @version 2.0
  */
-public class InterfazGrafica extends javax.swing.JFrame {
+public class Principal extends javax.swing.JFrame {
     private CardLayout cardLayout;
     private String servidor;        // dirección o nombre del servidor de bases de datos
     private String usuario;         // nombre del usuario
@@ -36,7 +36,7 @@ public class InterfazGrafica extends javax.swing.JFrame {
     /**
      * Crea el panel y las distintas interfaces del programa.
      */
-    public InterfazGrafica() {
+    public Principal() {
         // Configurar el color de la barra de progreso
         UIManager.put("ProgressBar.selectionForeground", Color.white);
         UIManager.put("ProgressBar.foreground", new Color(2,97,140));
@@ -610,9 +610,13 @@ public class InterfazGrafica extends javax.swing.JFrame {
                 JOptionPane.QUESTION_MESSAGE,null,opciones,"Aceptar"
             );
             if (eleccion == JOptionPane.YES_OPTION){
+                conn.terminarConexion();
+                panelExp.cancelarProceso();
+                panelImp.cancelarProceso();
                 System.exit(0);
             }
-        }else{
+        }else{     
+            conn.terminarConexion();
             System.exit(0);
         }
     }//GEN-LAST:event_cerrarVentana
@@ -643,8 +647,9 @@ public class InterfazGrafica extends javax.swing.JFrame {
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
+            @Override
             public void run() {
-                new InterfazGrafica().setVisible(true);
+                new Principal().setVisible(true);
             }
         });
     }
