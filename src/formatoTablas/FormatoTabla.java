@@ -30,7 +30,8 @@ public class FormatoTabla extends SwingWorker<Void,Void>{
     private int numRegistros;
     
     /**
-     * Constructor.
+     * Constructor. Crea un nuevo objeto que define de forma inicial el formato
+     * que tendrá la tabla en donde se muestran los datos de la base.
      * @param t Tabla sobre la que se mostrarán los datos.
      * @param c Conexión con la base de datos.
      * @param nomBase Nombre de la base de datos en donde está la tabla que se va a mostrar.
