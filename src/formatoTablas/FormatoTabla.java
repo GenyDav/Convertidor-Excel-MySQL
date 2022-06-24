@@ -1,6 +1,6 @@
 package formatoTablas;
 
-import lectura.Conexion;
+import lectura_escritura.Conexion;
 import java.awt.Component;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
