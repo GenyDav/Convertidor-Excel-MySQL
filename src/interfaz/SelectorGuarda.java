@@ -1,6 +1,6 @@
 package interfaz;
 
-import excel.GeneradorExcel;
+import lectura_escritura.GeneradorExcel;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
