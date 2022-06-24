@@ -1,6 +1,6 @@
-package conexion;
+package lectura;
 
-import interfaz.ElementoLista;
+import datos.ElementoLista;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
@@ -16,6 +16,9 @@ import java.util.ArrayList;
  * @version 1.0
  */
 public class Conexion {
+    private String servidor;
+    private String usr;
+    private String passwd;
     private Connection conn;        // conexión con el servidor de BD
     private DatabaseMetaData info;  // información sobre la conexión
     private ResultSet rs;           // almacena los datos obtenidos en una consulta
@@ -31,10 +34,17 @@ public class Conexion {
      */
     public Conexion(String servidor, String usr, String passwd) throws ClassNotFoundException, SQLException{
         Class.forName("com.mysql.jdbc.Driver");
+        this.servidor = servidor;
+        this.usr = usr;
+        this.passwd = passwd;
         conn = DriverManager.getConnection("jdbc:mysql://"+servidor+"/",usr,passwd);
         info = conn.getMetaData();  
         s = conn.createStatement();
         rs = null;
+    }
+    
+    public Conexion crearNuevaConexion() throws ClassNotFoundException, SQLException{
+        return new Conexion(servidor,usr,passwd);
     }
     
     /**
@@ -105,7 +115,7 @@ public class Conexion {
      * @throws SQLException Error al realizar la operación en el servidor.
      */
     public void crearBase(String nombre) throws SQLException{
-        s.executeUpdate("create database "+nombre+";");    
+        s.executeUpdate("create database "+nombre+";");
     }
     
     /**
