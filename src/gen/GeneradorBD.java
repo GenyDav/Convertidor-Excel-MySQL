@@ -77,7 +77,6 @@ public class GeneradorBD extends Generador{
      */
     private void crearTabla(HojaLista hoja) throws SQLException{
         if(isCancelled()){
-            //etiquetaProgreso.setText("Importación de la base '" + nombreBase + "' cancelada.");
             return;
         }
         String scriptTabla = crearScriptTabla(hoja); 
@@ -160,7 +159,6 @@ public class GeneradorBD extends Generador{
             iteradorRenglon.next(); // saltar el encabezado
             while(iteradorRenglon.hasNext()){
                 if(isCancelled()){
-                    //etiqueta.setText("Importación de la base '"+nombreBase+"' cancelada.");
                     return;
                 }
                 renglonActual = iteradorRenglon.next();
@@ -268,13 +266,11 @@ public class GeneradorBD extends Generador{
                         etiquetaProgreso.setText("Creando la base '"+nombreBase+"': Definiendo la estructura de la tabla '"+nomTabla+"'");              
                         crearTabla(listaHojas.get(i));
                         evento = "Estructura de la tabla '"+nomTabla+"' creada.";
-                        //areaReporte.append(evento);
                         reporte.agregarEvento(evento);
                         
                         // Insertar los datos en la tabla
                         etiquetaProgreso.setText("Creando la base '"+nombreBase+"': Insertando datos en la tabla '"+nomTabla+"' (Tabla "+(i+1)+" de "+numTablas+")");
                         evento = "Iniciando la inserción de registros en la tabla '"+nomTabla+"'.";
-                        //areaReporte.append(evento);
                         reporte.agregarEvento(evento);
                         insertarRegistros(listaHojas.get(i));
                     }
@@ -284,14 +280,12 @@ public class GeneradorBD extends Generador{
                             + listaHojas.get(i).getNombre() 
                             + "', código " + ex.getErrorCode() 
                             + " \n\t("+ ex.getMessage()+ ")\n";                  
-                    //areaReporte.append(evento);
                     reporte.agregarEvento(evento);
                     //ex.printStackTrace();
                 }                     
             }
             etiquetaProgreso.setText("Creación de la base de datos '"+nombreBase+"' terminada.");
             evento = "Importación de datos terminada.\n";
-            //areaReporte.append(evento);
             reporte.agregarEvento(evento);
             publish(100);
             conn.terminarConexion();
@@ -304,7 +298,6 @@ public class GeneradorBD extends Generador{
             //ex.printStackTrace();
             etiquetaProgreso.setText("Falló el intento para importar los datos en '"+nombreBase+"'");
             publish(0);
-            //mostrarMsgError(ex.getErrorCode());
         }
         btnImportar.setText("Crear base de datos");
         return null;
