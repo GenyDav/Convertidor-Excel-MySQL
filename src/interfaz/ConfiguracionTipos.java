@@ -3,6 +3,7 @@ package interfaz;
 import datos.InfoColumna;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Frame;
 import java.util.ArrayList;
 
 /**
@@ -23,7 +24,7 @@ public class ConfiguracionTipos extends javax.swing.JDialog {
      * @param hoja  Nombre de la hoja actual
      * @param col   Lista de columnas en la hoja 
      */
-    public ConfiguracionTipos(java.awt.Frame parent, boolean modal, String hoja, ArrayList<InfoColumna> col) {
+    public ConfiguracionTipos(Frame parent, boolean modal, String hoja, ArrayList<InfoColumna> col) {
         super(parent, modal); 
         initComponents();
         setTitle("Configurar tipos de la columna " + hoja);     
