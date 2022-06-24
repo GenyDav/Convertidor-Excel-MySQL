@@ -1,5 +1,7 @@
 package interfaz;
 
+import datos.InfoColumna;
+import datos.Tipo;
 import java.awt.event.ItemEvent;
 import java.awt.event.KeyEvent;
 import java.util.regex.Matcher;
@@ -432,11 +434,9 @@ public class PanelColumna extends javax.swing.JPanel {
             case Tipo.MEDIUMINT:
             case Tipo.INT:
             case Tipo.BIGINT:
-                /*
-                Los tipos de datos enteros permiten que se deje vacío el campo o 
+                /* Los tipos de datos enteros permiten que se deje vacío el campo o 
                 permiten que el usuario ingrese como paramétro un valor entero 
-                entre 1 y 255, correspondientes al ancho de visualización.
-                */
+                entre 1 y 255, correspondientes al ancho de visualización. */
                 try{
                     if(!entrada.equals("")){
                         int tam = Integer.parseInt(entrada);
@@ -452,19 +452,17 @@ public class PanelColumna extends javax.swing.JPanel {
                         "\nPuede dejar el campo vacío o incluir"
                         + "\nun valor numérico ubicado entre 1 y 255.  "
                     );
-                    // el campo se reinicia al último valor aceptado
+                    // El campo se reinicia al último valor aceptado
                     parametros.setText(info.getParametros());
                 }
                 break;
             case Tipo.DECIMAL:         
-                /*
-                El tipo de dato decimal acepta dos valores numéricos separados por
+                /* El tipo de dato decimal acepta dos valores numéricos separados por
                 una coma(,). El primer número indica el número de dígitos en total
                 que pueden tener los valores de la columna (máximo 65). El segundo 
                 número representa el número de dígitos en la parte decimal del valor
                 (máximo 30). El valor del primer número debe ser mayor al valor del
-                segundo número del parámetro.
-                */
+                segundo número del parámetro. */
                 try{
                     if(!entrada.equals("")){
                         Matcher mat = patronDecimal.matcher(entrada);
@@ -495,14 +493,12 @@ public class PanelColumna extends javax.swing.JPanel {
                 }
                 break;
             case Tipo.FLOAT:
-                /*
-                El tipo de dato float permite que el campo para los parámetros esté vacio
+                /* El tipo de dato float permite que el campo para los parámetros esté vacio
                 o contenga un número entero entre 0 y 53, indicando el tamaño de
                 almacenamiento. Una precisión de 0 a 23 da como resultado una columna 
                 FLOAT de precisión simple de 4 bytes. 
                 Una precisión de 24 a 53 da como resultado una columna DOUBLE de 
-                precisión doble de 8 bytes.
-                */
+                precisión doble de 8 bytes. */
                 try{
                     if(!entrada.equals("")){
                         int tam = Integer.parseInt(entrada);
@@ -522,10 +518,8 @@ public class PanelColumna extends javax.swing.JPanel {
                 }
                 break;
             case Tipo.TEXT:
-                /*
-                El tipo de dato text puede aceptar un número entero positivo
-                que indica la longitud máxima de los valores que pueden contener.
-                */
+                /* El tipo de dato text puede aceptar un número entero positivo
+                que indica la longitud máxima de los valores que pueden contener.*/
                 try{
                     if(!entrada.equals("")){
                         int tam = Integer.parseInt(entrada);
@@ -546,14 +540,12 @@ public class PanelColumna extends javax.swing.JPanel {
                 break;
             case Tipo.ENUM:
             case Tipo.SET:
-                /*
-                Los tipos de datos set y enum aceptan como parámetros una lista
+                /* Los tipos de datos set y enum aceptan como parámetros una lista
                 de elementos separados por coma. Cada elemento debe ir entre 
                 comillas simples (''). La diferencia entre ambos tipos de datos 
                 es que el número máximo de elementos que se pueden definir para 
                 el tipo set es 64 mientras que para enum el número máximo de 
-                elementos en la lista puede ser hasta 65,535.
-                */
+                elementos en la lista puede ser hasta 65,535. */
                 Matcher mat = patronEnumSet.matcher(entrada);
                 try{
                     if(mat.matches()){
@@ -579,12 +571,10 @@ public class PanelColumna extends javax.swing.JPanel {
                 break;
             case Tipo.CHAR:
             case Tipo.BINARY:
-                /*
-                Los tipos de datos char y binary permiten que el usuario escriba
+                /* Los tipos de datos char y binary permiten que el usuario escriba
                 como parámetro un valor entero ubicado entre 0 y 255, indicando el
                 número de caracteres (para el tipo char) o bytes (binary) que se 
-                pueden almacenar en un dato de la columna.
-                */
+                pueden almacenar en un dato de la columna. */
                 try{
                     if(!entrada.equals("")){
                         int tam = Integer.parseInt(entrada);
@@ -605,14 +595,12 @@ public class PanelColumna extends javax.swing.JPanel {
                 break;
             case Tipo.VARCHAR:
             case Tipo.VARBINARY:
-                /*
-                Los tipos de datos char y binary permiten que el usuario escriba
+                /* Los tipos de datos char y binary permiten que el usuario escriba
                 como parámetro un valor entero ubicado entre 0 y 65,535, indicando 
                 el número de caracteres (para el tipo char) o bytes (binary) que 
                 se pueden almacenar como máximo en un dato de la columna.
                 Estos tipos de datos no permiten que el campo de parámetros se
-                encuentre vacío.
-                */
+                encuentre vacío. */
                 try{
                     int tam = Integer.parseInt(entrada);
                     if(tam<0||tam>65535)
