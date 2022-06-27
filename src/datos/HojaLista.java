@@ -58,5 +58,6 @@ public class HojaLista extends ElementoLista{
         for (InfoColumna columna : columnas) {
             System.out.println("   " + columna.getNombre() + ": " + columna.getPK() +","+ Tipo.NOMBRES[columna.getTipo()]);
         }
+        System.out.println();
     }
 }
