@@ -1,9 +1,7 @@
-package gen;
+package lectura_escritura;
 
-import lectura.Conexion;
 import datos.HojaLista;
 import datos.InfoColumna;
-import lectura.LectorExcel;
 import interfaz.PanelImport;
 import interfaz.Reporte;
 import java.sql.SQLException;

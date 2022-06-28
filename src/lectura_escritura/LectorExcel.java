@@ -1,9 +1,9 @@
-package excel;
+package lectura_escritura;
 
 import datos.InfoColumna;
 import datos.Tipo;
 import interfaz.PanelImport;
-import interfaz.TablaLista;
+import datos.HojaLista;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -33,7 +33,7 @@ public class LectorExcel extends SwingWorker<Void,Void>{
     private String ruta;                    // ruta del archivo que va a cargar
     private String nombre;                  // nombre del archivo
     private Workbook libro;                 // archivo Excel
-    private ArrayList<TablaLista> hojas;    // lista de hojas encontradas en el archivo
+    private ArrayList<HojaLista> hojas;     // lista de hojas encontradas en el archivo
     
     private JComboBox comboHojas;   // comboBox en donde se añaden los nombres de las hojas del archivo
     private JLabel etiquetaReg;     // etiqueta donde se muestra el número de renglones de la hoja 
@@ -99,7 +99,7 @@ public class LectorExcel extends SwingWorker<Void,Void>{
             for(int i=0;i<libro.getNumberOfSheets();i++){
                 hojaActual = libro.getSheetAt(i);
                 // Crear un nuevo elemento 'hoja' y añadirlo a la estructura
-                hojas.add(new TablaLista(hojaActual.getSheetName(),i));
+                hojas.add(new HojaLista(hojaActual.getSheetName(),i));
                 // Verificar si la hoja no está vacía para agregar las columnas a la estructura
                 if(hojaActual.getPhysicalNumberOfRows()>0){ 
                     indiceColumna = 0;

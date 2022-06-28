@@ -1,6 +1,5 @@
-package gen;
+package lectura_escritura;
 
-import lectura.Conexion;
 import datos.ElementoLista;
 import interfaz.PanelExport;
 import interfaz.Reporte;

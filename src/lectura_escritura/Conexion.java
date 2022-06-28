@@ -1,4 +1,4 @@
-package lectura;
+package lectura_escritura;
 
 import datos.ElementoLista;
 import java.sql.Connection;

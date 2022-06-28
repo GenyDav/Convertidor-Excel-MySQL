@@ -1,4 +1,4 @@
-package gen;
+package lectura_escritura;
 
 import java.sql.SQLException;
 import javax.swing.SwingWorker;
