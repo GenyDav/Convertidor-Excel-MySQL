@@ -1,7 +1,7 @@
 package interfaz;
 
 import datos.ElementoLista;
-import lectura.Conexion;
+import lectura_escritura.Conexion;
 import java.awt.CardLayout;
 import java.awt.Color;
 import java.sql.SQLException;
@@ -40,7 +40,6 @@ public class Principal extends javax.swing.JFrame {
         // Configurar el color de la barra de progreso
         UIManager.put("ProgressBar.selectionForeground", Color.white);
         UIManager.put("ProgressBar.foreground", new Color(2,97,140));
-        
         initComponents(); 
         setIconImage(new ImageIcon(getClass().getResource("/imagenes/icono_frame.png")).getImage());
         setResizable(false);
@@ -59,19 +58,6 @@ public class Principal extends javax.swing.JFrame {
         modo = EXP;
         panelExp = new PanelExport(this,contenedor);
         panelImp = new PanelImport(this,contenedor);
-    }
-    
-    /**
-     * Muestra por consola el estado de selección de cada elemento en una lista
-     * (de tablas o de hojas.
-     * @param <T> Clases que heredan de ElementoLista.
-     * @param lista Lista de elementos a mostrar.
-     */
-    public static <T extends ElementoLista> void mostrarListaElementos(ArrayList<T> lista){
-        for(int i=0;i<lista.size();i++){
-            System.out.print("["+lista.get(i).estaSeleccionado()+"]");
-        }
-        System.out.println();
     }
     
     /**
@@ -99,8 +85,8 @@ public class Principal extends javax.swing.JFrame {
         imagenInicio = new javax.swing.JLabel();
         panelSecundario = new javax.swing.JPanel();
         menuLateral = new javax.swing.JPanel();
-        modoExport = new javax.swing.JButton();
-        modoImport = new javax.swing.JButton();
+        btnModoExport = new javax.swing.JButton();
+        btnModoImport = new javax.swing.JButton();
         btnSalir = new javax.swing.JButton();
         panelContenido = new javax.swing.JPanel();
 
@@ -242,15 +228,15 @@ public class Principal extends javax.swing.JFrame {
         menuLateral.setBackground(new java.awt.Color(51, 51, 51));
         menuLateral.setForeground(new java.awt.Color(255, 255, 255));
 
-        modoExport.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/btn1.png"))); // NOI18N
-        modoExport.setToolTipText("Convertir una base de datos en un archivo de Excel");
-        modoExport.setBorder(null);
-        modoExport.setBorderPainted(false);
-        modoExport.setContentAreaFilled(false);
-        modoExport.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        modoExport.setDefaultCapable(false);
-        modoExport.setFocusPainted(false);
-        modoExport.addMouseListener(new java.awt.event.MouseAdapter() {
+        btnModoExport.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/btn1.png"))); // NOI18N
+        btnModoExport.setToolTipText("Convertir una base de datos en un archivo de Excel");
+        btnModoExport.setBorder(null);
+        btnModoExport.setBorderPainted(false);
+        btnModoExport.setContentAreaFilled(false);
+        btnModoExport.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnModoExport.setDefaultCapable(false);
+        btnModoExport.setFocusPainted(false);
+        btnModoExport.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 btnExportarMouseEntered(evt);
             }
@@ -258,21 +244,21 @@ public class Principal extends javax.swing.JFrame {
                 btnExportarMouseExited(evt);
             }
         });
-        modoExport.addActionListener(new java.awt.event.ActionListener() {
+        btnModoExport.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                modoExportActionPerformed(evt);
+                btnModoExportActionPerformed(evt);
             }
         });
 
-        modoImport.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/btn2.png"))); // NOI18N
-        modoImport.setToolTipText("Crear una base de datos desde un archivo de Excel");
-        modoImport.setBorder(null);
-        modoImport.setBorderPainted(false);
-        modoImport.setContentAreaFilled(false);
-        modoImport.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        modoImport.setDefaultCapable(false);
-        modoImport.setFocusPainted(false);
-        modoImport.addMouseListener(new java.awt.event.MouseAdapter() {
+        btnModoImport.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/btn2.png"))); // NOI18N
+        btnModoImport.setToolTipText("Crear una base de datos desde un archivo de Excel");
+        btnModoImport.setBorder(null);
+        btnModoImport.setBorderPainted(false);
+        btnModoImport.setContentAreaFilled(false);
+        btnModoImport.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnModoImport.setDefaultCapable(false);
+        btnModoImport.setFocusPainted(false);
+        btnModoImport.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 btnImportMouseEntered(evt);
             }
@@ -280,9 +266,9 @@ public class Principal extends javax.swing.JFrame {
                 btnImportMouseExited(evt);
             }
         });
-        modoImport.addActionListener(new java.awt.event.ActionListener() {
+        btnModoImport.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                modoImportActionPerformed(evt);
+                btnModoImportActionPerformed(evt);
             }
         });
 
@@ -307,17 +293,17 @@ public class Principal extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, menuLateralLayout.createSequentialGroup()
                 .addGap(0, 6, Short.MAX_VALUE)
                 .addGroup(menuLateralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(modoImport, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(modoExport, javax.swing.GroupLayout.PREFERRED_SIZE, 66, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(btnModoImport, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnModoExport, javax.swing.GroupLayout.PREFERRED_SIZE, 66, javax.swing.GroupLayout.PREFERRED_SIZE)))
             .addComponent(btnSalir, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
         );
         menuLateralLayout.setVerticalGroup(
             menuLateralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(menuLateralLayout.createSequentialGroup()
                 .addGap(6, 6, 6)
-                .addComponent(modoExport)
+                .addComponent(btnModoExport)
                 .addGap(0, 0, 0)
-                .addComponent(modoImport)
+                .addComponent(btnModoImport)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(btnSalir)
                 .addGap(5, 5, 5))
@@ -359,6 +345,81 @@ public class Principal extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     /**
+     * Método encargado de intentar realizar la conexión con el servidor de BD
+     * con los datos proporcionados por el usuario. 
+     * Si la conexión se realiza de forma exitosa, el programa muestra la 
+     * pantalla que permite exportar una base de datos en un archivo Excel. 
+     * Si la conexión no se puede realizar, se muestra un mensaje de error en la
+     * pantalla inicial.
+     * param evt Evento generado al presionar el botón 'Conectar'. 
+     */
+    private void btnConectarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConectarActionPerformed
+        mensaje = "Estableciendo la conexión con el servidor...";
+        msj.setText(mensaje);
+        btnConectar.setEnabled(false);
+        servidor = txtServidor.getText();
+        usuario = txtUsuario.getText();
+        clave = txtClave.getText();
+        new Thread(){
+            @Override
+            public void run(){
+                try{
+                    conn = new Conexion(servidor,usuario,clave); // Conectar con el servidor
+                    panelImp.definirConexion(conn);
+                    panelExp.cargarListaDeBases(conn);
+                    panelContenido.removeAll();
+                    panelContenido.add(panelExp);
+                    panelContenido.revalidate();
+                    panelContenido.repaint();
+                    cardLayout.show(contenedor, "pantallaSecundaria"); // cambiar a la pantalla de exportación
+                }catch(SQLException sqle){
+                    mensaje += "\nFalló el intento de conexión. "
+                    + "\nError MySQL " + sqle.getErrorCode() + ": " + sqle.getMessage() + ".";
+                    if(sqle.getErrorCode()==1045){
+                        mensaje += "\nDatos de conexión incorrectos, verifique e intente de nuevo.";
+                    }
+                }catch(ClassNotFoundException cnf){
+                    //cnf.printStackTrace();
+                    mensaje += "\nFalló el intento de conexión."
+                    + "\nNo se pudo encontar la librería mysql-conector-java";
+                }finally{
+                    msj.setText(mensaje);
+                    btnConectar.setEnabled(true);
+                }
+            }
+        }.start();
+    }//GEN-LAST:event_btnConectarActionPerformed
+  
+    /**
+     * Metodo que permite terminar la ejecución del programa al presionar el 
+     * botón para cerrar la ventana (X). Verifica si existen procesos de importación
+     * o exportación ejecutándose antes de terminarlo.
+     * @param evt Evento lanzado al presionar el botón que cierra la ventana del
+     * programa.
+     */
+    private void cerrarVentana(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_cerrarVentana
+        Object []opciones ={"Aceptar","Cancelar"};
+        if((panelExp.consultarEstadoProceso()==StateValue.STARTED)||(panelImp.consultarEstadoProceso()==StateValue.STARTED)){    
+            int eleccion = JOptionPane.showOptionDialog(
+                this,
+                "Hay procesos ejecutándose, ¿desea cerrar el programa?  ",
+                "Confirmar cierre",
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.QUESTION_MESSAGE,null,opciones,"Aceptar"
+            );
+            if (eleccion == JOptionPane.YES_OPTION){
+                conn.terminarConexion();
+                panelExp.cancelarProceso();
+                panelImp.cancelarProceso();
+                System.exit(0);
+            }
+        }else{     
+            conn.terminarConexion();
+            System.exit(0);
+        }
+    }//GEN-LAST:event_cerrarVentana
+    
+    /**
      * Permite que el usuario cierre la conexión con el servidor despues de 
      * verificar que no existen procesos ejecutándose. Si los hay, se pide que
      * el usuario confirme que estos sean interrumpidos.
@@ -369,10 +430,9 @@ public class Principal extends javax.swing.JFrame {
         new SwingWorker<Void,Void>(){
             @Override
             protected Void doInBackground() throws Exception { 
-                System.out.println(panelExp.consultarEstadoProceso());
                 if((panelExp.consultarEstadoProceso()==StateValue.STARTED)||(panelImp.consultarEstadoProceso()==StateValue.STARTED)){
                     int eleccion = JOptionPane.showOptionDialog(
-                        null,
+                        contenedor,
                         "Hay procesos ejecutándose, ¿desea cerrar la conexión?  ",
                         "Confirmar cierre",
                         JOptionPane.YES_NO_OPTION,
@@ -395,14 +455,117 @@ public class Principal extends javax.swing.JFrame {
      * Termina la sesión del usuario en el programa.
      */
     private void terminarConexion(){
-        reiniciarCamposInicio();
+        reiniciarCamposLogIn();
         conn.terminarConexion();
         modo = EXP;
-        modoExport.setIcon(new ImageIcon(getClass().getResource("/imagenes/btn1.png")));
-        modoImport.setIcon(new ImageIcon(getClass().getResource("/imagenes/btn2.png")));
+        btnModoExport.setIcon(new ImageIcon(getClass().getResource("/imagenes/btn1.png")));
+        btnModoImport.setIcon(new ImageIcon(getClass().getResource("/imagenes/btn2.png")));
         panelExp.reiniciarElementosExp();
         panelImp.reiniciarElementosImp(true);
-        cardLayout.show(contenedor, "panelInicio");  
+        cardLayout.show(contenedor, "panelInicio"); // regresar a la pantalla de inicio de sesión  
+    }
+
+    /**
+     * Limpia los valores de los campos de la pantalla de inicio de sesión.
+     */
+    public void reiniciarCamposLogIn(){
+        txtServidor.setText("");
+        txtUsuario.setText("");
+        txtClave.setText("");
+        mensaje = "Conexión terminada.";
+        msj.setText(mensaje);
+        btnConectar.setEnabled(true);
+    }
+    
+    /**
+     * Método que muestra la interfaz con los elementos para crear un archivo
+     * Excel a partir de una base de datos.
+     * @param evt Evento lanzado al presionar el botón que muestra la interfaz
+     * para exportar bases de datos.
+     */
+    private void btnModoExportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModoExportActionPerformed
+        modo = EXP;
+        panelSecundario.setBackground(new Color(153,153,153));
+        panelContenido.removeAll();
+        panelContenido.add(panelExp);
+        panelContenido.revalidate();
+        panelContenido.repaint();
+    }//GEN-LAST:event_btnModoExportActionPerformed
+
+    /**
+     * Método que muestra la interfaz con los elementos para crear una base de
+     * datos a partir de un archivo de Excel.
+     * @param evt Evento lanzado al presionar el botón que muestra la interfaz
+     * para importar bases de datos.
+     */
+    private void btnModoImportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModoImportActionPerformed
+        modo = IMP;
+        panelSecundario.setBackground(new Color(104,104,104));
+        panelContenido.removeAll();
+        panelContenido.add(panelImp);
+        panelContenido.revalidate();
+        panelContenido.repaint();
+    }//GEN-LAST:event_btnModoImportActionPerformed
+
+    /**
+     * Método que configura la apariencia de los botones que cambian la interfaz
+     * cuando el usuario pasa el mouse sobre el botón del modo Importar.
+     * @param evt Evento lanzado cuando el puntero del mouse entra al área del 
+     * botón que cambia el modo de programa a Importar.
+     */
+    private void btnImportMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnImportMouseEntered
+        btnModoImport.setIcon(new ImageIcon(getClass().getResource("/imagenes/btn2_1.png")));
+        btnModoExport.setIcon(new ImageIcon(getClass().getResource("/imagenes/btn1_1.png")));
+    }//GEN-LAST:event_btnImportMouseEntered
+
+    /**
+     * Método que configura la apariencia de los botones que cambian la interfaz
+     * cuando el usuario hace que el mouse salga del área del botón del modo Importar.
+     * @param evt Evento lanzado cuando el puntero del mouse sale del área del
+     * botón que cambia el modo del programa a Importar
+     */
+    private void btnImportMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnImportMouseExited
+        if(modo==EXP){
+            btnModoExport.setIcon(new ImageIcon(getClass().getResource("/imagenes/btn1.png")));
+            btnModoImport.setIcon(new ImageIcon(getClass().getResource("/imagenes/btn2.png")));
+        }
+    }//GEN-LAST:event_btnImportMouseExited
+
+    /**
+     * Método que configura la apariencia de los botones que cambian la interfaz
+     * cuando el usuario pasa el mouse sobre el botón del modo Exportar.
+     * @param evt Evento lanzado cuando el puntero del mouse entral al área del
+     * botón que cambia el modo del programa a Exportar.
+     */
+    private void btnExportarMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnExportarMouseEntered
+        btnModoExport.setIcon(new ImageIcon(getClass().getResource("/imagenes/btn1.png")));
+        btnModoImport.setIcon(new ImageIcon(getClass().getResource("/imagenes/btn2.png")));
+    }//GEN-LAST:event_btnExportarMouseEntered
+
+    /**
+     * Método que configura la apariencia de los botones que cambian la interfaz
+     * cuando el usuario hace que el mouse salga del área del botón del modo Importar.
+     * @param evt Evento lanzado cuando el puntero del mouse sale del área del 
+     * botón que cambia el modo del programa a Importar.
+     */
+    private void btnExportarMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnExportarMouseExited
+        if(modo==IMP){
+            btnModoExport.setIcon(new ImageIcon(getClass().getResource("/imagenes/btn1_1.png")));
+            btnModoImport.setIcon(new ImageIcon(getClass().getResource("/imagenes/btn2_1.png")));
+        }
+    }//GEN-LAST:event_btnExportarMouseExited
+    
+    /**
+     * Muestra por consola el estado de selección de cada elemento en una lista
+     * (de tablas o de hojas.
+     * @param <T> Clases que heredan de ElementoLista.
+     * @param lista Lista de elementos a mostrar.
+     */
+    public static <T extends ElementoLista> void mostrarListaElementos(ArrayList<T> lista){
+        for(int i=0;i<lista.size();i++){
+            System.out.print("["+lista.get(i).estaSeleccionado()+"]");
+        }
+        System.out.println();
     }
     
     /**
@@ -468,172 +631,6 @@ public class Principal extends javax.swing.JFrame {
     }
     
     /**
-     * Método que muestra la interfaz con los elementos para crear un archivo
-     * Excel a partir de una base de datos.
-     * @param evt Evento lanzado al presionar el botón que muestra la interfaz
-     * para exportar bases de datos.
-     */
-    private void modoExportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_modoExportActionPerformed
-        modo = EXP;
-        panelSecundario.setBackground(new Color(153,153,153));
-        panelContenido.removeAll();
-        panelContenido.add(panelExp);
-        panelContenido.revalidate();
-        panelContenido.repaint();
-    }//GEN-LAST:event_modoExportActionPerformed
-
-    /**
-     * Método que muestra la interfaz con los elementos para crear una base de
-     * datos a partir de un archivo de Excel.
-     * @param evt Evento lanzado al presionar el botón que muestra la interfaz
-     * para importar bases de datos.
-     */
-    private void modoImportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_modoImportActionPerformed
-        modo = IMP;
-        panelSecundario.setBackground(new Color(104,104,104));
-        panelContenido.removeAll();
-        panelContenido.add(panelImp);
-        panelContenido.revalidate();
-        panelContenido.repaint();
-    }//GEN-LAST:event_modoImportActionPerformed
-
-    /**
-     * Método que configura la apariencia de los botones que cambian la interfaz
-     * cuando el usuario pasa el mouse sobre el botón del modo Importar.
-     * @param evt Evento lanzado cuando el puntero del mouse entra al área del 
-     * botón que cambia el modo de programa a Importar.
-     */
-    private void btnImportMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnImportMouseEntered
-        modoImport.setIcon(new ImageIcon(getClass().getResource("/imagenes/btn2_1.png")));
-        modoExport.setIcon(new ImageIcon(getClass().getResource("/imagenes/btn1_1.png")));
-    }//GEN-LAST:event_btnImportMouseEntered
-
-    /**
-     * Método que configura la apariencia de los botones que cambian la interfaz
-     * cuando el usuario hace que el mouse salga del área del botón del modo Importar.
-     * @param evt Evento lanzado cuando el puntero del mouse sale del área del
-     * botón que cambia el modo del programa a Importar
-     */
-    private void btnImportMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnImportMouseExited
-        if(modo==EXP){
-            modoExport.setIcon(new ImageIcon(getClass().getResource("/imagenes/btn1.png")));
-            modoImport.setIcon(new ImageIcon(getClass().getResource("/imagenes/btn2.png")));
-        }
-    }//GEN-LAST:event_btnImportMouseExited
-
-    /**
-     * Método que configura la apariencia de los botones que cambian la interfaz
-     * cuando el usuario pasa el mouse sobre el botón del modo Exportar.
-     * @param evt Evento lanzado cuando el puntero del mouse entral al área del
-     * botón que cambia el modo del programa a Exportar.
-     */
-    private void btnExportarMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnExportarMouseEntered
-        modoExport.setIcon(new ImageIcon(getClass().getResource("/imagenes/btn1.png")));
-        modoImport.setIcon(new ImageIcon(getClass().getResource("/imagenes/btn2.png")));
-    }//GEN-LAST:event_btnExportarMouseEntered
-
-    /**
-     * Método que configura la apariencia de los botones que cambian la interfaz
-     * cuando el usuario hace que el mouse salga del área del botón del modo Importar.
-     * @param evt Evento lanzado cuando el puntero del mouse sale del área del 
-     * botón que cambia el modo del programa a Importar.
-     */
-    private void btnExportarMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnExportarMouseExited
-        if(modo==IMP){
-            modoExport.setIcon(new ImageIcon(getClass().getResource("/imagenes/btn1_1.png")));
-            modoImport.setIcon(new ImageIcon(getClass().getResource("/imagenes/btn2_1.png")));
-        }
-    }//GEN-LAST:event_btnExportarMouseExited
-
-   
-    /**
-     * Método encargado de intentar realizar la conexión con el servidor de BD
-     * con los datos proporcionados por el usuario. 
-     * Si la conexión se realiza de forma exitosa, el programa muestra la 
-     * pantalla que permite exportar una base de datos en un archivo Excel. 
-     * Si la conexión no se puede realizar, se muestra un mensaje de error en la
-     * pantalla inicial.
-     * param evt Evento generado al presionar el botón 'Conectar'. 
-     */
-    private void btnConectarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConectarActionPerformed
-        mensaje = "Estableciendo la conexión con el servidor...";
-        msj.setText(mensaje);
-        btnConectar.setEnabled(false);
-        servidor = txtServidor.getText();
-        usuario = txtUsuario.getText();
-        clave = txtClave.getText();
-        new Thread(){
-            @Override
-            public void run(){
-                try{
-                    conn = new Conexion(servidor,usuario,clave); // Conectar con el servidor
-                    panelImp.definirConexion(conn);
-                    panelExp.cargarListaDeBases(conn);
-                    panelContenido.removeAll();
-                    panelContenido.add(panelExp);
-                    panelContenido.revalidate();
-                    panelContenido.repaint();
-                    cardLayout.show(contenedor, "pantallaSecundaria"); // cambiar a la pantalla de exportación
-                }catch(SQLException sqle){
-                    mensaje += "\nFalló el intento de conexión. "
-                    + "\nError MySQL " + sqle.getErrorCode()+": "+sqle.getMessage()+".";
-                    if(sqle.getErrorCode()==1045){
-                        mensaje += "\nDatos de conexión incorrectos, verifique e intente de nuevo.";
-                    }
-                }catch(ClassNotFoundException cnf){
-                    //cnf.printStackTrace();
-                    mensaje += "\nFalló el intento de conexión."
-                    + "\nNo se pudo encontar la librería mysql-conector-java";
-                }finally{
-                    msj.setText(mensaje);
-                    btnConectar.setEnabled(true);
-                }
-            }
-        }.start();
-    }//GEN-LAST:event_btnConectarActionPerformed
-  
-    /**
-     * Metodo que permite terminar la ejecución del programa al presionar el 
-     * botón para cerrar la ventana. Verifica si existen procesos de importación
-     * o exportación ejecutándose antes de terminarlo.
-     * @param evt Evento lanzado al presionar el botón que cierra la ventana del
-     * programa.
-     */
-    private void cerrarVentana(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_cerrarVentana
-        Object []opciones ={"Aceptar","Cancelar"};
-        if((panelExp.consultarEstadoProceso()==StateValue.STARTED)||(panelImp.consultarEstadoProceso()==StateValue.STARTED)){    
-            int eleccion = JOptionPane.showOptionDialog(
-                this,
-                "Hay procesos ejecutándose, ¿desea cerrar el programa?  ",
-                "Confirmar cierre",
-                JOptionPane.YES_NO_OPTION,
-                JOptionPane.QUESTION_MESSAGE,null,opciones,"Aceptar"
-            );
-            if (eleccion == JOptionPane.YES_OPTION){
-                conn.terminarConexion();
-                panelExp.cancelarProceso();
-                panelImp.cancelarProceso();
-                System.exit(0);
-            }
-        }else{     
-            conn.terminarConexion();
-            System.exit(0);
-        }
-    }//GEN-LAST:event_cerrarVentana
-    
-    /**
-     * Limpia los valores de los campos de la pantalla de inicio de sesión.
-     */
-    public void reiniciarCamposInicio(){
-        txtServidor.setText("");
-        txtUsuario.setText("");
-        txtClave.setText("");
-        mensaje = "Conexión terminada.";
-        msj.setText(mensaje);
-        btnConectar.setEnabled(true);
-    }
-    
-    /**
      * Método que inicia la ejecución del programa.
      * @param args Argumentos de la línea de comandos.
      */
@@ -642,7 +639,7 @@ public class Principal extends javax.swing.JFrame {
         try {    
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         } catch (Exception ex) {
-            System.err.println(ex);
+            //System.err.println(ex);
         }
 
         /* Create and display the form */
@@ -656,6 +653,8 @@ public class Principal extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnConectar;
+    private javax.swing.JButton btnModoExport;
+    private javax.swing.JButton btnModoImport;
     private javax.swing.JButton btnSalir;
     private javax.swing.JPanel contenedor;
     private javax.swing.JLabel imagenInicio;
@@ -664,8 +663,6 @@ public class Principal extends javax.swing.JFrame {
     private javax.swing.JLabel labelServidor;
     private javax.swing.JLabel labelUsuario;
     private javax.swing.JPanel menuLateral;
-    private javax.swing.JButton modoExport;
-    private javax.swing.JButton modoImport;
     private javax.swing.JTextArea msj;
     private javax.swing.JPanel panelContenido;
     private javax.swing.JPanel panelLogIn;
