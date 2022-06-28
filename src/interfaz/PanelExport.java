@@ -1,8 +1,8 @@
 package interfaz;
 
-import bd.Conexion;
+import lectura_escritura.Conexion;
 import datos.ElementoLista;
-import excel.GeneradorExcel;
+import lectura_escritura.GeneradorExcel;
 import formatoTablas.FormatoTabla;
 import java.awt.event.ItemEvent;
 import java.io.File;
@@ -30,15 +30,15 @@ import javax.swing.table.DefaultTableModel;
  * @version 1.1
  */
 public class PanelExport extends javax.swing.JPanel {
-    private JFrame ventana;
-    private JPanel panel;
-    private int indiceBaseAct;
-    private boolean cambioCancelado;
-    private ArrayList<ElementoLista> listaElementos;
+    private JFrame ventana;     // Ventana sobre la que corre el programa
+    private JPanel panel;       // Panel contenedor del panel de exportación
+    private int indiceBaseAct;  // Índice de la tabla que se está mostrando en pantalla
+    private boolean cambioCancelado; 
+    private ArrayList<ElementoLista> listaElementos; // estructura que representa a las tablas de la BD 
     private DefaultListModel modeloLista; // modelo que contiene a los elementos seleccionados en la lista de exportación
-    private GeneradorExcel generadorArch;
-    private Conexion conn;
-    private FormatoTabla formato;   // formato de la tabla en donde se muestran los datos
+    private GeneradorExcel generadorArch; // objeto encargado de crear el archivo de Excel
+    private Conexion conn;                // conexión que muestra los datos de la BD
+    private FormatoTabla formato;         // formato de la tabla en donde se muestran los datos
     private Reporte reporte;
     
     /**
@@ -403,30 +403,57 @@ public class PanelExport extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    /**
+     * Método para obtener el botón que permite iniciar la exportación de la 
+     * base de datos.
+     * @return Objeto JButton que inicia el proceso de exportación.
+     */
     public JButton getBtnExportar() {
         return btnExportar;
     }
 
+    /**
+     * Devuelve el botón que permite visualizar los eventos ocurridos durante la
+     * creación del archivo Excel.
+     * @return Objeto JButton que muestra el reporte de exportación.
+     */
     public JButton getBtnReporte() {
         return btnReporte;
     }
 
+    /**
+     * Método que devuelve la ventana que contiene al reporte de exportación.
+     * @return Objeto de tipo Reporte.
+     */
     public Reporte getReporte() {
         return reporte;
     }
 
+    /**
+     * 
+     * @return 
+     */
     public JLabel getLabelInfo() {
         return labelInfo;
     }
 
+    /**
+     * Método que permite obtener la barra donde se muestra el progreso de 
+     * exportación de la base de datos.
+     * @return objeto JProgressBar del proceso de exportación. 
+     */
     public JProgressBar getBarraProgreso() {
         return barraProgreso;
     }
 
+    /**
+     * Método que devuelve la ventana princial sobre la que se ejecuta todo el
+     * programa.
+     * @return Objeto JFrame principal del programa.
+     */
     public JFrame getVentana() {
         return ventana;
     }
-
     
     /**
      * Método que comprueba si la tabla seleccionada está agregada a la lista de
@@ -444,7 +471,7 @@ public class PanelExport extends javax.swing.JPanel {
             jListTablas.setSelectedIndex(modeloLista.getSize()-1);
             // marcar la tabla como seleccionada en la estructura de datos
             listaElementos.get(comboTablas.getSelectedIndex()).setSeleccionado(true);
-            // InterfazGrafica.mostrarListaElementos();
+            // Principal.mostrarListaElementos();
             btnQuitar.setEnabled(true);
             btnBorrar.setEnabled(true);
             btnAgregarTabla.setEnabled(false);
@@ -519,8 +546,8 @@ public class PanelExport extends javax.swing.JPanel {
      * todos los elementos de la lista de exportación.
      */
     private void btnBorrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBorrarActionPerformed
-        if(InterfazGrafica.limpiarSeleccion(panel,"tablas",modeloLista,listaElementos) == JOptionPane.OK_OPTION){
-            //InterfazGrafica.mostrarListaElementos(listaElementos);
+        if(Principal.limpiarSeleccion(panel,"tablas",modeloLista,listaElementos) == JOptionPane.OK_OPTION){
+            //Principal.mostrarListaElementos(listaElementos);
             btnAgregarTabla.setEnabled(true);
             btnExportar.setEnabled(false);
             btnBorrar.setEnabled(false);
@@ -535,8 +562,8 @@ public class PanelExport extends javax.swing.JPanel {
      * los elementos.
      */
     private void btnQuitarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnQuitarActionPerformed
-        InterfazGrafica.borrarElemento(jListTablas,modeloLista,listaElementos);
-        //InterfazGrafica.mostrarListaElementos(listaElementos);
+        Principal.borrarElemento(jListTablas,modeloLista,listaElementos);
+        //Principal.mostrarListaElementos(listaElementos);
         // Revisar si la tabla que se se está mostrando está en la lista de exportación
         if(!listaElementos.get(comboTablas.getSelectedIndex()).estaSeleccionado())
             btnAgregarTabla.setEnabled(true);
@@ -560,9 +587,9 @@ public class PanelExport extends javax.swing.JPanel {
             cargarDatos(comboBases.getSelectedItem().toString(),comboTablas.getSelectedItem().toString());
             if(opTablasSel.isSelected()){
                 if(listaElementos.get(comboTablas.getSelectedIndex()).estaSeleccionado())
-                btnAgregarTabla.setEnabled(false); // deshabilitar el boton si la tabla actual está en la lista
+                    btnAgregarTabla.setEnabled(false); // deshabilitar el boton si la tabla actual está en la lista
                 else
-                btnAgregarTabla.setEnabled(true);
+                    btnAgregarTabla.setEnabled(true);
             }
         }
     }//GEN-LAST:event_comboTablasItemStateChanged
@@ -608,7 +635,7 @@ public class PanelExport extends javax.swing.JPanel {
             if(!cambioCancelado){
                 if(evt.getStateChange()==ItemEvent.SELECTED){
                     comboBases.hidePopup();
-                    if(InterfazGrafica.limpiarSeleccion(panel,"tablas",modeloLista,listaElementos)==JOptionPane.OK_OPTION){
+                    if(Principal.limpiarSeleccion(panel,"tablas",modeloLista,listaElementos)==JOptionPane.OK_OPTION){
                         comboTablas.removeAllItems();
                         opcTablasCompletas.setSelected(true);
                         btnAgregarTabla.setEnabled(false);
@@ -709,7 +736,7 @@ public class PanelExport extends javax.swing.JPanel {
         String directorio; // directorio por defecto del usuario
         try {
             String nombreBD = comboBases.getSelectedItem().toString(); 
-            // Crear una nueva conexión que se encargará de obtener los datos de la BD
+            // Crear una nueva conexión utilizada para crear el archivo de Excel
             Conexion con2 = conn.crearNuevaConexion();
             if(opcTablasCompletas.isSelected()){
                 lista = listaElementos; 
@@ -719,7 +746,6 @@ public class PanelExport extends javax.swing.JPanel {
                     .collect(Collectors.toList());
             }
             // Inicializar el objeto que va a crear el archivo de Excel
-            //generadorArch = new GeneradorExcel(con2,nombreBD,lista,labelInfo,barraProgreso,ventana,btnExportar,reporte);
             generadorArch = new GeneradorExcel(con2,nombreBD,lista,this);
             directorio = FileSystemView.getFileSystemView().getDefaultDirectory().getPath();
             // Instanciar y mostrar la ventana de selección de archivos
