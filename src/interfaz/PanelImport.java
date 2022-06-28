@@ -1,11 +1,11 @@
 package interfaz;
 
-import bd.GeneradorBD;
+import lectura_escritura.GeneradorBD;
 import datos.HojaLista;
-import bd.Conexion;
+import lectura_escritura.Conexion;
 import datos.ElementoLista;
 import datos.InfoColumna;
-import excel.LectorExcel;
+import lectura_escritura.LectorExcel;
 import formatoTablas.FormatoTablaExcel;
 import java.awt.event.ItemEvent;
 import java.io.File;
@@ -37,9 +37,9 @@ import javax.swing.table.DefaultTableModel;
 public class PanelImport extends javax.swing.JPanel {
     private JFrame ventana;                     // Contenedor padre del programa
     private JPanel panel;                       // Panel sobre el que se muestra el panel de importación
-    private ArrayList<HojaLista> listaHojas;   // Estructura con la información de las hojas
+    private ArrayList<HojaLista> listaHojas;    // Estructura con la información de las hojas
     private LectorExcel lector;                 // Objeto que abre el archivo de Excel
-    private Conexion conn;                      // Conexión a la base de datos
+    private Conexion conn;                      // Conexión que lee los datos que se muestran en las tablas 
     private FormatoTablaExcel formatoTabla;     // Formato de la tabla donde se muestran los datos de la hoja 
     private DefaultListModel modeloLista;       // Modelo de la lista de importación
     private GeneradorBD genBD;                  // Objeto que crea la base de datos
@@ -466,8 +466,8 @@ public class PanelImport extends javax.swing.JPanel {
      * seleccionadas de la lista de importación.
      */
     private void btnQuitarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnQuitarActionPerformed
-        InterfazGrafica.borrarElemento(jListHojas,modeloLista,listaHojas);
-        //InterfazGrafica.mostrarListaElementos(listaHojas);
+        Principal.borrarElemento(jListHojas,modeloLista,listaHojas);
+        // Principal.mostrarListaElementos(listaHojas);
         if(!listaHojas.get(comboHojas.getSelectedIndex()).estaSeleccionado()){
             btnTipos.setEnabled(false);
             btnAgregarHoja.setEnabled(true);
@@ -486,7 +486,7 @@ public class PanelImport extends javax.swing.JPanel {
      * todos los elementos de la lista de importación.
      */
     private void btnBorrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBorrarActionPerformed
-        if(InterfazGrafica.limpiarSeleccion(panel,"hojas",modeloLista,listaHojas)==JOptionPane.OK_OPTION){
+        if(Principal.limpiarSeleccion(panel,"hojas",modeloLista,listaHojas)==JOptionPane.OK_OPTION){
             btnTipos.setEnabled(false);
             btnAgregarHoja.setEnabled(true);
             btnImportar.setEnabled(false);
@@ -602,9 +602,8 @@ public class PanelImport extends javax.swing.JPanel {
                 .filter(elemento->elemento.estaSeleccionado())
                 .collect(Collectors.toList());
         }
-        try{
-            //Conexion con2 = new Conexion(conn.getServidor(),conn.getUsr(),conn.getPasswd());            
-            Conexion con2 = conn.crearNuevaConexion();            
+        try{            
+            Conexion con2 = conn.crearNuevaConexion(); // conexión en la que se crea la base de datos           
             genBD =  new GeneradorBD(con2,nombre,listaHojasImportar,this);
             genBD.execute();      
             btnReporte.setEnabled(true);
@@ -636,7 +635,7 @@ public class PanelImport extends javax.swing.JPanel {
         modeloLista.addElement(new ElementoLista(comboHojas.getSelectedItem().toString(),comboHojas.getSelectedIndex()));
         jListHojas.setSelectedIndex(modeloLista.getSize()-1);
         listaHojas.get(comboHojas.getSelectedIndex()).setSeleccionado(true);
-        //InterfazGrafica.mostrarListaElementos(listaHojas);
+        // Principal.mostrarListaElementos(listaHojas);
         btnQuitar.setEnabled(true);
         btnBorrar.setEnabled(true);
         btnTipos.setEnabled(true);
@@ -661,7 +660,7 @@ public class PanelImport extends javax.swing.JPanel {
         // Si la lista no está vacía, se muestra un cuadro de diálogo donde se
         // le solicita al usuario la confirmación para eliminar las tablas de la
         // lista antes de abrir el nuevo archivo.
-        if(!modeloLista.isEmpty()&&InterfazGrafica.limpiarSeleccion(panel,"hojas",modeloLista,listaHojas)==JOptionPane.OK_OPTION){
+        if(!modeloLista.isEmpty()&&Principal.limpiarSeleccion(panel,"hojas",modeloLista,listaHojas)==JOptionPane.OK_OPTION){
             btnBorrar.setEnabled(false);
             btnQuitar.setEnabled(false);
             if(opcHojasSel.isSelected()){
@@ -681,13 +680,13 @@ public class PanelImport extends javax.swing.JPanel {
                 rutaArch = sa.getSelectedFile().getPath();
                 File archivo = new File(rutaArch);
                 if(archivo.length()==0){
-                    reiniciarPantalla(true);
+                    reiniciarElementosImp(true);
                     JOptionPane.showMessageDialog(
                         this, nomArch+"\nEl archivo no tiene información.  ",
                         "No se puede leer el archivo", JOptionPane.WARNING_MESSAGE
                     );
                 }else{
-                    reiniciarPantalla(false);
+                    reiniciarElementosImp(false);
                     lector = new LectorExcel(ventana, this);
                     lector.execute();
                 }
@@ -704,7 +703,7 @@ public class PanelImport extends javax.swing.JPanel {
      * @param estadoBtnAbrir Booleano que indica si el botón para cargar un
      * archivo nuevo debe permanecer habilitado o deshabilitado.
      */
-    public void reiniciarPantalla(boolean estadoBtnAbrir){
+    public void reiniciarElementosImp(boolean estadoBtnAbrir){
         btnAbrir.setEnabled(estadoBtnAbrir);
         labelArchivo.setText("");
         comboHojas.removeAllItems();
@@ -892,9 +891,8 @@ public class PanelImport extends javax.swing.JPanel {
         String nomTabla = listaHojas.get(comboHojas.getSelectedIndex()).getNombre();
         ArrayList<InfoColumna> columnas = listaHojas.get(comboHojas.getSelectedIndex()).obtenerColumnas();
         new ConfiguracionTipos(ventana,true,nomTabla,columnas).setVisible(true);
-        /*for (TablaLista hoja : listaHojas) {
+        /*for(TablaLista hoja : listaHojas) {
             hoja.mostrarColumnas();
-            System.out.println();
         }*/
     }//GEN-LAST:event_btnTiposActionPerformed
 
