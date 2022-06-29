@@ -3,5 +3,5 @@ nbproject
 src/recursos
 build.xml
 manifest.mf
-/dist/
+dist/
 src/lib
