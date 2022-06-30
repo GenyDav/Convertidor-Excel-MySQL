@@ -188,7 +188,6 @@
                 </Component>
                 <Component class="javax.swing.JTextField" name="txtUsuario">
                   <Properties>
-                    <Property name="text" type="java.lang.String" value="root"/>
                     <Property name="autoscrolls" type="boolean" value="false"/>
                     <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
                       <Border info="org.netbeans.modules.form.compat2.border.LineBorderInfo">
@@ -204,7 +203,6 @@
                 </Component>
                 <Component class="javax.swing.JTextField" name="txtServidor">
                   <Properties>
-                    <Property name="text" type="java.lang.String" value="localhost"/>
                     <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
                       <Border info="org.netbeans.modules.form.compat2.border.LineBorderInfo">
                         <LineBorder thickness="3">
@@ -216,7 +214,6 @@
                 </Component>
                 <Component class="javax.swing.JPasswordField" name="txtClave">
                   <Properties>
-                    <Property name="text" type="java.lang.String" value="root"/>
                     <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
                       <Border info="org.netbeans.modules.form.compat2.border.LineBorderInfo">
                         <LineBorder thickness="3">
