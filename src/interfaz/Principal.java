@@ -120,15 +120,12 @@ public class Principal extends javax.swing.JFrame {
         labelClave.setForeground(new java.awt.Color(255, 255, 255));
         labelClave.setText("Contraseña");
 
-        txtUsuario.setText("root");
         txtUsuario.setAutoscrolls(false);
         txtUsuario.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255), 3));
         txtUsuario.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
 
-        txtServidor.setText("localhost");
         txtServidor.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255), 3));
 
-        txtClave.setText("root");
         txtClave.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255), 3));
 
         btnConectar.setText("Conectar");
