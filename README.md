@@ -20,7 +20,7 @@ Tambien es posible crear una base de datos nueva con el contenido de un libro de
 
 ## Capturas de pantalla del programa en funcionamiento
 * Al iniciar el programa la pantalla que aparece es la que le permite al usuario realizar una conexión con el servidor de bases de datos. Cuando el usuario escribe sus credenciales, el programa muestra un mensaje indicando que se está intentando conextar con el servidor MySQL especificado. 
-!(Inicio de sesión)[Imagen1.png]
+![Inicio de sesión](Imagen1.png)
 
 ## Lenguajes y herramientas
 * El proyecto está escrito completamente en el lenguaje Java
