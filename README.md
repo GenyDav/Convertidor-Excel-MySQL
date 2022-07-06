@@ -7,7 +7,7 @@ Tambien es posible crear una base de datos nueva con el contenido de un libro de
 * Acceso al sistema con las credenciales de usuario
 * Se incluye un panel donde es posible visualizar las tablas de la base seleccionada
 * Las celdas del archivo creado pertenecen al tipo de dato obtenido desde la base
-* Es posible ver el progreso y sus detalles durante el proceso de exportación
+* Es posible ver el progreso de la exportación y los detalles ocurridos en el proceso
 
 ### Importación de bases de datos
 * Se incluye un panel para visualizar las hojas del archivo abierto
@@ -17,6 +17,10 @@ Tambien es posible crear una base de datos nueva con el contenido de un libro de
 * El usuario puede seleccionar las hojas del archivo que serán convertidas en tablas
 * Antes de crear la base, el usuario puede configurar el tipo de dato y los modificadores de cada columna en la hoja, los cuales son utilizados para definir la estructura de la tabla nueva.
 * Es posible ver el progreso y sus detalles durante el proceso de importación
+
+## Capturas de pantalla del programa en funcionamiento
+* Al iniciar el programa la pantalla que aparece es la que le permite al usuario realizar una conexión con el servidor de bases de datos. Cuando el usuario escribe sus credenciales, el programa muestra un mensaje indicando que se está intentando conextar con el servidor MySQL especificado. 
+!(Inicio de sesión)[Imagen1.png]
 
 ## Lenguajes y herramientas
 * El proyecto está escrito completamente en el lenguaje Java
