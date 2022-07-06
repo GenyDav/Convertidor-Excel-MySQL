@@ -234,7 +234,6 @@ public class GeneradorBD extends Generador{
     protected Void doInBackground(){
         String nomTabla;
         int numTablas = listaHojas.size();
-        
         try{
             // Crear la base de datos
             btnImportar.setText("Cancelar importación");
@@ -295,6 +294,7 @@ public class GeneradorBD extends Generador{
             reporte.agregarEvento(evento);
             //ex.printStackTrace();
             etiquetaProgreso.setText("Falló el intento para importar los datos en '"+nombreBase+"'");
+            mostrarMsgError(ex.getErrorCode());
             publish(0);
         }
         btnImportar.setText("Crear base de datos");
