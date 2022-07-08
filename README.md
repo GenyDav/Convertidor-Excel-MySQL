@@ -8,6 +8,7 @@ Tambien es posible crear una base de datos nueva con el contenido de un libro de
 * Se incluye un panel donde es posible visualizar las tablas de la base seleccionada
 * Las celdas del archivo creado pertenecen al tipo de dato obtenido desde la base
 * Es posible ver el progreso de la exportación y los detalles ocurridos en el proceso
+* El proceso de exportación se puede cancelar en cualquier momento
 
 ### Importación de bases de datos
 * Se incluye un panel para visualizar las hojas del archivo abierto
@@ -17,6 +18,7 @@ Tambien es posible crear una base de datos nueva con el contenido de un libro de
 * El usuario puede seleccionar las hojas del archivo que serán convertidas en tablas
 * Antes de crear la base, el usuario puede configurar el tipo de dato y los modificadores de cada columna en la hoja, los cuales son utilizados para definir la estructura de la tabla nueva.
 * Es posible ver el progreso y sus detalles durante el proceso de importación
+* El proceso de importación se puede cancelar en cualquier momento
 
 ## Capturas de pantalla del programa en funcionamiento
 * Explicando brevemente, el funcionamiento del programa es el siguiente:
@@ -29,9 +31,13 @@ Tambien es posible crear una base de datos nueva con el contenido de un libro de
 
 ![Interfaz de exportación](Imagen2.png)
 
-* En esta sección se puede seleccionar alguna de las bases de datos del servidor y se puede seleccionar una tabla en específico para poder ver sus datos en pantalla. El usuario puede exportar todas las tablas en la base de datos seleccionada o puede escoger solo las tablas que desea exportar mediante el botón 'Seleccionar tabla'. Ta,bien puede editar la lista de tablas seleccionadas.
+* En esta sección se puede seleccionar alguna de las bases de datos del servidor y se puede seleccionar una tabla en específico para poder ver sus datos en pantalla. El usuario puede exportar todas las tablas en la base de datos seleccionada o puede escoger solo las tablas que desea exportar mediante el botón 'Seleccionar tabla'. Tambien puede editar la lista de tablas seleccionadas.
 
-* Cuando se presiona el botón 'Exportar' se habilita una ventana en donde se describen los eventos ocurridos al ir creando el archivo de Excel, y el progreso en la exportación de cada tabla se muestra en la barra inferior.
+![Selección de tablas](Imagen3.png)
+
+* Cuando se presiona el botón 'Exportar', y después de haber seleccionado la ubicación del archivo, se habilita una ventana en donde se describen los eventos ocurridos al ir creando el archivo de Excel, y el progreso en la exportación de cada tabla se muestra en la barra inferior.
+
+![Progreso de exportación](Imagen4.png)
 
 ## Lenguajes y herramientas
 * El proyecto está escrito completamente en el lenguaje Java
