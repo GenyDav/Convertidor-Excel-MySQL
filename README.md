@@ -39,6 +39,23 @@ Tambien es posible crear una base de datos nueva con el contenido de un libro de
 
 ![Progreso de exportación](Imagen4.png)
 
+* Al terminar de escribir los datos en todas las hojas, se muestra un mensaje que indica que el proceso ha terminado de forma correcta.
+
+![Fin de la exportación](Imagen5.png)
+
+* Si el usuario selecciona en el menú lateral la opción que corresponde a la sección de importación, se muestra la siguiente pantalla:
+
+![Sección de importación](Imagen6.png)
+
+* Despues de seleccionar un archivo para abrirlo, el usuario puede ver los datos de cada hoja seleccionando el nombre de la misma en la lista superior.
+
+![Archivo abierto](Imagen7.png)
+
+* De igual forma que en la sección de exportación, el usuario puede seleccionar en una lista únicamente las tablas que desea que se incluyan en la base de datos nueva. 
+* Cuando una hoja está seleccionada en el combo box y se hace clic en el botón 'Cambiar tipos' aparece una nueva ventana en donde se muestra un conjunto de paneles en el que cada uno corresponde con una columna de la hoja seleccionada. Cada panel muestra el nombre de la columna e incluye los campos para cambiar el tipo de dato de la columna, agregar parámetros a ese tipo de dato y asignar los modificadores de llave primaria, campo no nulo, de valor único, valor sin signo y de auto incremento. 
+
+![Configuracion de tipos](Imagen8.png)
+
 ## Lenguajes y herramientas
 * El proyecto está escrito completamente en el lenguaje Java
 * Para establecer la conexión con el servidor de bases de datos se utilizó la librería mysql-connector-java-5.1.18
