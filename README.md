@@ -19,12 +19,19 @@ Tambien es posible crear una base de datos nueva con el contenido de un libro de
 * Es posible ver el progreso y sus detalles durante el proceso de importación
 
 ## Capturas de pantalla del programa en funcionamiento
-* Al iniciar el programa la pantalla que aparece es la que le permite al usuario realizar una conexión con el servidor de bases de datos. Cuando el usuario escribe sus credenciales, el programa muestra un mensaje indicando que se está intentando conectar con el servidor MySQL especificado. 
+* Explicando brevemente, el funcionamiento del programa es el siguiente:
+
+* Al iniciar el programa la pantalla que aparece es la que le permite al usuario realizar una conexión con el servidor de bases de datos. Cuando el usuario escribe sus credenciales, el programa muestra un mensaje indicando que se está intentando conectar con el servidor MySQL especificado. Si no se puede establecer la conexión, el programa muestra un mensaje describiendo el motivo.
 
 ![Inicio de sesión](Imagen1.png)
 
-* Si no se puede establecer la conexión con el servidor, el programa muestra una descripción del motivo.
-![Inicio de sesión](Imagen2.png)
+* Cuando se puede crear una nueva conexión con el servidor, el programa cambia la pantalla y muestra un menú lateral en donde se puede seleccionar la sección de importación o exportación. Por defecto, al establecer la conexión, el programa muestra la sección de exportación.
+
+![Interfaz de exportación](Imagen2.png)
+
+* En esta sección se puede seleccionar alguna de las bases de datos del servidor y se puede seleccionar una tabla en específico para poder ver sus datos en pantalla. El usuario puede exportar todas las tablas en la base de datos seleccionada o puede escoger solo las tablas que desea exportar mediante el botón 'Seleccionar tabla'. Ta,bien puede editar la lista de tablas seleccionadas.
+
+* Cuando se presiona el botón 'Exportar' se habilita una ventana en donde se describen los eventos ocurridos al ir creando el archivo de Excel, y el progreso en la exportación de cada tabla se muestra en la barra inferior.
 
 ## Lenguajes y herramientas
 * El proyecto está escrito completamente en el lenguaje Java
