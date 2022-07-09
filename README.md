@@ -56,6 +56,8 @@ Tambien es posible crear una base de datos nueva con el contenido de un libro de
 
 ![Configuracion de tipos](Imagen8.png)
 
+* Cuando el usuario presionar el botón 'Crear base de datos', el usuario debe introducir un nombre válido para la base y despues comienza el proceso, el progreso de la importación se muestra en la barra inferior; los eventos ocurridos (por ejemplo, la creación de una tabla nueva o una excepción ocurrida) se pueden consultar haciendo clic en el botón ubicado junto a la barra de progreso. La importación se puede cancelar en cualquier momento haciendo clic en el botón 'Cancelar'.
+
 ## Lenguajes y herramientas
 * El proyecto está escrito completamente en el lenguaje Java
 * Para establecer la conexión con el servidor de bases de datos se utilizó la librería mysql-connector-java-5.1.18
