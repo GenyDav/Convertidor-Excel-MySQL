@@ -285,9 +285,8 @@ public class PanelImport extends javax.swing.JPanel {
         panelnferiorTablaLayout.setHorizontalGroup(
             panelnferiorTablaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelnferiorTablaLayout.createSequentialGroup()
-                .addContainerGap()
                 .addComponent(btnAgregarHoja)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 24, Short.MAX_VALUE)
                 .addComponent(labelRegExcel, javax.swing.GroupLayout.PREFERRED_SIZE, 384, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
@@ -332,7 +331,7 @@ public class PanelImport extends javax.swing.JPanel {
         panelImportLayout.setHorizontalGroup(
             panelImportLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelImportLayout.createSequentialGroup()
-                .addGap(36, 36, 36)
+                .addGap(33, 33, 33)
                 .addGroup(panelImportLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(panelImportLayout.createSequentialGroup()
                         .addGroup(panelImportLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
@@ -877,6 +876,14 @@ public class PanelImport extends javax.swing.JPanel {
      */
     public JProgressBar getBarraProgreso() {
         return barraProgreso;
+    }
+    
+    /**
+     * Devuelve la ventana sobre la que se ejecuta el programa.
+     * @return Ventana principal del programa.
+     */
+    public JFrame getVentana(){
+        return ventana;
     }
 
     /**
