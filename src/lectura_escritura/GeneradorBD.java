@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import javax.swing.JButton;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JProgressBar;
@@ -31,6 +32,7 @@ public class GeneradorBD extends Generador{
     private JButton btnImportar;
     private JProgressBar barra;
     private Reporte reporte;
+    private JFrame ventana;
     private String evento;              // Descripción de una actividad ocurrida en el proceso
     
     /**
@@ -45,6 +47,7 @@ public class GeneradorBD extends Generador{
         etiquetaProgreso = null;
         barra = null;
         reporte = null;
+        ventana = null;
     }
 
     /**
@@ -65,6 +68,7 @@ public class GeneradorBD extends Generador{
         btnImportar = panel.getBtnImportar();
         barra = panel.getBarraProgreso();
         reporte = panel.getRep();
+        ventana = panel.getVentana();
     }
     
     /**
@@ -285,6 +289,12 @@ public class GeneradorBD extends Generador{
             evento = "Importación de datos terminada.\n";
             reporte.agregarEvento(evento);
             publish(100);
+            JOptionPane.showMessageDialog(
+                ventana, 
+                "La creación de la base de datos finalizó.",
+                "Proceso terminado", 
+                JOptionPane.INFORMATION_MESSAGE
+            );
             conn.terminarConexion();
         }catch(SQLException ex){ // Errores al crear la base de datos                
             evento = "[No se pudo continuar con la creación del "
