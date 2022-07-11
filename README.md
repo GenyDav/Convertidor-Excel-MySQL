@@ -56,7 +56,21 @@ Tambien es posible crear una base de datos nueva con el contenido de un libro de
 
 ![Configuracion de tipos](Imagen8.png)
 
-* Cuando el usuario presionar el botón 'Crear base de datos', el usuario debe introducir un nombre válido para la base y despues comienza el proceso, el progreso de la importación se muestra en la barra inferior; los eventos ocurridos (por ejemplo, la creación de una tabla nueva o una excepción ocurrida) se pueden consultar haciendo clic en el botón ubicado junto a la barra de progreso. La importación se puede cancelar en cualquier momento haciendo clic en el botón 'Cancelar'.
+* Cuando el usuario presiona el botón 'Crear base de datos', debe introducir un nombre válido para la base de datos nueva.
+
+![Creación de la base nueva](Imagen9.png)
+
+* Cuando comienza el proceso, el progreso de la importación se muestra en la barra inferior, al igual que en la sección de exportación: 
+
+![Progreso de la importación](Imagen10.png)
+
+* Los eventos ocurridos (por ejemplo, la creación de una tabla nueva o una excepción ocurrida) se pueden consultar haciendo clic en el botón ubicado junto a la barra de progreso.
+
+![Reporte de importación](Imagen11.png)
+
+* La importación se puede cancelar en cualquier momento haciendo clic en el botón 'Cancelar'. Al terminar la inserción de datos en la base, aparece una ventana de notificación:
+
+![Notificación de finalización](Imagen12.png)
 
 ## Lenguajes y herramientas
 * El proyecto está escrito completamente en el lenguaje Java
