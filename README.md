@@ -3,22 +3,21 @@ Programa que permite extraer los datos de una base MySQL para crear un archivo E
 Tambien es posible crear una base de datos nueva con el contenido de un libro de trabajo de Excel.
 
 ## Características
-### Exportación de bases de datos
 * Acceso al sistema con las credenciales de usuario
-* Se incluye un panel donde es posible visualizar las tablas de la base seleccionada
-* Las celdas del archivo creado pertenecen al tipo de dato obtenido desde la base
-* Es posible ver el progreso de la exportación y los detalles ocurridos en el proceso
-* El proceso de exportación se puede cancelar en cualquier momento
+* El usuario puede visualizar los datos de una tabla o de una hoja determinada
+* El usuario puede seleccionar sólo los elementos (tablas u hojas) que desea exportar o importar
+* Los procesos de exportación/importación se pueden cancelar en cualquier momento
+* Si el usuario intentar terminar la conexión o cerrar el programa mientras se está realizando un proceso, el programa le solicita confirmar la acción
+* Es posible ver el progreso y los detalles ocurridos en los procesos
+
+### Exportación de bases de datos
+* La exportación consiste en la creación de un archivo de Excel con los datos obtenidos de una base en el servidor MySQL
+* En el archivo de Excel creado, las columnas de una hoja toman el tipo de dato especificado por su correspondiente tabla en la base de datos
+* Cada hoja del archivo nuevo tiene un estilo básico predefinido.
 
 ### Importación de bases de datos
-* Se incluye un panel para visualizar las hojas del archivo abierto
-* Creación de un archivo Excel en el que cada hoja corresponde con una tabla de la base de datos
-* El usuario puede seleccionar cuales tablas se van a incluir en el archivo
-* Creación de una base de datos nueva utilizando los datos del archivo Excel abierto en el programa
-* El usuario puede seleccionar las hojas del archivo que serán convertidas en tablas
+* La importación consiste en la creación de una base de datos nueva utilizando los datos contenidos en un archivo de Excel
 * Antes de crear la base, el usuario puede configurar el tipo de dato y los modificadores de cada columna en la hoja, los cuales son utilizados para definir la estructura de la tabla nueva.
-* Es posible ver el progreso y sus detalles durante el proceso de importación
-* El proceso de importación se puede cancelar en cualquier momento
 
 ## Capturas de pantalla del programa en funcionamiento
 * Explicando brevemente, el funcionamiento del programa es el siguiente:
@@ -42,6 +41,10 @@ Tambien es posible crear una base de datos nueva con el contenido de un libro de
 * Al terminar de escribir los datos en todas las hojas, se muestra un mensaje que indica que el proceso ha terminado de forma correcta.
 
 ![Fin de la exportación](Imagen5.png)
+
+* Cada hoja del archivo nuevo tiene un estilo como el de la siguiente imágen:
+
+![Archivo creado]()
 
 * Si el usuario selecciona en el menú lateral la opción que corresponde a la sección de importación, se muestra la siguiente pantalla:
 
@@ -71,6 +74,10 @@ Tambien es posible crear una base de datos nueva con el contenido de un libro de
 * La importación se puede cancelar en cualquier momento haciendo clic en el botón 'Cancelar'. Al terminar la inserción de datos en la base, aparece una ventana de notificación:
 
 ![Notificación de finalización](Imagen12.png)
+
+* Al consultar la creación del esquema, por ejemplo, en MySQL Workbench, se obtienen los siguientes resultados en onde se muestran la información de las columnas de todas las tablas:
+
+![Información de la base]()
 
 ## Lenguajes y herramientas
 * El proyecto está escrito completamente en el lenguaje Java
