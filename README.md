@@ -24,60 +24,60 @@ Tambien es posible crear una base de datos nueva con el contenido de un libro de
 
 * Al iniciar el programa la pantalla que aparece es la que le permite al usuario realizar una conexión con el servidor de bases de datos. Cuando el usuario escribe sus credenciales, el programa muestra un mensaje indicando que se está intentando conectar con el servidor MySQL especificado. Si no se puede establecer la conexión, el programa muestra un mensaje describiendo el motivo.
 
-![Inicio de sesión](Imagen1.png)
+![Inicio de sesión](img_readme/Imagen1.png)
 
 * Cuando se puede crear una nueva conexión con el servidor, el programa cambia la pantalla y muestra un menú lateral en donde se puede seleccionar la sección de importación o exportación. Por defecto, al establecer la conexión, el programa muestra la sección de exportación.
 
-![Interfaz de exportación](Imagen2.png)
+![Interfaz de exportación](img_readme/exp_Imagen2.png)
 
 * En esta sección se puede seleccionar alguna de las bases de datos del servidor y se puede seleccionar una tabla en específico para poder ver sus datos en pantalla. El usuario puede exportar todas las tablas en la base de datos seleccionada o puede escoger solo las tablas que desea exportar mediante el botón 'Seleccionar tabla'. Tambien puede editar la lista de tablas seleccionadas.
 
-![Selección de tablas](Imagen3.png)
+![Selección de tablas](img_readme/exp_Imagen3.png)
 
 * Cuando se presiona el botón 'Exportar', y después de haber seleccionado la ubicación del archivo, se habilita una ventana en donde se describen los eventos ocurridos al ir creando el archivo de Excel, y el progreso en la exportación de cada tabla se muestra en la barra inferior.
 
-![Progreso de exportación](Imagen4.png)
+![Progreso de exportación](img_readme/exp_Imagen4.png)
 
 * Al terminar de escribir los datos en todas las hojas, se muestra un mensaje que indica que el proceso ha terminado de forma correcta.
 
-![Fin de la exportación](Imagen5.png)
+![Fin de la exportación](img_readme/exp_Imagen5.png)
 
 * Cada hoja del archivo nuevo tiene un estilo como el de la siguiente imágen:
 
-![Archivo creado]()
+![Archivo creado](img_readme/exp_Imagen6.png)
 
 * Si el usuario selecciona en el menú lateral la opción que corresponde a la sección de importación, se muestra la siguiente pantalla:
 
-![Sección de importación](Imagen6.png)
+![Sección de importación](img_readme/imp_Imagen7.png)
 
 * Despues de seleccionar un archivo para abrirlo, el usuario puede ver los datos de cada hoja seleccionando el nombre de la misma en la lista superior.
 
-![Archivo abierto](Imagen7.png)
+![Archivo abierto](img_readme/imp_Imagen8.png)
 
 * De igual forma que en la sección de exportación, el usuario puede seleccionar en una lista únicamente las tablas que desea que se incluyan en la base de datos nueva. 
 * Cuando una hoja está seleccionada en el combo box y se hace clic en el botón 'Cambiar tipos' aparece una nueva ventana en donde se muestra un conjunto de paneles en el que cada uno corresponde con una columna de la hoja seleccionada. Cada panel muestra el nombre de la columna e incluye los campos para cambiar el tipo de dato de la columna, agregar parámetros a ese tipo de dato y asignar los modificadores de llave primaria, campo no nulo, de valor único, valor sin signo y de auto incremento. 
 
-![Configuracion de tipos](Imagen8.png)
+![Configuracion de tipos](img_readme/imp_Imagen9.png)
 
 * Cuando el usuario presiona el botón 'Crear base de datos', debe introducir un nombre válido para la base de datos nueva.
 
-![Creación de la base nueva](Imagen9.png)
+![Creación de la base nueva](img_readme/imp_Imagen10.png)
 
 * Cuando comienza el proceso, el progreso de la importación se muestra en la barra inferior, al igual que en la sección de exportación: 
 
-![Progreso de la importación](Imagen10.png)
+![Progreso de la importación](img_readme/imp_Imagen11.png)
 
 * Los eventos ocurridos (por ejemplo, la creación de una tabla nueva o una excepción ocurrida) se pueden consultar haciendo clic en el botón ubicado junto a la barra de progreso.
 
-![Reporte de importación](Imagen11.png)
+![Reporte de importación](img_readme/imp_Imagen12.png)
 
 * La importación se puede cancelar en cualquier momento haciendo clic en el botón 'Cancelar'. Al terminar la inserción de datos en la base, aparece una ventana de notificación:
 
-![Notificación de finalización](Imagen12.png)
+![Notificación de finalización](img_readme/imp_Imagen13.png)
 
 * Al consultar la creación del esquema, por ejemplo, en MySQL Workbench, se obtienen los siguientes resultados en onde se muestran la información de las columnas de todas las tablas:
 
-![Información de la base]()
+![Información de la base](img_readme/imp_Imagen14.png)
 
 ## Lenguajes y herramientas
 * El proyecto está escrito completamente en el lenguaje Java
