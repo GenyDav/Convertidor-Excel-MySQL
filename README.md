@@ -44,7 +44,7 @@ Tambien es posible crear una base de datos nueva con el contenido de un libro de
 
 * Cada hoja del archivo nuevo tiene un estilo como el de la siguiente imágen:
 
-![Archivo creado](img_readme/exp_Imagen6.png)
+![Archivo creado](img_readme/exp_Imagen6.PNG)
 
 * Si el usuario selecciona en el menú lateral la opción que corresponde a la sección de importación, se muestra la siguiente pantalla:
 
@@ -77,7 +77,7 @@ Tambien es posible crear una base de datos nueva con el contenido de un libro de
 
 * Al consultar la creación del esquema, por ejemplo, en MySQL Workbench, se obtienen los siguientes resultados en onde se muestran la información de las columnas de todas las tablas:
 
-![Información de la base](img_readme/imp_Imagen14.png)
+![Información de la base](img_readme/imp_Imagen14.PNG)
 
 ## Lenguajes y herramientas
 * El proyecto está escrito completamente en el lenguaje Java
