@@ -189,7 +189,7 @@ public class GeneradorExcel extends Generador{
             labelProgreso.setText("No se puede escribir el archivo.");
             evento = "No se puede escribir el archivo porque está siendo utilizado por otro programa.";
             reporte.agregarEvento(evento);
-            // ex.printStackTrace();
+            //ex.printStackTrace();
         }
     }
     
@@ -229,6 +229,11 @@ public class GeneradorExcel extends Generador{
         }
     }
     
+    /**
+     * Método que muestra un cuadro de diálogo indicando que ha ocurrido una
+     * excepción que causó que el proceso de exportación se detuviera.
+     * @param codigo Número de identificación de la excepción MySQL.
+     */
     @Override
     public void mostrarMsgError(int codigo){
         JOptionPane.showMessageDialog(
