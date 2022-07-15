@@ -652,6 +652,11 @@ public class PanelExport extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_comboBasesItemStateChanged
 
+    /**
+     * Permite que la ventana donde se describen los eventos ocurridos en la
+     * exportación sea visible para el usuario.
+     * @param evt Evento lanzado al presionar el botón de reportes.
+     */
     private void btnReporteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReporteActionPerformed
         reporte.setVisible(true);
     }//GEN-LAST:event_btnReporteActionPerformed
